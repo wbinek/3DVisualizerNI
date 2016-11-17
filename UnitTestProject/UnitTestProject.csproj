@@ -51,6 +51,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="IntersectionPointsTest.cs" />
     <Compile Include="MyVector3DTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -59,6 +60,9 @@
       <Project>{23d9f9b7-562a-4d2f-ae35-07f5c02591bf}</Project>
       <Name>3DVisualizerNI</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -15,6 +15,7 @@ namespace _3DVisualizerNI.ViewModel
     {
         private Model3DGroup model3DContent;
         private Model3DGroup spatialResponse3DContent;
+        private Model3DGroup intersectionPoints3DContent;
 
         public Model3DGroup Model3DContent
         {
@@ -46,12 +47,34 @@ namespace _3DVisualizerNI.ViewModel
             }
         }
 
+        public Model3DGroup IntersectionPoints3DContent
+        {
+            get
+            {
+                return intersectionPoints3DContent;
+            }
+            set
+            {
+                if (value != this.intersectionPoints3DContent)
+                {
+                    intersectionPoints3DContent = value;
+                    RaisePropertyChanged("IntersectionPoints3DContent");
+                }
+            }
+        }
+
         public Model3DViewModel()
         {
             Messenger.Default.Register<Scene3D>
             (
                 this,
                 (scene3D) => ReceiveScene(scene3D)
+            );
+
+            Messenger.Default.Register<IntersectionPoints>
+            (
+                this,
+                (ip) => ReceiveIntersectionPoints(ip)
             );
 
             Messenger.Default.Register<SpatialMeasurement>
@@ -70,6 +93,12 @@ namespace _3DVisualizerNI.ViewModel
         private object ReceiveResponse(SpatialMeasurement sm)
         {
             SpatialResponse3DContent = sm.responseModel;
+            return null;
+        }
+
+        private object ReceiveIntersectionPoints(IntersectionPoints ip)
+        {
+            IntersectionPoints3DContent = ip.intersectionModel;
             return null;
         }
     }

@@ -18,6 +18,7 @@ namespace _3DVisualizerNI.Model
         private double Fs { get; set; }
         private int _resolution = 5;
         private Vector3D _position;
+        private int _scale = 5;
 
 
         public int resolution
@@ -28,6 +29,7 @@ namespace _3DVisualizerNI.Model
                 {
                     _resolution = value;
                     buildResponseModel();
+                    setTransforms();
                 }
             }
         }
@@ -40,10 +42,22 @@ namespace _3DVisualizerNI.Model
             set
             {
                 _position = value;
-                setPosition();
+                setTransforms();
             }
         }
-      
+        public int scale
+        {
+            get
+            {
+                return _scale;
+            }
+            set
+            {
+                _scale = value;
+                setTransforms();
+            }
+        }
+
         public Model3DGroup responseModel { get; set; }
 
         public SpatialMeasurement() {}
@@ -110,27 +124,43 @@ namespace _3DVisualizerNI.Model
             //Add cones to model to create a view of spatial impulse response
             for (int i = 0; i < bins/2; i++)
                 for (int j = 0; j < bins; j++)
-            {
                 {
-                    TruncatedConeVisual3D cone = new TruncatedConeVisual3D();
-
-                    cone.Origin = center;
-                    cone.Height = r[i,j]*100;
-                    cone.Normal = MyVector3D.toCartesianDeg(i*resolution,j*resolution,r[i,j]);
-                    cone.BaseRadius = 0.0001;
-                    cone.TopRadius = 0.01;
-                    responseModel.Children.Add(cone.Content);
+                    {
+                        TruncatedConeVisual3D cone = new TruncatedConeVisual3D();
+                        //r[i, j] = 1;
+                        cone.Origin = center;
+                        cone.Height = r[i,j];
+                        cone.Normal = MyVector3D.toCartesianDeg(i*resolution,j*resolution,r[i,j]);
+                        cone.BaseRadius = 0.0001;
+                        cone.TopRadius = (2*Math.PI*r[i,j]/(2*bins));
+                        responseModel.Children.Add(cone.Content);
+                    }
                 }
             }
-        }
 
-        public void setPosition()
+        public void setTransforms()
         {
            
             Transform3DGroup newTransform = new Transform3DGroup();
 
             newTransform.Children.Add(new TranslateTransform3D(position));
+            newTransform.Children.Add(new ScaleTransform3D(new Vector3D(scale,scale,scale),position.ToPoint3D()));
             responseModel.Transform = newTransform;
+        }
+
+        public Vector3D getDirectionAtIdx(int idx)
+        {
+            return new Vector3D(x[idx], y[idx], z[idx]);
+        }
+
+        public int getDirectionsNo()
+        {
+            return w.Length;
+        }
+
+        public double[] getAmplitudeArray()
+        {
+            return w;
         }
     }
 }

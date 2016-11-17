@@ -13,6 +13,7 @@
             <h:DefaultLights></h:DefaultLights>
             <ModelVisual3D Content="{Binding Model3DContent}"></ModelVisual3D>
             <ModelVisual3D Content="{Binding SpatialResponse3DContent}"></ModelVisual3D>
+            <ModelVisual3D Content="{Binding IntersectionPoints3DContent}"></ModelVisual3D>
         </h:HelixViewport3D>
             
     </Grid>

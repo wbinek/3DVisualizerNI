@@ -131,9 +131,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\IntersectionPoints.cs" />
     <Compile Include="Model\MyVector3D.cs" />
     <Compile Include="Model\Scene3D.cs" />
-    <Compile Include="Model\spatialMeasurement.cs" />
+    <Compile Include="Model\SpatialMeasurement.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MenuToolbarViewModel.cs" />
     <Compile Include="ViewModel\Model3DViewModel.cs" />

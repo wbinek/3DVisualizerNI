@@ -26,6 +26,8 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
 
                 <Label Content="Resolution [deg]:" VerticalContentAlignment="Center"></Label>
@@ -46,6 +48,11 @@
                         <xctk:DoubleUpDown Value="{Binding pZ}"></xctk:DoubleUpDown>
                     </StackPanel>
                 </StackPanel>
+
+                <Label Grid.Row="2" Content="Response scale:" VerticalContentAlignment="Center"></Label>
+                <Slider Grid.Row="2" Grid.Column="1" Value="{Binding ImpulseScale}" Maximum="50" Minimum="1"></Slider>
+                
+                <Button Grid.Row="3" Grid.ColumnSpan="2" Command="{Binding CalculateIPCommand}">Calculate intersection points</Button>
             </Grid>
         </GroupBox>
         

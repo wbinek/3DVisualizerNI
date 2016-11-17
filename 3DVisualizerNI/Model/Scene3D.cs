@@ -9,7 +9,7 @@ using System.Windows.Media.Media3D;
 
 namespace _3DVisualizerNI.Model
 {
-    class Scene3D
+    public class Scene3D
     {
         public Model3DGroup model { get; set; }
 
@@ -21,6 +21,8 @@ namespace _3DVisualizerNI.Model
         public void LoadModel()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "3ds files (*.3ds)|*.3ds";
+
             if (openFileDialog.ShowDialog() == true)
             {
                 String path = openFileDialog.FileName;
@@ -35,6 +37,20 @@ namespace _3DVisualizerNI.Model
                 model = group;
                 
             }
+        }
+
+        public void LoadModel(string path)
+        {
+            ModelImporter import = new ModelImporter();
+
+            Model3DGroup group = import.Load(path);
+            foreach (Model3D part in group.Children)
+            {
+                ((GeometryModel3D)part).Material = null;
+            }
+
+            model = group;
+        
         }
     }
 }
