@@ -14,6 +14,7 @@ namespace _3DVisualizerNI.ViewModel
     public class Model3DViewModel : ViewModelBase
     {
         private Model3DGroup model3DContent;
+        private Model3DGroup spatialResponse3DContent;
 
         public Model3DGroup Model3DContent
         {
@@ -29,6 +30,22 @@ namespace _3DVisualizerNI.ViewModel
             }
         }
 
+        public Model3DGroup SpatialResponse3DContent
+        {
+            get
+            {
+                return spatialResponse3DContent;
+            }
+            set
+            {
+                if (value != this.spatialResponse3DContent)
+                {
+                    spatialResponse3DContent = value;
+                    RaisePropertyChanged("SpatialResponse3DContent");
+                }
+            }
+        }
+
         public Model3DViewModel()
         {
             Messenger.Default.Register<Scene3D>
@@ -36,11 +53,23 @@ namespace _3DVisualizerNI.ViewModel
                 this,
                 (scene3D) => ReceiveScene(scene3D)
             );
+
+            Messenger.Default.Register<SpatialMeasurement>
+            (
+                this,
+                (sm) => ReceiveResponse(sm)
+            );
         }
 
         private object ReceiveScene(Scene3D scene3D)
         {
             Model3DContent = scene3D.model;            
+            return null;
+        }
+
+        private object ReceiveResponse(SpatialMeasurement sm)
+        {
+            SpatialResponse3DContent = sm.responseModel;
             return null;
         }
     }

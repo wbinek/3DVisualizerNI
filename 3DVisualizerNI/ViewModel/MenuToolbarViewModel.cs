@@ -14,12 +14,15 @@ namespace _3DVisualizerNI.ViewModel
     public class MenuToolbarViewModel : ViewModelBase
     {
         Scene3D scene3D;
-
+        SpatialMeasurement spatialMeasurement;
+        
         public RelayCommand LoadModelCommand { get; private set; }
+        public RelayCommand LoadMeasurementCommand { get; private set; }
 
         public MenuToolbarViewModel()
         {
             this.LoadModelCommand = new RelayCommand(this.LoadModel);
+            this.LoadMeasurementCommand = new RelayCommand(this.LoadMeasurement);
         }
 
         public void LoadModel()
@@ -28,6 +31,14 @@ namespace _3DVisualizerNI.ViewModel
             scene3D.LoadModel();
 
             Messenger.Default.Send<Scene3D>(scene3D);
+        }
+
+        public void LoadMeasurement()
+        {
+            spatialMeasurement = new SpatialMeasurement();
+            spatialMeasurement.importWaveResult();
+
+            Messenger.Default.Send<SpatialMeasurement>(spatialMeasurement);
         }
     }
 }

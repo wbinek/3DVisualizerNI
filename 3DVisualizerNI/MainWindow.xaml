@@ -8,13 +8,22 @@
         mc:Ignorable="d"
         DataContext="{Binding Main, Source={StaticResource Locator}}"
         Title="MainWindow" Height="350" Width="525">
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <views:MenuToolbarView x:Name = "MenuToolbarView" Grid.Row="0"></views:MenuToolbarView>
-        <views:Model3DView x:Name = "Model3DView" Grid.Row="1"></views:Model3DView>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <views:Model3DView x:Name = "Model3DView" Grid.Column="0"></views:Model3DView>
+            <GroupBox Header="PROPERTIES" Grid.Column="1" Background="GhostWhite" VerticalAlignment="Stretch">
+                <views:PropertiesView x:Name="PropertiesView" ></views:PropertiesView>
+            </GroupBox>
+        </Grid>
     </Grid>
 </Window>

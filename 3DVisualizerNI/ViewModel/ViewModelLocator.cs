@@ -45,7 +45,7 @@ namespace _3DVisualizerNI.ViewModel
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<MenuToolbarViewModel>();
             SimpleIoc.Default.Register<Model3DViewModel>();
-
+            SimpleIoc.Default.Register<PropertiesViewModel>();          
         }
 
         public MainViewModel Main
@@ -70,6 +70,14 @@ namespace _3DVisualizerNI.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<Model3DViewModel>();
+            }
+        }
+
+        public PropertiesViewModel Properties
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<PropertiesViewModel>();
             }
         }
 
