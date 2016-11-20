@@ -75,6 +75,55 @@ namespace _3DVisualizerNI.ViewModel
                 Messenger.Default.Send<SpatialMeasurement>(spatialMeasurement);
             }
         }
+        public double timeSlider {
+            get
+            {
+                return intStartTime;
+            }
+            set
+            {
+                double diff = intEndTime - intStartTime;
+                intEndTime = value + diff;
+                intStartTime = value;
+                RaisePropertyChanged("intStartTime");
+                RaisePropertyChanged("intEndTime");
+
+                ShowIP();
+            }
+        }
+        public double maxTimeSlider {
+            get
+            {
+                if (intersectionPoints != null) return (intersectionPoints.respLength/ intersectionPoints.Fs) - (intEndTime - intStartTime);
+                return 0;
+            }
+        }
+        public double intStartTime {
+            get
+            {
+                if(intersectionPoints != null) return intersectionPoints.startTime;
+                return 0;
+            }
+            set
+            {
+                intersectionPoints.startTime = value;
+                RaisePropertyChanged("maxTimeSlider");
+            }
+        }
+        public double intEndTime
+        {
+            get
+            {
+                if (intersectionPoints != null) return intersectionPoints.endTime;
+                return 0;
+            }
+            set
+            {
+                intersectionPoints.endTime = value;
+                RaisePropertyChanged("maxTimeSlider");
+            }
+        }
+
         public int ImpulseScale
         {
             get
@@ -91,6 +140,8 @@ namespace _3DVisualizerNI.ViewModel
 
         public RelayCommand CalculateIPCommand { get; private set; }
 
+        public RelayCommand ShowIPCommand { get; private set; }
+
         public PropertiesViewModel()
         {
             ResolutionList = new ObservableCollection<int>();
@@ -101,6 +152,7 @@ namespace _3DVisualizerNI.ViewModel
             ResolutionList.Add(15);
 
             this.CalculateIPCommand = new RelayCommand(this.CalculateIP);
+            this.ShowIPCommand = new RelayCommand(this.ShowIP);
 
             Messenger.Default.Register<SpatialMeasurement>
             (
@@ -143,8 +195,16 @@ namespace _3DVisualizerNI.ViewModel
         {
             intersectionPoints = new IntersectionPoints();
             intersectionPoints.calculateIntersectionPoints(model.model, spatialMeasurement);
-            intersectionPoints.bilidIntersectionModel();
 
+            RaisePropertyChanged("intStartTime");
+            RaisePropertyChanged("intEndTime");
+            RaisePropertyChanged("maxTimeSlider");
+            RaisePropertyChanged("timeSlider");            
+        }
+
+        private void ShowIP()
+        {
+            intersectionPoints.builidIntersectionModel();
             Messenger.Default.Send<IntersectionPoints>(intersectionPoints);
         }
 

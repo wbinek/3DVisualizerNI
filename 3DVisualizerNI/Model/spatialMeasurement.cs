@@ -15,7 +15,7 @@ namespace _3DVisualizerNI.Model
     public class SpatialMeasurement
     {
         private double[] w, x, y, z;
-        private double Fs { get; set; }
+        public int Fs { get; set; }
         private int _resolution = 5;
         private Vector3D _position;
         private int _scale = 5;
@@ -101,6 +101,7 @@ namespace _3DVisualizerNI.Model
                 z = Array.ConvertAll(_z.ToArray(), s => (double)s);
 
                 buildResponseModel();
+                setTransforms();
             }
 
         }
@@ -129,11 +130,18 @@ namespace _3DVisualizerNI.Model
                         TruncatedConeVisual3D cone = new TruncatedConeVisual3D();
                         //r[i, j] = 1;
                         cone.Origin = center;
-                        cone.Height = r[i,j];
-                        cone.Normal = MyVector3D.toCartesianDeg(i*resolution,j*resolution,r[i,j]);
-                        cone.BaseRadius = 0.0001;
-                        cone.TopRadius = (2*Math.PI*r[i,j]/(2*bins));
+                        cone.Height = r[i, j];
+                        cone.Normal = MyVector3D.toCartesianDeg(i * resolution, j * resolution, r[i, j]);
+                        cone.BaseRadius = 0;
+                        cone.TopRadius = (2 * Math.PI * r[i, j] / (2 * bins));
+                        cone.BaseCap = false;
+                        cone.ThetaDiv = 5;
                         responseModel.Children.Add(cone.Content);
+
+                        //LinesVisual3D line = new LinesVisual3D();
+                        //line.Points.Add(center);
+                        //line.Points.Add(MyVector3D.toCartesianDeg(i * resolution, j * resolution, r[i, j]).ToPoint3D());
+                        //responseModel.Children.Add(line.Content);
                     }
                 }
             }

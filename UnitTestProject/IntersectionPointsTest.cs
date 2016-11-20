@@ -16,7 +16,6 @@ namespace UnitTestProject
             IntersectionPoints intersections = new IntersectionPoints();
             SpatialMeasurement measurement = new SpatialMeasurement();
             measurement.position = new Vector3D(1, 1, 1);
-            measurement.
 
             //intersections.RayHitTester(scena.model, new Point3D(1, 1, 1), new Vector3D(1, 0, 0));
 

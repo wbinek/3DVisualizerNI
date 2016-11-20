@@ -50,11 +50,39 @@
                 </StackPanel>
 
                 <Label Grid.Row="2" Content="Response scale:" VerticalContentAlignment="Center"></Label>
-                <Slider Grid.Row="2" Grid.Column="1" Value="{Binding ImpulseScale}" Maximum="50" Minimum="1"></Slider>
-                
-                <Button Grid.Row="3" Grid.ColumnSpan="2" Command="{Binding CalculateIPCommand}">Calculate intersection points</Button>
+                <Slider Grid.Row="2" Grid.Column="1" Value="{Binding ImpulseScale}" Maximum="50" Minimum="1" TickPlacement="Both"  TickFrequency="10"></Slider>
+                              
             </Grid>
         </GroupBox>
-        
+        <GroupBox Grid.Row="1" Header='Intersecion properties'>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Row="0" Grid.ColumnSpan="2" Command="{Binding CalculateIPCommand}">Calculate intersection points</Button>
+
+                <Label Grid.Row="1" Content="Start time:"></Label>
+                <xctk:DoubleUpDown Grid.Row="1" Grid.Column ="1" Value="{Binding intStartTime}" Increment="0.01"></xctk:DoubleUpDown>
+
+                <Label Grid.Row="2" Content="End time:"></Label>
+                <xctk:DoubleUpDown Grid.Row="2" Grid.Column ="1" Value="{Binding intEndTime}" Increment="0.01"></xctk:DoubleUpDown>
+
+                <Label Grid.Row="3" Content="Slide window:" VerticalContentAlignment="Center"></Label>
+                <Slider Grid.Row="3" Grid.Column="1" Value="{Binding timeSlider}" Maximum="{Binding maxTimeSlider}" Minimum="0" TickPlacement="Both"  TickFrequency="0.01" IsSnapToTickEnabled="True"></Slider>
+
+                <Button Grid.Row="4" Grid.ColumnSpan="2" Command="{Binding ShowIPCommand}">Show intersection points</Button>
+            </Grid>
+
+        </GroupBox>
+
     </Grid>
 </UserControl>

@@ -12,9 +12,54 @@ namespace _3DVisualizerNI.Model
 {
     public class IntersectionPoints
     {
+        private double _startTime = 0;
+        private double _endTime = 0.08;
+        public int respLength { get; protected set; }
+        public int Fs { get; protected set; }
+
         public Model3DGroup intersectionModel { get; set; }
         public List<Point3D> intersectionPoints { get; set; }
+        public List<Point3D> faceNormals { get; set; }
         public double[] amplitudes { get; set; }
+        public int scale { get; set; } = 1;
+        public double startTime
+        {
+            get { return _startTime; }
+            set { if (value < 0)
+                {
+                    value = 0;
+                }
+                else if(value>endTime)
+                {
+                    value = endTime;
+                }
+                if (value != _startTime)
+                {
+                    _startTime = value;                  
+                }
+
+            }
+        }
+
+        public double endTime
+        {
+            get { return _endTime; }
+            set
+            {
+                if (value > (double)respLength/Fs)
+                {
+                    value = respLength / Fs;
+                }
+                else if (value < startTime)
+                {
+                    value = startTime;
+                }
+                if (value != _endTime)
+                {
+                    _endTime = value;                  
+                }
+            }
+        }
 
         public IntersectionPoints()
         {
@@ -25,27 +70,38 @@ namespace _3DVisualizerNI.Model
         {
             ModelVisual3D testModel = new ModelVisual3D();
             testModel.Content = model;
+            intersectionPoints.Clear();
 
             amplitudes = measuremet.getAmplitudeArray();
+            respLength = amplitudes.Count();
+            Fs = measuremet.Fs;
+
             Point3D origin = measuremet.position.ToPoint3D();
 
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < respLength; i++)
+            //for (int i = startTime*Fs; i < endTime * Fs; i++)
             {
-                Vector3D direction = measuremet.getDirectionAtIdx(i);
+                Vector3D direction = -measuremet.getDirectionAtIdx(i);
                 RayHitTester(testModel, origin, direction);
             }
         }
 
-        public void bilidIntersectionModel()
+        public void builidIntersectionModel()
         {
             intersectionModel = new Model3DGroup();
-            for (int i = 0; i < intersectionPoints.Count; i++)
+            for (int i = (int)(startTime * Fs); i < endTime * Fs; i++)
             {
                 SphereVisual3D sphere = new SphereVisual3D();
                 sphere.Center = intersectionPoints[i];
-                sphere.Radius = amplitudes[i] * amplitudes[i] * 5;
+                sphere.Radius = Math.Pow(amplitudes[i] * scale * scale,2f/3f);
+                sphere.ThetaDiv = 4;
+                sphere.PhiDiv = 2;
+                sphere.Material = new DiffuseMaterial(new SolidColorBrush(Colors.Red));
                 intersectionModel.Children.Add(sphere.Content);
-             }
+
+                //TruncatedConeVisual3D cone = new TruncatedConeVisual3D();
+                //cone.Origin = intersectionPoints[i]
+            }
         }
 
         private void RayHitTester(ModelVisual3D model, Point3D origin, Vector3D direction)
@@ -73,6 +129,7 @@ namespace _3DVisualizerNI.Model
                 {
                     // Yes we did!
                     intersectionPoints.Add(rayMeshResult.PointHit);
+
                     return HitTestResultBehavior.Stop;
                 }
             }
