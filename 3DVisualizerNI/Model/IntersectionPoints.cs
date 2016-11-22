@@ -19,7 +19,7 @@ namespace _3DVisualizerNI.Model
 
         public Model3DGroup intersectionModel { get; set; }
         public List<Point3D> intersectionPoints { get; set; }
-        public List<Point3D> faceNormals { get; set; }
+        public List<Vector3D> faceNormals { get; set; }
         public double[] amplitudes { get; set; }
         public int scale { get; set; } = 1;
         public double startTime
@@ -64,6 +64,7 @@ namespace _3DVisualizerNI.Model
         public IntersectionPoints()
         {
             intersectionPoints = new List<Point3D>();
+            faceNormals = new List<Vector3D>();
         }
 
         public void calculateIntersectionPoints(Model3DGroup model, SpatialMeasurement measuremet)
@@ -79,28 +80,38 @@ namespace _3DVisualizerNI.Model
             Point3D origin = measuremet.position.ToPoint3D();
 
             for (int i = 0; i < respLength; i++)
-            //for (int i = startTime*Fs; i < endTime * Fs; i++)
             {
                 Vector3D direction = -measuremet.getDirectionAtIdx(i);
                 RayHitTester(testModel, origin, direction);
             }
+
         }
 
         public void builidIntersectionModel()
         {
             intersectionModel = new Model3DGroup();
+
             for (int i = (int)(startTime * Fs); i < endTime * Fs; i++)
             {
-                SphereVisual3D sphere = new SphereVisual3D();
-                sphere.Center = intersectionPoints[i];
-                sphere.Radius = Math.Pow(amplitudes[i] * scale * scale,2f/3f);
-                sphere.ThetaDiv = 4;
-                sphere.PhiDiv = 2;
-                sphere.Material = new DiffuseMaterial(new SolidColorBrush(Colors.Red));
-                intersectionModel.Children.Add(sphere.Content);
+                //    SphereVisual3D sphere = new SphereVisual3D();
+                //    sphere.Center = intersectionPoints[i];
+                //    sphere.Radius = Math.Pow(amplitudes[i] * scale * scale, 2f / 3f);
+                //    sphere.ThetaDiv = 4;
+                //    sphere.PhiDiv = 2;
+                //    sphere.Material = new DiffuseMaterial(new SolidColorBrush(Colors.Red));
+                //    intersectionModel.Children.Add(sphere.Content);
 
-                //TruncatedConeVisual3D cone = new TruncatedConeVisual3D();
-                //cone.Origin = intersectionPoints[i]
+                TruncatedConeVisual3D cone = new TruncatedConeVisual3D();
+                cone.Height = 0.01;
+                cone.Origin = intersectionPoints[i] - faceNormals[i] * cone.Height;
+                cone.Normal = -faceNormals[i];
+                cone.BaseRadius = Math.Pow(amplitudes[i] * scale * scale, 2f / 3f);
+                cone.ThetaDiv = 5;
+                cone.BaseCap = false;
+                cone.TopCap = false;
+                cone.Material = new DiffuseMaterial(new SolidColorBrush(Colors.Yellow));
+                cone.BackMaterial = null;
+                intersectionModel.Children.Add(cone.Content);
             }
         }
 
@@ -129,6 +140,12 @@ namespace _3DVisualizerNI.Model
                 {
                     // Yes we did!
                     intersectionPoints.Add(rayMeshResult.PointHit);
+
+                    Vector3D v1 = rayMeshResult.MeshHit.Positions[rayMeshResult.VertexIndex1].ToVector3D() - rayMeshResult.MeshHit.Positions[rayMeshResult.VertexIndex2].ToVector3D();
+                    Vector3D v2 = rayMeshResult.MeshHit.Positions[rayMeshResult.VertexIndex1].ToVector3D() - rayMeshResult.MeshHit.Positions[rayMeshResult.VertexIndex3].ToVector3D();
+                    Vector3D normal = Vector3D.CrossProduct(v1, v2);
+                    normal.Normalize();
+                    faceNormals.Add(normal);
 
                     return HitTestResultBehavior.Stop;
                 }
