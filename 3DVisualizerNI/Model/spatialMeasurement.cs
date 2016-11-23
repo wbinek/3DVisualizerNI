@@ -170,5 +170,25 @@ namespace _3DVisualizerNI.Model
         {
             return w;
         }
+
+        public double getMax()
+        {
+            if (w != null)
+            {
+                return w.Select(x => Math.Abs(x)).Max();
+
+            }
+            return 0;
+        }
+
+        public int getMaxIdx()
+        {
+            if (w != null)
+            {
+                double max = getMax();
+                return Array.IndexOf(Array.ConvertAll(w,x => Math.Abs(x)), max);
+            }
+            return 0;
+        }
     }
 }

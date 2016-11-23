@@ -8,7 +8,7 @@
              DataContext="{Binding Properties, Source={StaticResource Locator}}"
              
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="500" d:DesignWidth="300">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -51,12 +51,15 @@
 
                 <Label Grid.Row="2" Content="Response scale:" VerticalContentAlignment="Center"></Label>
                 <Slider Grid.Row="2" Grid.Column="1" Value="{Binding ImpulseScale}" Maximum="50" Minimum="1" TickPlacement="Both"  TickFrequency="10"></Slider>
-                              
+
+                <Label Grid.Row="3" Content="Direct time:" VerticalContentAlignment="Center"></Label>
+                <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding directTime,StringFormat=N3}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="1" Header='Intersecion properties'>
+        <GroupBox Grid.Row="1" Header='Intersection properties'>
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
@@ -68,18 +71,20 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Row="0" Grid.ColumnSpan="2" Command="{Binding CalculateIPCommand}">Calculate intersection points</Button>
+                <Button Grid.Row="0" Grid.ColumnSpan="2" Command="{Binding CalculateIPCommand}" Margin="5,5,5,5">Calculate intersection points</Button>
 
                 <Label Grid.Row="1" Content="Start time:"></Label>
-                <xctk:DoubleUpDown Grid.Row="1" Grid.Column ="1" Value="{Binding intStartTime}" Increment="0.01"></xctk:DoubleUpDown>
+                <xctk:DoubleUpDown Grid.Row="1" Grid.Column ="1" Value="{Binding intStartTime}" Increment="0.01" FormatString="N3"></xctk:DoubleUpDown>
 
                 <Label Grid.Row="2" Content="End time:"></Label>
-                <xctk:DoubleUpDown Grid.Row="2" Grid.Column ="1" Value="{Binding intEndTime}" Increment="0.01"></xctk:DoubleUpDown>
+                <xctk:DoubleUpDown Grid.Row="2" Grid.Column ="1" Value="{Binding intEndTime}" Increment="0.01" FormatString="N3"></xctk:DoubleUpDown>
 
                 <Label Grid.Row="3" Content="Slide window:" VerticalContentAlignment="Center"></Label>
                 <Slider Grid.Row="3" Grid.Column="1" Value="{Binding timeSlider}" Maximum="{Binding maxTimeSlider}" Minimum="0" TickPlacement="Both"  TickFrequency="0.01" IsSnapToTickEnabled="True"></Slider>
 
-                <Button Grid.Row="4" Grid.ColumnSpan="2" Command="{Binding ShowIPCommand}">Show intersection points</Button>
+                <Button Grid.Row="4" Grid.ColumnSpan="2" Command="{Binding ShowIPCommand}" Margin="5,5,5,5">Show intersection points</Button>
+
+                <Button Grid.Row="5" Grid.ColumnSpan="2" Command="{Binding ShowAnimationCommand}" Margin="5,5,5,5">Show animation</Button>
             </Grid>
 
         </GroupBox>

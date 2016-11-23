@@ -7,8 +7,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Media.Media3D;
+using System.Windows.Threading;
 
 namespace _3DVisualizerNI.ViewModel
 {
@@ -21,7 +24,7 @@ namespace _3DVisualizerNI.ViewModel
 
         public ObservableCollection<int> ResolutionList { get; set; }
         public int ResolutionSelected {
-            get { if(spatialMeasurement != null) return spatialMeasurement.resolution;
+            get { if (spatialMeasurement != null) return spatialMeasurement.resolution;
                 return 5;
             }
             set
@@ -94,19 +97,20 @@ namespace _3DVisualizerNI.ViewModel
         public double maxTimeSlider {
             get
             {
-                if (intersectionPoints != null) return (intersectionPoints.respLength/ intersectionPoints.Fs) - (intEndTime - intStartTime);
+                if (intersectionPoints != null) return (intersectionPoints.respLength / intersectionPoints.Fs) - (intEndTime - intStartTime);
                 return 0;
             }
         }
         public double intStartTime {
             get
             {
-                if(intersectionPoints != null) return intersectionPoints.startTime;
+                if (intersectionPoints != null) return intersectionPoints.startTime;
                 return 0;
             }
             set
             {
                 intersectionPoints.startTime = value;
+                RaisePropertyChanged("intStartTime");
                 RaisePropertyChanged("maxTimeSlider");
             }
         }
@@ -120,10 +124,21 @@ namespace _3DVisualizerNI.ViewModel
             set
             {
                 intersectionPoints.endTime = value;
+                RaisePropertyChanged("intEndTime");
                 RaisePropertyChanged("maxTimeSlider");
             }
         }
-
+        public double directTime
+        {
+            get
+            {
+                if (spatialMeasurement != null)
+                {
+                    return (double)spatialMeasurement.getMaxIdx() / spatialMeasurement.Fs;
+                }
+                else return 0;
+            }
+        }
         public int ImpulseScale
         {
             get
@@ -139,8 +154,18 @@ namespace _3DVisualizerNI.ViewModel
         }
 
         public RelayCommand CalculateIPCommand { get; private set; }
-
         public RelayCommand ShowIPCommand { get; private set; }
+        public RelayCommand ShowAnimationCommand { get; private set; }
+
+        DispatcherTimer aTimer;
+        class AnimationParams
+        {
+            public int frame { get; set; }
+            public double dt { get; set; }
+            public int framesNo { get; set; }
+        }
+        AnimationParams animationParams;
+        
 
         public PropertiesViewModel()
         {
@@ -153,6 +178,7 @@ namespace _3DVisualizerNI.ViewModel
 
             this.CalculateIPCommand = new RelayCommand(this.CalculateIP);
             this.ShowIPCommand = new RelayCommand(this.ShowIP);
+            this.ShowAnimationCommand = new RelayCommand(this.ShowAnimation);
 
             Messenger.Default.Register<SpatialMeasurement>
             (
@@ -176,6 +202,7 @@ namespace _3DVisualizerNI.ViewModel
         private object ReceiveResponse(SpatialMeasurement sm)
         {
             spatialMeasurement = sm;
+            RaisePropertyChanged("directTime");
             return null;
         }
 
@@ -196,6 +223,9 @@ namespace _3DVisualizerNI.ViewModel
             intersectionPoints = new IntersectionPoints();
             intersectionPoints.calculateIntersectionPoints(model.model, spatialMeasurement);
 
+            intStartTime = intersectionPoints.startTime + (directTime - 0.005);
+            intEndTime = intersectionPoints.endTime + directTime;
+
             RaisePropertyChanged("intStartTime");
             RaisePropertyChanged("intEndTime");
             RaisePropertyChanged("maxTimeSlider");
@@ -208,6 +238,31 @@ namespace _3DVisualizerNI.ViewModel
             Messenger.Default.Send<IntersectionPoints>(intersectionPoints);
         }
 
+        private void ShowAnimation()
+        {
+            animationParams = new AnimationParams();
+                
+            aTimer = new DispatcherTimer();
+            aTimer.Tick += (sender, e) => MyElapsedMethod(sender, e, this);
+            aTimer.Interval = TimeSpan.FromSeconds(0.5);
+            aTimer.Start();
+
+            animationParams.frame = 0;
+            animationParams.dt = intEndTime - intStartTime;
+            animationParams.framesNo = (int)(maxTimeSlider / animationParams.dt);
+
+        }
+        static void MyElapsedMethod(object sender, EventArgs e, PropertiesViewModel vm)
+        {
+            vm.intStartTime = vm.animationParams.frame * vm.animationParams.dt;
+            vm.intEndTime = (vm.animationParams.frame + 1) * vm.animationParams.dt;           
+            vm.ShowIP();
+            vm.animationParams.frame++;
+            if(vm.animationParams.frame == vm.animationParams.framesNo - 1)
+            {
+                vm.aTimer.Stop();
+            }
+        }
 
     }
 }

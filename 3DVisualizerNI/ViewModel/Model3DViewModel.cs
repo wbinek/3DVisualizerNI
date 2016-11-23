@@ -30,7 +30,6 @@ namespace _3DVisualizerNI.ViewModel
                 }
             }
         }
-
         public Model3DGroup SpatialResponse3DContent
         {
             get
@@ -46,7 +45,6 @@ namespace _3DVisualizerNI.ViewModel
                 }
             }
         }
-
         public Model3DGroup IntersectionPoints3DContent
         {
             get
@@ -82,6 +80,7 @@ namespace _3DVisualizerNI.ViewModel
                 this,
                 (sm) => ReceiveResponse(sm)
             );
+
         }
 
         private object ReceiveScene(Scene3D scene3D)
@@ -98,7 +97,7 @@ namespace _3DVisualizerNI.ViewModel
 
         private object ReceiveIntersectionPoints(IntersectionPoints ip)
         {
-            IntersectionPoints3DContent = ip.intersectionModel;
+            IntersectionPoints3DContent = ip.intersectionModel;            
             return null;
         }
     }
