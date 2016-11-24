@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Media.Media3D;
 using System.Windows.Threading;
+using static _3DVisualizerNI.Model.IntersectionPoints;
 
 namespace _3DVisualizerNI.ViewModel
 {
@@ -150,6 +152,18 @@ namespace _3DVisualizerNI.ViewModel
                 else return 0;
             }
         }
+        public double maxLevel
+        {
+            get
+            {
+                if (spatialMeasurement != null)
+                {
+                    return MeasurementUtils.todB(spatialMeasurement.getMax());
+                }
+                else return 0;
+            }
+        }
+
         public int ImpulseScale
         {
             get
@@ -163,6 +177,47 @@ namespace _3DVisualizerNI.ViewModel
             }
         }
 
+        public ObservableCollection<DataColour> dataColors{
+            get
+            {
+                if(intersectionPoints!=null) return intersectionPoints.currentColorSet;
+                return null;
+            }
+            set
+            {
+                intersectionPoints.currentColorSet = value;
+            }
+        }
+        public ObservableCollection<string> colorModes
+        {
+            get
+            {
+                if (intersectionPoints != null) return intersectionPoints.colorDisplayMode;
+                return null;
+            }
+        }
+        public string colorModeSelected
+        {
+            get
+            {
+                if (intersectionPoints != null) return intersectionPoints.sellectedColorDisplayMode;
+                return "";
+            }
+            set
+            {
+                intersectionPoints.sellectedColorDisplayMode = value;
+                RaisePropertyChanged("dataColors");
+            }
+        }
+
+        public bool isResponsePropertiesEnabled
+        {
+            get
+            {
+                if (spatialMeasurement != null) return true;
+                return false;
+            }
+        }
         public bool isIntersectionPropertiesEnabled
         {
             get
@@ -205,6 +260,8 @@ namespace _3DVisualizerNI.ViewModel
         public RelayCommand ShowIPCommand { get; private set; }
         public RelayCommand StartAnimationCommand { get; private set; }
         public RelayCommand StopAnimationCommand { get; private set; }
+        public RelayCommand<IList> RemoveDataColorCommand { get; private set; }
+        public RelayCommand AddDataColorCommand { get; private set; }
 
         DispatcherTimer aTimer;
         class AnimationParams
@@ -228,6 +285,8 @@ namespace _3DVisualizerNI.ViewModel
             this.ShowIPCommand = new RelayCommand(this.ShowIP);
             this.StartAnimationCommand = new RelayCommand(this.ShowAnimation);
             this.StopAnimationCommand = new RelayCommand(this.StopAnimation);
+            this.AddDataColorCommand = new RelayCommand(AddDataColor);
+            this.RemoveDataColorCommand = new RelayCommand<IList>(RemoveDataColor);
 
             Messenger.Default.Register<SpatialMeasurement>
             (
@@ -252,6 +311,8 @@ namespace _3DVisualizerNI.ViewModel
         {
             spatialMeasurement = sm;
             RaisePropertyChanged("directTime");
+            RaisePropertyChanged("maxLevel");
+            RaisePropertyChanged("isResponsePropertiesEnabled");
             RaisePropertyChanged("isIntersectionPropertiesEnabled");
 
             ipDisplayEnabled = false;
@@ -282,6 +343,8 @@ namespace _3DVisualizerNI.ViewModel
             RaisePropertyChanged("intEndTime");
             RaisePropertyChanged("maxTimeSlider");
             RaisePropertyChanged("timeSlider");
+            RaisePropertyChanged("dataColors");
+            RaisePropertyChanged("colorModes");
 
             ipDisplayEnabled = true;            
         }
@@ -321,6 +384,22 @@ namespace _3DVisualizerNI.ViewModel
         {
             aTimer.Stop();
             animationStartEnabled = true;
+        }
+        public void AddDataColor()
+        {
+            DataColour newColor = new DataColour();
+            dataColors.Add(newColor);
+            return;
+        }
+        public void RemoveDataColor(IList toRemove)
+        {
+            var collection = toRemove.Cast<DataColour> ();
+            List<DataColour> copy = new List<DataColour>(collection);
+
+            foreach (DataColour color in copy)
+            {
+                dataColors.Remove(color);
+            }
         }
 
     }

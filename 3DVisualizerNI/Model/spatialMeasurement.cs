@@ -115,16 +115,16 @@ namespace _3DVisualizerNI.Model
             //Calculate the amount of energy with specified resolution
             int bins = 360 / resolution;
 
-            double[,] r = new double[bins/2, bins];
+            double[,] r = new double[bins / 2, bins];
 
             for (int i = 0; i < w.Length; i++)
             {
                 Vector3D vector = MyVector3D.toSphericalDeg(x[i], y[i], z[i]);
-                r[(int)(vector.X / resolution), (int)(vector.Y / resolution)] += w[i] * w[i];               
+                r[(int)(vector.X / resolution), (int)(vector.Y / resolution)] += w[i] * w[i];
             }
 
             //Add cones to model to create a view of spatial impulse response
-            for (int i = 0; i < bins/2; i++)
+            for (int i = 0; i < bins / 2; i++)
                 for (int j = 0; j < bins; j++)
                 {
                     {
@@ -145,14 +145,14 @@ namespace _3DVisualizerNI.Model
                         //responseModel.Children.Add(line.Content);
                     }
                 }
-            }
+        }
         public void setTransforms()
         {
-           
+
             Transform3DGroup newTransform = new Transform3DGroup();
 
             newTransform.Children.Add(new TranslateTransform3D(position));
-            newTransform.Children.Add(new ScaleTransform3D(new Vector3D(scale,scale,scale),position.ToPoint3D()));
+            newTransform.Children.Add(new ScaleTransform3D(new Vector3D(scale, scale, scale), position.ToPoint3D()));
             responseModel.Transform = newTransform;
         }
         public Vector3D getDirectionAtIdx(int idx)
@@ -181,9 +181,23 @@ namespace _3DVisualizerNI.Model
             if (w != null)
             {
                 double max = getMax();
-                return Array.IndexOf(Array.ConvertAll(w,x => Math.Abs(x)), max);
+                return Array.IndexOf(Array.ConvertAll(w, x => Math.Abs(x)), max);
             }
             return 0;
         }
     }
+
+    public static class MeasurementUtils
+    {
+        public static double todB(double preassure)
+        {
+            return 10 * Math.Log10(preassure * preassure / (4E-10));
+        }
+
+        public static double toPreassureSquared(double level)
+        {
+            return (4E-10) * Math.Pow(10, 0.1 * level);
+        }
+    }
+
 }

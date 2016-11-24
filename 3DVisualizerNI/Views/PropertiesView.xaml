@@ -4,97 +4,142 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:_3DVisualizerNI.Views"
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:data = "clr-namespace:_3DVisualizerNI.Model"
              DataContext="{Binding Properties, Source={StaticResource Locator}}"
              
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="300">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-        </Grid.RowDefinitions>
+    <UserControl.Resources>
 
+        <DataTemplate DataType = "{x:Type data:DataColour}">
+            <StackPanel Orientation = "Horizontal">
+                <TextBlock Text=">" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <xctk:DecimalUpDown Value = "{Binding treshold}"  Width = "60" Margin = "5 5 5 5"/>
+                <xctk:ColorPicker SelectedColor = "{Binding color, Mode = TwoWay}" Margin = "5 5 5 5" Width = "70"/>
+            </StackPanel>
+        </DataTemplate>
         
-        <GroupBox Header='Spatial response properties'>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                </Grid.RowDefinitions>
+    </UserControl.Resources>
 
-                <Label Content="Resolution [deg]:" VerticalContentAlignment="Center"></Label>
-                <ComboBox Grid.Column="1" SelectedItem="{Binding ResolutionSelected}" ItemsSource="{Binding ResolutionList}" VerticalContentAlignment="Center" Margin="5,5,5,5" Width="50"></ComboBox>
 
-                <Label Content="Position:" Grid.Row="1" VerticalContentAlignment="Center"></Label>
-                <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="X:"></Label>
-                        <xctk:DoubleUpDown Value="{Binding pX}"></xctk:DoubleUpDown>
+    <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Expander Header='Spatial response properties' IsExpanded="True" IsEnabled="{Binding isResponsePropertiesEnabled}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Label Content="Resolution [deg]:" VerticalContentAlignment="Center"></Label>
+                    <ComboBox Grid.Column="1" SelectedItem="{Binding ResolutionSelected}" ItemsSource="{Binding ResolutionList}" VerticalContentAlignment="Center" Margin="5,5,5,5" Width="50"></ComboBox>
+
+                    <Label Content="Position:" Grid.Row="1" VerticalContentAlignment="Center"></Label>
+                    <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="X:"></Label>
+                            <xctk:DecimalUpDown Value="{Binding pX}"></xctk:DecimalUpDown>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Y:"></Label>
+                            <xctk:DecimalUpDown Value="{Binding pY}"></xctk:DecimalUpDown>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Z:"></Label>
+                            <xctk:DecimalUpDown Value="{Binding pZ}"></xctk:DecimalUpDown>
+                        </StackPanel>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Y:"></Label>
-                        <xctk:DoubleUpDown Value="{Binding pY}"></xctk:DoubleUpDown>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Z:"></Label>
-                        <xctk:DoubleUpDown Value="{Binding pZ}"></xctk:DoubleUpDown>
-                    </StackPanel>
-                </StackPanel>
 
-                <Label Grid.Row="2" Content="Response scale:" VerticalContentAlignment="Center"></Label>
-                <Slider Grid.Row="2" Grid.Column="1" Value="{Binding ImpulseScale}" Maximum="50" Minimum="1" TickPlacement="Both"  TickFrequency="10"></Slider>
+                    <Label Grid.Row="2" Content="Response scale:" VerticalContentAlignment="Center"></Label>
+                    <Slider Grid.Row="2" Grid.Column="1" Value="{Binding ImpulseScale}" Maximum="50" Minimum="1" TickPlacement="Both"  TickFrequency="10"></Slider>
 
-                <Label Grid.Row="3" Content="Direct time:" VerticalContentAlignment="Center"></Label>
-                <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding directTime,StringFormat=N3}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-            </Grid>
-        </GroupBox>
-        <GroupBox Grid.Row="1" Header='Intersection properties' IsEnabled="{Binding isIntersectionPropertiesEnabled}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
+                    <Label Grid.Row="3" Content="Direct time:" VerticalContentAlignment="Center"></Label>
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding directTime,StringFormat=N3}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
 
-                <Button Grid.Row="0" Grid.ColumnSpan="2" Command="{Binding CalculateIPCommand}" Margin="5,5,5,5">Calculate intersection points</Button>
+                    <Label Grid.Row="4" Content="Max level:" VerticalContentAlignment="Center"></Label>
+                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding maxLevel,StringFormat=N1}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                </Grid>
+            </Expander>
 
-                <Label Grid.Row="1" Content="Start time:"></Label>
-                <xctk:DoubleUpDown Grid.Row="1" Grid.Column ="1" Value="{Binding intStartTime}" Increment="0.001" FormatString="N3"></xctk:DoubleUpDown>
+            <Expander Grid.Row="1" Header='Intersection properties' IsEnabled="{Binding isIntersectionPropertiesEnabled}" IsExpanded="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
 
-                <Label Grid.Row="2" Content="End time:"></Label>
-                <xctk:DoubleUpDown Grid.Row="2" Grid.Column ="1" Value="{Binding intEndTime}" Increment="0.001" FormatString="N3"></xctk:DoubleUpDown>
+                    <Button Grid.Row="0" Grid.ColumnSpan="2" Command="{Binding CalculateIPCommand}" Margin="5,5,5,5">Calculate intersection points</Button>
 
-                <Label Grid.Row="3" Content="Window length:"></Label>
-                <xctk:DoubleUpDown Grid.Row="3" Grid.Column ="1" Value="{Binding intLength}" Increment="0.01" FormatString="N3"></xctk:DoubleUpDown>
+                    <Label Grid.Row="1" Content="Start time:"></Label>
+                    <xctk:DecimalUpDown Grid.Row="1" Grid.Column ="1" Value="{Binding intStartTime}" Increment="0.001" FormatString="N3"></xctk:DecimalUpDown>
 
-                <Label Grid.Row="4" Content="Slide window:" VerticalContentAlignment="Center"></Label>
-                <Slider Grid.Row="4" Grid.Column="1" Value="{Binding timeSlider}" Maximum="{Binding maxTimeSlider}" Minimum="0" TickPlacement="Both"  TickFrequency="0.01" IsSnapToTickEnabled="True"></Slider>
+                    <Label Grid.Row="2" Content="End time:"></Label>
+                    <xctk:DecimalUpDown Grid.Row="2" Grid.Column ="1" Value="{Binding intEndTime}" Increment="0.001" FormatString="N3"></xctk:DecimalUpDown>
 
-                <Button Grid.Row="5" Grid.ColumnSpan="2" Command="{Binding ShowIPCommand}" Margin="5,5,5,5" IsEnabled="{Binding ipDisplayEnabled}">Show intersection points</Button>
+                    <Label Grid.Row="3" Content="Window length:"></Label>
+                    <xctk:DecimalUpDown Grid.Row="3" Grid.Column ="1" Value="{Binding intLength}" Increment="0.01" FormatString="N3"></xctk:DecimalUpDown>
 
-                <Button Grid.Row="6" Grid.ColumnSpan="2" Command="{Binding StartAnimationCommand}" Margin="5,5,5,5" IsEnabled="{Binding animationStartEnabled}">Start animation</Button>
+                    <Label Grid.Row="4" Content="Slide window:" VerticalContentAlignment="Center"></Label>
+                    <Slider Grid.Row="4" Grid.Column="1" Value="{Binding timeSlider}" Maximum="{Binding maxTimeSlider}" Minimum="0" TickPlacement="Both"  TickFrequency="0.01" IsSnapToTickEnabled="True"></Slider>
 
-                <Button Grid.Row="7" Grid.ColumnSpan="2" Command="{Binding StopAnimationCommand}" Margin="5,5,5,5" IsEnabled="{Binding animationStopEnabled}">Stop animation</Button>
-            </Grid>
+                    <Button Grid.Row="5" Grid.ColumnSpan="2" Command="{Binding ShowIPCommand}" Margin="5,5,5,5" IsEnabled="{Binding ipDisplayEnabled}">Show intersection points</Button>
 
-        </GroupBox>
+                    <Button Grid.Row="6" Grid.ColumnSpan="2" Command="{Binding StartAnimationCommand}" Margin="5,5,5,5" IsEnabled="{Binding animationStartEnabled}">Start animation</Button>
+
+                    <Button Grid.Row="7" Grid.ColumnSpan="2" Command="{Binding StopAnimationCommand}" Margin="5,5,5,5" IsEnabled="{Binding animationStopEnabled}">Stop animation</Button>
+
+                    <Label Grid.Row="8" Grid.ColumnSpan="2" Content="LEGEND" HorizontalAlignment="Center" VerticalContentAlignment="Center"></Label>
+
+
+                    <ComboBox Grid.Row="9"  Grid.ColumnSpan="2" SelectedItem="{Binding colorModeSelected}" ItemsSource="{Binding colorModes}" VerticalContentAlignment="Center" Margin="5,5,5,5"></ComboBox>
+                    
+                    <ListBox Name="LegendListBox" Grid.Row="10" Grid.ColumnSpan="2" ItemsSource = "{Binding dataColors}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="200"/>
+                    
+                    <Button Grid.Row="11"  Command="{Binding AddDataColorCommand}" Margin="5,5,5,5">Add item</Button>
+                    <Button Grid.Row="11" Grid.Column="1" Command="{Binding RemoveDataColorCommand}" CommandParameter="{Binding ElementName=LegendListBox, Path=SelectedItems}" Margin="5,5,5,5">Remove item
+                        <Button.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding ="{Binding ElementName=LegendListBox, Path=SelectedIndex}" Value="-1">
+                                        <Setter Property="Button.IsEnabled" Value="false"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    
+                    
+                </Grid>
+            </Expander>
 
     </Grid>
+    </ScrollViewer>
 </UserControl>
