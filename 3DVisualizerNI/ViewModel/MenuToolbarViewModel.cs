@@ -32,7 +32,6 @@ namespace _3DVisualizerNI.ViewModel
 
             Messenger.Default.Send<Scene3D>(scene3D);
         }
-
         public void LoadMeasurement()
         {
             spatialMeasurement = new SpatialMeasurement();

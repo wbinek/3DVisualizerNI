@@ -13,6 +13,8 @@ namespace _3DVisualizerNI.ViewModel
 {
     public class Model3DViewModel : ViewModelBase
     {
+        SpatialMeasurement test;
+
         private Model3DGroup model3DContent;
         private Model3DGroup spatialResponse3DContent;
         private Model3DGroup intersectionPoints3DContent;
@@ -88,13 +90,12 @@ namespace _3DVisualizerNI.ViewModel
             Model3DContent = scene3D.model;            
             return null;
         }
-
         private object ReceiveResponse(SpatialMeasurement sm)
         {
+            test = sm;
             SpatialResponse3DContent = sm.responseModel;
             return null;
         }
-
         private object ReceiveIntersectionPoints(IntersectionPoints ip)
         {
             IntersectionPoints3DContent = ip.intersectionModel;            

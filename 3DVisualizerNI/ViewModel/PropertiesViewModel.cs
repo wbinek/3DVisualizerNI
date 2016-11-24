@@ -18,7 +18,6 @@ namespace _3DVisualizerNI.ViewModel
     public class PropertiesViewModel : ViewModelBase
     {
         SpatialMeasurement spatialMeasurement;
-
         Scene3D model;
         IntersectionPoints intersectionPoints;
 
@@ -30,7 +29,6 @@ namespace _3DVisualizerNI.ViewModel
             set
             {
                 spatialMeasurement.resolution = value;
-                Messenger.Default.Send<SpatialMeasurement>(spatialMeasurement);
             }
         }
         public double pX
@@ -45,7 +43,6 @@ namespace _3DVisualizerNI.ViewModel
                 Vector3D newPos = spatialMeasurement.position;
                 newPos.X = value;
                 spatialMeasurement.position = newPos;
-                Messenger.Default.Send<SpatialMeasurement>(spatialMeasurement);
             }
         }
         public double pY
@@ -60,7 +57,6 @@ namespace _3DVisualizerNI.ViewModel
                 Vector3D newPos = spatialMeasurement.position;
                 newPos.Y = value;
                 spatialMeasurement.position = newPos;
-                Messenger.Default.Send<SpatialMeasurement>(spatialMeasurement);
             }
         }
         public double pZ
@@ -75,7 +71,6 @@ namespace _3DVisualizerNI.ViewModel
                 Vector3D newPos = spatialMeasurement.position;
                 newPos.Z = value;
                 spatialMeasurement.position = newPos;
-                Messenger.Default.Send<SpatialMeasurement>(spatialMeasurement);
             }
         }
         public double timeSlider {
@@ -149,7 +144,14 @@ namespace _3DVisualizerNI.ViewModel
             set
             {
                 spatialMeasurement.scale = value;
-                Messenger.Default.Send<SpatialMeasurement>(spatialMeasurement);
+            }
+        }
+        public bool isIntersectionPropertiesEnabled
+        {
+            get
+            {
+                if (spatialMeasurement != null & model != null) return true;
+                return false;
             }
         }
 
@@ -203,15 +205,15 @@ namespace _3DVisualizerNI.ViewModel
         {
             spatialMeasurement = sm;
             RaisePropertyChanged("directTime");
+            RaisePropertyChanged("isIntersectionPropertiesEnabled");
             return null;
         }
-
         private object ReceiveModel(Scene3D _model)
         {
             model = _model;
+            RaisePropertyChanged("isIntersectionPropertiesEnabled");
             return null;
         }
-
         private object ReceiveIntersectionPoints(IntersectionPoints ip)
         {
             intersectionPoints = ip;

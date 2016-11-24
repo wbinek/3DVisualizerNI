@@ -57,10 +57,12 @@ namespace _3DVisualizerNI.Model
                 setTransforms();
             }
         }
-
         public Model3DGroup responseModel { get; set; }
 
-        public SpatialMeasurement() {}
+        public SpatialMeasurement()
+        {
+            responseModel = new Model3DGroup();
+        }
 
         public void importWaveResult()
         {
@@ -105,10 +107,9 @@ namespace _3DVisualizerNI.Model
             }
 
         }
-
         public void buildResponseModel()
         {
-            responseModel = new Model3DGroup();
+            responseModel.Children.Clear();
             Point3D center = new Point3D(0, 0, 0);
 
             //Calculate the amount of energy with specified resolution
@@ -145,7 +146,6 @@ namespace _3DVisualizerNI.Model
                     }
                 }
             }
-
         public void setTransforms()
         {
            
@@ -155,22 +155,18 @@ namespace _3DVisualizerNI.Model
             newTransform.Children.Add(new ScaleTransform3D(new Vector3D(scale,scale,scale),position.ToPoint3D()));
             responseModel.Transform = newTransform;
         }
-
         public Vector3D getDirectionAtIdx(int idx)
         {
             return new Vector3D(x[idx], y[idx], z[idx]);
         }
-
         public int getDirectionsNo()
         {
             return w.Length;
         }
-
         public double[] getAmplitudeArray()
         {
             return w;
         }
-
         public double getMax()
         {
             if (w != null)
@@ -180,7 +176,6 @@ namespace _3DVisualizerNI.Model
             }
             return 0;
         }
-
         public int getMaxIdx()
         {
             if (w != null)
