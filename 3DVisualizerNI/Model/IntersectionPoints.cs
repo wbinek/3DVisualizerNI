@@ -74,7 +74,7 @@ namespace _3DVisualizerNI.Model
         public ObservableCollection<String> colorDisplayMode { get; set; }
         public string sellectedColorDisplayMode { get; set; } = "Time";
 
-        public int scale { get; set; } = 1;
+        public int scale { get; set; } = 2;
         public double startTime
         {
             get { return _startTime; }
@@ -143,7 +143,7 @@ namespace _3DVisualizerNI.Model
 
             for (int i = 0; i < respLength; i++)
             {
-                Vector3D direction = -measurement.getDirectionAtIdx(i);
+                Vector3D direction = measurement.getDirectionAtIdx(i);
                 RayHitTester(testModel, origin, direction);
             }
 
@@ -161,7 +161,7 @@ namespace _3DVisualizerNI.Model
                 cone.Height = 0.01;
                 cone.Origin = intersectionPoints[i] - faceNormals[i] * cone.Height;
                 cone.Normal = -faceNormals[i];
-                cone.BaseRadius = Math.Pow(amplitudes[i] * scale * scale, 2f / 3f);
+                cone.BaseRadius = amplitudes[i] * Math.Sqrt(scale);
                 cone.ThetaDiv = 5;
                 cone.BaseCap = false;
                 cone.TopCap = false;
@@ -261,7 +261,8 @@ namespace _3DVisualizerNI.Model
                     double amplitude = MeasurementUtils.todB(preassure);
                     foreach (DataColour color in colorsAmplitudeSet)
                     {
-                        if (amplitude > color.treshold) return color.color;
+                        if (amplitude > color.treshold)
+                            return color.color;
                     }
                     break;           
             }

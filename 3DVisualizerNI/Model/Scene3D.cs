@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Media.Media3D;
 
 namespace _3DVisualizerNI.Model
@@ -35,6 +36,7 @@ namespace _3DVisualizerNI.Model
                 }
 
                 model = group;
+                //model.Children.Add(new AmbientLight(Colors.DimGray));
                 
             }
         }
