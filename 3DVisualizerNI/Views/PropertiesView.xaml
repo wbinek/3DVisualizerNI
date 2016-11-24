@@ -65,6 +65,8 @@
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -74,17 +76,22 @@
                 <Button Grid.Row="0" Grid.ColumnSpan="2" Command="{Binding CalculateIPCommand}" Margin="5,5,5,5">Calculate intersection points</Button>
 
                 <Label Grid.Row="1" Content="Start time:"></Label>
-                <xctk:DoubleUpDown Grid.Row="1" Grid.Column ="1" Value="{Binding intStartTime}" Increment="0.01" FormatString="N3"></xctk:DoubleUpDown>
+                <xctk:DoubleUpDown Grid.Row="1" Grid.Column ="1" Value="{Binding intStartTime}" Increment="0.001" FormatString="N3"></xctk:DoubleUpDown>
 
                 <Label Grid.Row="2" Content="End time:"></Label>
-                <xctk:DoubleUpDown Grid.Row="2" Grid.Column ="1" Value="{Binding intEndTime}" Increment="0.01" FormatString="N3"></xctk:DoubleUpDown>
+                <xctk:DoubleUpDown Grid.Row="2" Grid.Column ="1" Value="{Binding intEndTime}" Increment="0.001" FormatString="N3"></xctk:DoubleUpDown>
 
-                <Label Grid.Row="3" Content="Slide window:" VerticalContentAlignment="Center"></Label>
-                <Slider Grid.Row="3" Grid.Column="1" Value="{Binding timeSlider}" Maximum="{Binding maxTimeSlider}" Minimum="0" TickPlacement="Both"  TickFrequency="0.01" IsSnapToTickEnabled="True"></Slider>
+                <Label Grid.Row="3" Content="Window length:"></Label>
+                <xctk:DoubleUpDown Grid.Row="3" Grid.Column ="1" Value="{Binding intLength}" Increment="0.01" FormatString="N3"></xctk:DoubleUpDown>
 
-                <Button Grid.Row="4" Grid.ColumnSpan="2" Command="{Binding ShowIPCommand}" Margin="5,5,5,5">Show intersection points</Button>
+                <Label Grid.Row="4" Content="Slide window:" VerticalContentAlignment="Center"></Label>
+                <Slider Grid.Row="4" Grid.Column="1" Value="{Binding timeSlider}" Maximum="{Binding maxTimeSlider}" Minimum="0" TickPlacement="Both"  TickFrequency="0.01" IsSnapToTickEnabled="True"></Slider>
 
-                <Button Grid.Row="5" Grid.ColumnSpan="2" Command="{Binding ShowAnimationCommand}" Margin="5,5,5,5">Show animation</Button>
+                <Button Grid.Row="5" Grid.ColumnSpan="2" Command="{Binding ShowIPCommand}" Margin="5,5,5,5" IsEnabled="{Binding ipDisplayEnabled}">Show intersection points</Button>
+
+                <Button Grid.Row="6" Grid.ColumnSpan="2" Command="{Binding StartAnimationCommand}" Margin="5,5,5,5" IsEnabled="{Binding animationStartEnabled}">Start animation</Button>
+
+                <Button Grid.Row="7" Grid.ColumnSpan="2" Command="{Binding StopAnimationCommand}" Margin="5,5,5,5" IsEnabled="{Binding animationStopEnabled}">Stop animation</Button>
             </Grid>
 
         </GroupBox>

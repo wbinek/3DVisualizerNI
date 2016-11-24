@@ -21,6 +21,9 @@ namespace _3DVisualizerNI.ViewModel
         Scene3D model;
         IntersectionPoints intersectionPoints;
 
+        private bool _ipDisplayEnabled;
+        private bool _animationStartEnabled;
+
         public ObservableCollection<int> ResolutionList { get; set; }
         public int ResolutionSelected {
             get { if (spatialMeasurement != null) return spatialMeasurement.resolution;
@@ -86,7 +89,7 @@ namespace _3DVisualizerNI.ViewModel
                 RaisePropertyChanged("intStartTime");
                 RaisePropertyChanged("intEndTime");
 
-                ShowIP();
+                //ShowIP(); //Uncomment to update display when slider is moved (very slow);
             }
         }
         public double maxTimeSlider {
@@ -106,6 +109,7 @@ namespace _3DVisualizerNI.ViewModel
             {
                 intersectionPoints.startTime = value;
                 RaisePropertyChanged("intStartTime");
+                RaisePropertyChanged("intLength");
                 RaisePropertyChanged("maxTimeSlider");
             }
         }
@@ -120,7 +124,19 @@ namespace _3DVisualizerNI.ViewModel
             {
                 intersectionPoints.endTime = value;
                 RaisePropertyChanged("intEndTime");
+                RaisePropertyChanged("intLength");
                 RaisePropertyChanged("maxTimeSlider");
+            }
+        }
+        public double intLength
+        {
+            get
+            {
+                return intEndTime - intStartTime;
+            }
+            set
+            {
+                intEndTime = intStartTime + value;
             }
         }
         public double directTime
@@ -146,6 +162,7 @@ namespace _3DVisualizerNI.ViewModel
                 spatialMeasurement.scale = value;
             }
         }
+
         public bool isIntersectionPropertiesEnabled
         {
             get
@@ -154,10 +171,40 @@ namespace _3DVisualizerNI.ViewModel
                 return false;
             }
         }
+        public bool ipDisplayEnabled
+        {
+            get
+            {
+                return _ipDisplayEnabled;
+            }
+            set
+            {
+                animationStartEnabled = value;
+                _ipDisplayEnabled = value;
+                RaisePropertyChanged("ipDisplayEnabled");
+            }
+        }
+        public bool animationStartEnabled { get { return _animationStartEnabled; }
+            set
+            {
+                _animationStartEnabled = value;
+                RaisePropertyChanged("animationStartEnabled");
+                RaisePropertyChanged("animationStopEnabled");
+            }
+        }
+        public bool animationStopEnabled
+        {
+            get
+            {
+                if (ipDisplayEnabled == false) return false;
+                return !animationStartEnabled;
+            }
+        }
 
         public RelayCommand CalculateIPCommand { get; private set; }
         public RelayCommand ShowIPCommand { get; private set; }
-        public RelayCommand ShowAnimationCommand { get; private set; }
+        public RelayCommand StartAnimationCommand { get; private set; }
+        public RelayCommand StopAnimationCommand { get; private set; }
 
         DispatcherTimer aTimer;
         class AnimationParams
@@ -168,7 +215,6 @@ namespace _3DVisualizerNI.ViewModel
         }
         AnimationParams animationParams;
         
-
         public PropertiesViewModel()
         {
             ResolutionList = new ObservableCollection<int>();
@@ -180,7 +226,8 @@ namespace _3DVisualizerNI.ViewModel
 
             this.CalculateIPCommand = new RelayCommand(this.CalculateIP);
             this.ShowIPCommand = new RelayCommand(this.ShowIP);
-            this.ShowAnimationCommand = new RelayCommand(this.ShowAnimation);
+            this.StartAnimationCommand = new RelayCommand(this.ShowAnimation);
+            this.StopAnimationCommand = new RelayCommand(this.StopAnimation);
 
             Messenger.Default.Register<SpatialMeasurement>
             (
@@ -194,11 +241,11 @@ namespace _3DVisualizerNI.ViewModel
                 (model) => ReceiveModel(model)
             );
 
-            Messenger.Default.Register<IntersectionPoints>
-            (
-                this,
-                (intersectionPoints) => ReceiveIntersectionPoints(intersectionPoints)
-            );
+            //Messenger.Default.Register<IntersectionPoints>
+            //(
+            //    this,
+            //    (intersectionPoints) => ReceiveIntersectionPoints(intersectionPoints)
+            //);
         }
 
         private object ReceiveResponse(SpatialMeasurement sm)
@@ -206,6 +253,9 @@ namespace _3DVisualizerNI.ViewModel
             spatialMeasurement = sm;
             RaisePropertyChanged("directTime");
             RaisePropertyChanged("isIntersectionPropertiesEnabled");
+
+            ipDisplayEnabled = false;
+            RaisePropertyChanged("ipDisplayEnabled");
             return null;
         }
         private object ReceiveModel(Scene3D _model)
@@ -214,11 +264,11 @@ namespace _3DVisualizerNI.ViewModel
             RaisePropertyChanged("isIntersectionPropertiesEnabled");
             return null;
         }
-        private object ReceiveIntersectionPoints(IntersectionPoints ip)
-        {
-            intersectionPoints = ip;
-            return null;
-        }
+        //private object ReceiveIntersectionPoints(IntersectionPoints ip)
+        //{
+        //    intersectionPoints = ip;
+        //    return null;
+        //}
 
         private void CalculateIP()
         {
@@ -231,15 +281,15 @@ namespace _3DVisualizerNI.ViewModel
             RaisePropertyChanged("intStartTime");
             RaisePropertyChanged("intEndTime");
             RaisePropertyChanged("maxTimeSlider");
-            RaisePropertyChanged("timeSlider");            
-        }
+            RaisePropertyChanged("timeSlider");
 
+            ipDisplayEnabled = true;            
+        }
         private void ShowIP()
         {
             intersectionPoints.builidIntersectionModel();
             Messenger.Default.Send<IntersectionPoints>(intersectionPoints);
         }
-
         private void ShowAnimation()
         {
             animationParams = new AnimationParams();
@@ -253,6 +303,8 @@ namespace _3DVisualizerNI.ViewModel
             animationParams.dt = intEndTime - intStartTime;
             animationParams.framesNo = (int)(maxTimeSlider / animationParams.dt);
 
+            animationStartEnabled = false;
+
         }
         static void MyElapsedMethod(object sender, EventArgs e, PropertiesViewModel vm)
         {
@@ -264,6 +316,11 @@ namespace _3DVisualizerNI.ViewModel
             {
                 vm.aTimer.Stop();
             }
+        }
+        private void StopAnimation()
+        {
+            aTimer.Stop();
+            animationStartEnabled = true;
         }
 
     }
