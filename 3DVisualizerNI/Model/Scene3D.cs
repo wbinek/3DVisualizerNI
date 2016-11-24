@@ -36,7 +36,7 @@ namespace _3DVisualizerNI.Model
                 }
 
                 model = group;
-                //model.Children.Add(new AmbientLight(Colors.DimGray));
+                model.Children.Add(new AmbientLight(Colors.DimGray));
                 
             }
         }

@@ -236,6 +236,7 @@ namespace _3DVisualizerNI.Model
             DataColour set3 = new DataColour(Colors.Yellow, maxAmplitude - 12);
             DataColour set4 = new DataColour(Colors.GreenYellow, maxAmplitude - 15);
             DataColour set5 = new DataColour(Colors.Green, maxAmplitude - 18);
+            DataColour set6 = new DataColour(Colors.Blue, maxAmplitude - 21);
 
             colorsAmplitudeSet.Add(set0);
             colorsAmplitudeSet.Add(set1);
@@ -243,6 +244,7 @@ namespace _3DVisualizerNI.Model
             colorsAmplitudeSet.Add(set3);
             colorsAmplitudeSet.Add(set4);
             colorsAmplitudeSet.Add(set5);
+            colorsAmplitudeSet.Add(set6);
         }
 
         private Color getColor(int index, double preassure)

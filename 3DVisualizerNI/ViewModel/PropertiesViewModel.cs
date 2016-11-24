@@ -222,7 +222,7 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (spatialMeasurement != null & model != null) return true;
+                if (spatialMeasurement != null & model != null & ipDisplayEnabled) return true;
                 return false;
             }
         }
@@ -237,6 +237,7 @@ namespace _3DVisualizerNI.ViewModel
                 animationStartEnabled = value;
                 _ipDisplayEnabled = value;
                 RaisePropertyChanged("ipDisplayEnabled");
+                RaisePropertyChanged("isIntersectionPropertiesEnabled");
             }
         }
         public bool animationStartEnabled { get { return _animationStartEnabled; }
@@ -346,7 +347,7 @@ namespace _3DVisualizerNI.ViewModel
             RaisePropertyChanged("dataColors");
             RaisePropertyChanged("colorModes");
 
-            ipDisplayEnabled = true;            
+            ipDisplayEnabled = true;
         }
         private void ShowIP()
         {
