@@ -47,10 +47,10 @@ namespace _3DVisualizerNI.Model
             {
                 switch (sellectedColorDisplayMode)
                 {
-                    case "Time":
+                    case "Time [ms]":
                         return colorsTimeSet;
 
-                    case "Amplitude":
+                    case "Amplitude [dB]":
                         return colorsAmplitudeSet;
                 }
                 return null;
@@ -59,11 +59,11 @@ namespace _3DVisualizerNI.Model
             {
                 switch (sellectedColorDisplayMode)
                 {
-                    case "Time":
+                    case "Time [ms]":
                         colorsTimeSet = value;
                         break;
 
-                    case "Amplitude":
+                    case "Amplitude [dB]":
                         colorsAmplitudeSet = value;
                         break;
                 }
@@ -71,7 +71,7 @@ namespace _3DVisualizerNI.Model
         }
 
         public ObservableCollection<String> colorDisplayMode { get; set; }
-        public string sellectedColorDisplayMode { get; set; } = "Time";
+        public string sellectedColorDisplayMode { get; set; } = "Time [ms]";
 
         public int scale { get; set; } = 2;
 
@@ -128,8 +128,8 @@ namespace _3DVisualizerNI.Model
         private void initColorDisplayMode()
         {
             colorDisplayMode = new ObservableCollection<string>();
-            colorDisplayMode.Add("Time");
-            colorDisplayMode.Add("Amplitude");
+            colorDisplayMode.Add("Time [ms]");
+            colorDisplayMode.Add("Amplitude [dB]");
         }
 
         public void calculateIntersectionPoints(Model3DGroup model, SpatialMeasurement measurement)
@@ -215,14 +215,14 @@ namespace _3DVisualizerNI.Model
 
         private void buildTimeLegend(SpatialMeasurement measurement)
         {
-            double startTime = (double)measurement.getMaxIdx() / measurement.Fs;
+            double startTime = (double)measurement.getMaxIdx() / measurement.Fs * 1000;
 
             DataColour set0 = new DataColour(Colors.DarkRed, 0);
-            DataColour set1 = new DataColour(Colors.Red, startTime - 0.01);
-            DataColour set2 = new DataColour(Colors.Orange, startTime + 0.01);
-            DataColour set3 = new DataColour(Colors.Yellow, startTime + 0.05);
-            DataColour set4 = new DataColour(Colors.GreenYellow, startTime + 0.07);
-            DataColour set5 = new DataColour(Colors.Green, startTime + 0.09);
+            DataColour set1 = new DataColour(Colors.Red, startTime - 10);
+            DataColour set2 = new DataColour(Colors.Orange, startTime + 10);
+            DataColour set3 = new DataColour(Colors.Yellow, startTime + 50);
+            DataColour set4 = new DataColour(Colors.GreenYellow, startTime + 70);
+            DataColour set5 = new DataColour(Colors.Green, startTime + 90);
 
             colorsTimeSet.Add(set0);
             colorsTimeSet.Add(set1);
@@ -257,15 +257,15 @@ namespace _3DVisualizerNI.Model
         {
             switch (sellectedColorDisplayMode)
             {
-                case "Time":
-                    double time = (double)index / Fs;
+                case "Time [ms]":
+                    double time = (double)index / Fs * 1000;
                     foreach (DataColour color in colorsTimeSet.Reverse())
                     {
                         if (time > color.treshold) return color.color;
                     }
                     break;
 
-                case "Amplitude":
+                case "Amplitude [dB]":
                     double amplitude = MeasurementUtils.todB(preassure);
                     foreach (DataColour color in colorsAmplitudeSet)
                     {

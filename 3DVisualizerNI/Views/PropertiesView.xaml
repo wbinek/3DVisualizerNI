@@ -9,14 +9,14 @@
              DataContext="{Binding Properties, Source={StaticResource Locator}}"
 
              mc:Ignorable="d"
-             d:DesignHeight="500" d:DesignWidth="300">
+             d:DesignHeight="600" d:DesignWidth="300">
 
     <UserControl.Resources>
 
         <DataTemplate DataType = "{x:Type data:DataColour}">
             <StackPanel Orientation = "Horizontal">
                 <TextBlock Text=">" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                <xctk:DecimalUpDown Value = "{Binding Path = treshold}"  Width = "60" Margin = "5 5 5 5" FormatString="N3" />
+                <xctk:DecimalUpDown Value = "{Binding Path = treshold}"  Width = "60" Margin = "5 5 5 5" FormatString="N0" Increment="1"/>
                 <xctk:ColorPicker SelectedColor = "{Binding color, Mode = TwoWay}" Margin = "5 5 5 5" Width = "70" />
             </StackPanel>
         </DataTemplate>
@@ -66,13 +66,13 @@
                     <Label Grid.Row="2" Content="Response scale:" VerticalContentAlignment="Center"></Label>
                     <Slider Grid.Row="2" Grid.Column="1" Value="{Binding ImpulseScale}" Maximum="50" Minimum="1" TickPlacement="Both"  TickFrequency="10"></Slider>
 
-                    <Label Grid.Row="3" Content="Direct time:" VerticalContentAlignment="Center"></Label>
+                    <Label Grid.Row="3" Content="Direct time [s]:" VerticalContentAlignment="Center"></Label>
                     <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding directTime,StringFormat=N3}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
 
-                    <Label Grid.Row="4" Content="Max level:" VerticalContentAlignment="Center"></Label>
+                    <Label Grid.Row="4" Content="Max level [dB]:" VerticalContentAlignment="Center"></Label>
                     <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding maxLevel,StringFormat=N1}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
 
-                    <Button Grid.Row="5" Grid.ColumnSpan="2" Command="{Binding CalculateIPCommand}" Margin="5,5,5,5">Calculate intersection points</Button>
+                    <Button Grid.Row="5" Grid.ColumnSpan="2" Command="{Binding CalculateIPCommand}" Margin="5,5,5,5" IsEnabled="{Binding isCalculateInstersecitionPointsEnabled}">Calculate intersection points</Button>
                 </Grid>
             </Expander>
 
@@ -97,13 +97,13 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <Label Grid.Row="1" Content="Start time:"></Label>
+                    <Label Grid.Row="1" Content="Start time [s]:"></Label>
                     <xctk:DecimalUpDown Grid.Row="1" Grid.Column ="1" Value="{Binding intStartTime}" Increment="0.001" FormatString="N3"></xctk:DecimalUpDown>
 
-                    <Label Grid.Row="2" Content="End time:"></Label>
+                    <Label Grid.Row="2" Content="End time [s]:"></Label>
                     <xctk:DecimalUpDown Grid.Row="2" Grid.Column ="1" Value="{Binding intEndTime}" Increment="0.001" FormatString="N3"></xctk:DecimalUpDown>
 
-                    <Label Grid.Row="3" Content="Window length:"></Label>
+                    <Label Grid.Row="3" Content="Window length [s]:"></Label>
                     <xctk:DecimalUpDown Grid.Row="3" Grid.Column ="1" Value="{Binding intLength}" Increment="0.01" FormatString="N3"></xctk:DecimalUpDown>
 
                     <Label Grid.Row="4" Content="Slide window:" VerticalContentAlignment="Center"></Label>

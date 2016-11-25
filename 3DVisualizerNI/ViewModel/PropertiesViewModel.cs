@@ -17,7 +17,7 @@ namespace _3DVisualizerNI.ViewModel
         #region Private Fields
 
         private bool _animationStartEnabled;
-        private bool _ipDisplayEnabled;
+        private bool _isIntersectionPointsDisplayEnabled;
         private AnimationParams animationParams;
         private DispatcherTimer aTimer;
         private IntersectionPoints intersectionPoints;
@@ -37,9 +37,9 @@ namespace _3DVisualizerNI.ViewModel
             ResolutionList.Add(10);
             ResolutionList.Add(15);
 
-            this.CalculateIPCommand = new RelayCommand(this.CalculateIP);
-            this.ShowIPCommand = new RelayCommand(this.ShowIP);
-            this.StartAnimationCommand = new RelayCommand(this.ShowAnimation);
+            this.CalculateIPCommand = new RelayCommand(this.CalculateIntersectionPoints);
+            this.ShowIPCommand = new RelayCommand(this.ShowIntersectionPoints);
+            this.StartAnimationCommand = new RelayCommand(this.StartAnimation);
             this.StopAnimationCommand = new RelayCommand(this.StopAnimation);
             this.AddDataColorCommand = new RelayCommand(AddDataColor);
             this.RemoveDataColorCommand = new RelayCommand<IList>(RemoveDataColor);
@@ -68,27 +68,8 @@ namespace _3DVisualizerNI.ViewModel
         #region Public Properties
 
         public RelayCommand AddDataColorCommand { get; private set; }
-        public bool animationStartEnabled
-        {
-            get { return _animationStartEnabled; }
-            set
-            {
-                _animationStartEnabled = value;
-                RaisePropertyChanged("animationStartEnabled");
-                RaisePropertyChanged("animationStopEnabled");
-            }
-        }
-
-        public bool animationStopEnabled
-        {
-            get
-            {
-                if (ipDisplayEnabled == false) return false;
-                return !animationStartEnabled;
-            }
-        }
-
         public RelayCommand CalculateIPCommand { get; private set; }
+
         public ObservableCollection<string> colorModes
         {
             get
@@ -194,18 +175,47 @@ namespace _3DVisualizerNI.ViewModel
             }
         }
 
-        public bool ipDisplayEnabled
+        public bool isAnimationStartEnabled
+        {
+            get { return _animationStartEnabled; }
+            set
+            {
+                _animationStartEnabled = value;
+                RaisePropertyChanged("animationStartEnabled");
+                RaisePropertyChanged("animationStopEnabled");
+            }
+        }
+
+        public bool isAnimationStopEnabled
         {
             get
             {
-                return _ipDisplayEnabled;
+                if (isIntersectionPointsDisplayEnabled == false) return false;
+                return !isAnimationStartEnabled;
+            }
+        }
+
+        public bool isIntersectionPointsDisplayEnabled
+        {
+            get
+            {
+                return _isIntersectionPointsDisplayEnabled;
             }
             set
             {
-                animationStartEnabled = value;
-                _ipDisplayEnabled = value;
-                RaisePropertyChanged("ipDisplayEnabled");
+                isAnimationStartEnabled = value;
+                _isIntersectionPointsDisplayEnabled = value;
+                RaisePropertyChanged("isIntersectionPointsDisplayEnabled");
                 RaisePropertyChanged("isIntersectionPropertiesEnabled");
+            }
+        }
+
+        public bool isCalculateInstersecitionPointsEnabled
+        {
+            get
+            {
+                if ( spatialMeasurement != null && model != null ) return true;
+                return false;
             }
         }
 
@@ -213,7 +223,7 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (spatialMeasurement != null && model != null && ipDisplayEnabled) return true;
+                if (spatialMeasurement != null && model != null && isIntersectionPointsDisplayEnabled) return true;
                 return false;
             }
         }
@@ -295,7 +305,6 @@ namespace _3DVisualizerNI.ViewModel
 
         public RelayCommand<IList> RemoveDataColorCommand { get; private set; }
         public ObservableCollection<int> ResolutionList { get; set; }
-
         public int ResolutionSelected
         {
             get
@@ -362,7 +371,7 @@ namespace _3DVisualizerNI.ViewModel
         {
             vm.intStartTime = vm.animationParams.frame * vm.animationParams.dt;
             vm.intEndTime = (vm.animationParams.frame + 1) * vm.animationParams.dt;
-            vm.ShowIP();
+            vm.ShowIntersectionPoints();
             vm.animationParams.frame++;
             if (vm.animationParams.frame == vm.animationParams.framesNo - 1)
             {
@@ -370,7 +379,7 @@ namespace _3DVisualizerNI.ViewModel
             }
         }
 
-        private void CalculateIP()
+        private void CalculateIntersectionPoints()
         {
             intersectionPoints = new IntersectionPoints();
             intersectionPoints.calculateIntersectionPoints(model.model, spatialMeasurement);
@@ -384,13 +393,15 @@ namespace _3DVisualizerNI.ViewModel
             RaisePropertyChanged("timeSlider");
             RaisePropertyChanged("dataColors");
             RaisePropertyChanged("colorModes");
+            RaisePropertyChanged("colorModeSelected");
 
-            ipDisplayEnabled = true;
+            isIntersectionPointsDisplayEnabled = true;
         }
 
         private object ReceiveModel(Scene3D _model)
         {
             model = _model;
+            RaisePropertyChanged("isCalculateInstersecitionPointsEnabled");
             RaisePropertyChanged("isIntersectionPropertiesEnabled");
             return null;
         }
@@ -401,14 +412,14 @@ namespace _3DVisualizerNI.ViewModel
             RaisePropertyChanged("directTime");
             RaisePropertyChanged("maxLevel");
             RaisePropertyChanged("isResponsePropertiesEnabled");
+            RaisePropertyChanged("isCalculateInstersecitionPointsEnabled");
             RaisePropertyChanged("isIntersectionPropertiesEnabled");
 
-            ipDisplayEnabled = false;
-            RaisePropertyChanged("ipDisplayEnabled");
+            isIntersectionPointsDisplayEnabled = false;
             return null;
         }
 
-        private void ShowAnimation()
+        private void StartAnimation()
         {
             animationParams = new AnimationParams();
 
@@ -421,7 +432,7 @@ namespace _3DVisualizerNI.ViewModel
             animationParams.dt = intEndTime - intStartTime;
             animationParams.framesNo = (int)(maxTimeSlider / animationParams.dt);
 
-            animationStartEnabled = false;
+            isAnimationStartEnabled = false;
         }
 
         //private object ReceiveIntersectionPoints(IntersectionPoints ip)
@@ -429,7 +440,7 @@ namespace _3DVisualizerNI.ViewModel
         //    intersectionPoints = ip;
         //    return null;
         //}
-        private void ShowIP()
+        private void ShowIntersectionPoints()
         {
             intersectionPoints.builidIntersectionModel();
             Messenger.Default.Send<IntersectionPoints>(intersectionPoints);
@@ -438,7 +449,7 @@ namespace _3DVisualizerNI.ViewModel
         private void StopAnimation()
         {
             aTimer.Stop();
-            animationStartEnabled = true;
+            isAnimationStartEnabled = true;
         }
 
         #endregion Private Methods
