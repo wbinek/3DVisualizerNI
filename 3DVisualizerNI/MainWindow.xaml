@@ -7,7 +7,7 @@
         xmlns:views="clr-namespace:_3DVisualizerNI.Views"
         mc:Ignorable="d"
         DataContext="{Binding Main, Source={StaticResource Locator}}"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="600" Width="800">
 
     <Grid>
         <Grid.RowDefinitions>

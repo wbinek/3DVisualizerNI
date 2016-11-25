@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DVisualizerNI", "3DVisuali
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{467C312F-4245-42D7-A0CF-59ED28BF0F58}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Installer\Installer.vdproj", "{8C2FCA9D-4E12-42ED-9F5D-A3768A32BECD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{467C312F-4245-42D7-A0CF-59ED28BF0F58}.Release|Any CPU.Build.0 = Release|Any CPU
 		{467C312F-4245-42D7-A0CF-59ED28BF0F58}.Release|x64.ActiveCfg = Release|Any CPU
 		{467C312F-4245-42D7-A0CF-59ED28BF0F58}.Release|x64.Build.0 = Release|Any CPU
+		{8C2FCA9D-4E12-42ED-9F5D-A3768A32BECD}.Debug|Any CPU.ActiveCfg = Debug
+		{8C2FCA9D-4E12-42ED-9F5D-A3768A32BECD}.Debug|x64.ActiveCfg = Debug
+		{8C2FCA9D-4E12-42ED-9F5D-A3768A32BECD}.Release|Any CPU.ActiveCfg = Release
+		{8C2FCA9D-4E12-42ED-9F5D-A3768A32BECD}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

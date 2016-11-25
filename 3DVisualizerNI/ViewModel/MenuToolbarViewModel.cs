@@ -2,27 +2,28 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace _3DVisualizerNI.ViewModel
 {
     public class MenuToolbarViewModel : ViewModelBase
     {
-        Scene3D scene3D;
-        SpatialMeasurement spatialMeasurement;
-        
-        public RelayCommand LoadModelCommand { get; private set; }
-        public RelayCommand LoadMeasurementCommand { get; private set; }
+        private Scene3D scene3D;
+        private SpatialMeasurement spatialMeasurement;
 
         public MenuToolbarViewModel()
         {
             this.LoadModelCommand = new RelayCommand(this.LoadModel);
             this.LoadMeasurementCommand = new RelayCommand(this.LoadMeasurement);
+        }
+
+        public RelayCommand LoadMeasurementCommand { get; private set; }
+        public RelayCommand LoadModelCommand { get; private set; }
+        public void LoadMeasurement()
+        {
+            spatialMeasurement = new SpatialMeasurement();
+            spatialMeasurement.importWaveResult();
+
+            Messenger.Default.Send<SpatialMeasurement>(spatialMeasurement);
         }
 
         public void LoadModel()
@@ -31,13 +32,6 @@ namespace _3DVisualizerNI.ViewModel
             scene3D.LoadModel();
 
             Messenger.Default.Send<Scene3D>(scene3D);
-        }
-        public void LoadMeasurement()
-        {
-            spatialMeasurement = new SpatialMeasurement();
-            spatialMeasurement.importWaveResult();
-
-            Messenger.Default.Send<SpatialMeasurement>(spatialMeasurement);
         }
     }
 }

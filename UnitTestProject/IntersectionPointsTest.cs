@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using _3DVisualizerNI.Model;
+﻿using _3DVisualizerNI.Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Windows.Media.Media3D;
 
 namespace UnitTestProject

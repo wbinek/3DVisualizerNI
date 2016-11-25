@@ -4,8 +4,6 @@ using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Media3D;
 
@@ -20,11 +18,11 @@ namespace _3DVisualizerNI.Model
         private Vector3D _position;
         private int _scale = 5;
 
-
         public int resolution
         {
             get { return _resolution; }
-            set {
+            set
+            {
                 if (_resolution != value)
                 {
                     _resolution = value;
@@ -33,6 +31,7 @@ namespace _3DVisualizerNI.Model
                 }
             }
         }
+
         public Vector3D position
         {
             get
@@ -45,6 +44,7 @@ namespace _3DVisualizerNI.Model
                 setTransforms();
             }
         }
+
         public int scale
         {
             get
@@ -57,6 +57,7 @@ namespace _3DVisualizerNI.Model
                 setTransforms();
             }
         }
+
         public Model3DGroup responseModel { get; set; }
 
         public SpatialMeasurement()
@@ -105,8 +106,8 @@ namespace _3DVisualizerNI.Model
                 buildResponseModel();
                 setTransforms();
             }
-
         }
+
         public void buildResponseModel()
         {
             responseModel.Children.Clear();
@@ -146,36 +147,40 @@ namespace _3DVisualizerNI.Model
                     }
                 }
         }
+
         public void setTransforms()
         {
-
             Transform3DGroup newTransform = new Transform3DGroup();
 
             newTransform.Children.Add(new TranslateTransform3D(position));
             newTransform.Children.Add(new ScaleTransform3D(new Vector3D(scale, scale, scale), position.ToPoint3D()));
             responseModel.Transform = newTransform;
         }
+
         public Vector3D getDirectionAtIdx(int idx)
         {
             return new Vector3D(x[idx], y[idx], z[idx]);
         }
+
         public int getDirectionsNo()
         {
             return w.Length;
         }
+
         public double[] getAmplitudeArray()
         {
             return w;
         }
+
         public double getMax()
         {
             if (w != null)
             {
                 return w.Select(x => Math.Abs(x)).Max();
-
             }
             return 0;
         }
+
         public int getMaxIdx()
         {
             if (w != null)
@@ -199,5 +204,4 @@ namespace _3DVisualizerNI.Model
             return (4E-10) * Math.Pow(10, 0.1 * level);
         }
     }
-
 }

@@ -4,7 +4,7 @@
       <vm:ViewModelLocator xmlns:vm="clr-namespace:_3DVisualizerNI"
                            x:Key="Locator" />
   </Application.Resources>
-  
+
   In the View:
   DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
 
@@ -12,7 +12,6 @@
   See http://www.galasoft.ch/mvvm
 */
 
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 
@@ -45,7 +44,7 @@ namespace _3DVisualizerNI.ViewModel
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<MenuToolbarViewModel>();
             SimpleIoc.Default.Register<Model3DViewModel>();
-            SimpleIoc.Default.Register<PropertiesViewModel>();          
+            SimpleIoc.Default.Register<PropertiesViewModel>();
         }
 
         public MainViewModel Main
@@ -63,7 +62,6 @@ namespace _3DVisualizerNI.ViewModel
                 return ServiceLocator.Current.GetInstance<MenuToolbarViewModel>();
             }
         }
-
 
         public Model3DViewModel Model3D
         {
