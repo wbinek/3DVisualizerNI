@@ -135,12 +135,12 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return intersectionPoints.endTime;
+                if (intersectionPoints != null) return intersectionPoints.respEndTime;
                 return 0;
             }
             set
             {
-                intersectionPoints.endTime = value;
+                intersectionPoints.respEndTime = value;
                 RaisePropertyChanged("intEndTime");
                 RaisePropertyChanged("intLength");
                 RaisePropertyChanged("maxTimeSlider");
@@ -163,12 +163,12 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return intersectionPoints.startTime;
+                if (intersectionPoints != null) return intersectionPoints.respStartTime;
                 return 0;
             }
             set
             {
-                intersectionPoints.startTime = value;
+                intersectionPoints.respStartTime = value;
                 RaisePropertyChanged("intStartTime");
                 RaisePropertyChanged("intLength");
                 RaisePropertyChanged("maxTimeSlider");
@@ -384,8 +384,8 @@ namespace _3DVisualizerNI.ViewModel
             intersectionPoints = new IntersectionPoints();
             intersectionPoints.calculateIntersectionPoints(model.model, spatialMeasurement);
 
-            intStartTime = intersectionPoints.startTime + (directTime - 0.005);
-            intEndTime = intersectionPoints.endTime + directTime;
+            intStartTime = intersectionPoints.respStartTime + (directTime - 0.005);
+            intEndTime = intersectionPoints.respEndTime + directTime;
 
             RaisePropertyChanged("intStartTime");
             RaisePropertyChanged("intEndTime");
