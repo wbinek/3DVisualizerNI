@@ -39,8 +39,15 @@ namespace _3DVisualizerNI.Model
         #endregion Public Constructors
 
         #region Public Properties
-
+        
+        /// <summary>
+        /// Property holding marker color
+        /// </summary>
         public Color color { get; set; }
+
+        /// <summary>
+        /// Threshold for using this color
+        /// </summary>
         public double threshold { get; set; }
 
         #endregion Public Properties
@@ -168,6 +175,9 @@ namespace _3DVisualizerNI.Model
         /// </summary>
         public int respScale { get; set; } = 2;
 
+        /// <summary>
+        /// Start time for intersections display
+        /// </summary>
         public double respStartTime
         {
             get { return _startTime; }
@@ -231,6 +241,7 @@ namespace _3DVisualizerNI.Model
                 cone.Origin = intersectionPoints[i] - faceNormals[i] * cone.Height;
                 cone.Normal = -faceNormals[i];
                 cone.BaseRadius = amplitudes[i] * Math.Sqrt(respScale);
+                cone.BaseRadius = 0.1;
                 cone.ThetaDiv = 5;
                 cone.BaseCap = false;
                 cone.TopCap = false;
@@ -251,15 +262,15 @@ namespace _3DVisualizerNI.Model
             testModel.Content = model;
             intersectionPoints.Clear();
 
-            amplitudes = measurement.getAmplitudeArray();
+            amplitudes = measurement.measurementData.getAmplitudeArray();
             respLength = amplitudes.Count();
-            Fs = measurement.Fs;
+            Fs = measurement.measurementData.Fs;
 
-            Point3D origin = measurement.position.ToPoint3D();
+            Point3D origin = measurement.measurementPosition.ToPoint3D();
 
             for (int i = 0; i < respLength; i++)
             {
-                Vector3D direction = measurement.getDirectionAtIdx(i);
+                Vector3D direction = measurement.measurementData.getDirectionAtIdx(i);
                 RayHitTester(testModel, origin, direction);
             }
 
@@ -277,7 +288,7 @@ namespace _3DVisualizerNI.Model
         /// <param name="measurement">3D impulse response</param>
         private void buildAmplitudeLegend(SpatialMeasurement measurement)
         {
-            double maxAmplitude = MeasurementUtils.todB(measurement.getMax());
+            double maxAmplitude = MeasurementUtils.todB(measurement.measurementData.getMax());
 
             DataColour set0 = new DataColour(Colors.DarkRed, maxAmplitude - 3);
             DataColour set1 = new DataColour(Colors.Red, maxAmplitude - 6);
@@ -302,7 +313,7 @@ namespace _3DVisualizerNI.Model
         /// <param name="measurement">3D impulse response</param>
         private void buildTimeLegend(SpatialMeasurement measurement)
         {
-            double startTime = (double)measurement.getMaxIdx() / measurement.Fs * 1000;
+            double startTime = (double)measurement.measurementData.getMaxIdx() / measurement.measurementData.Fs * 1000;
 
             DataColour set0 = new DataColour(Colors.DarkRed, 0);
             DataColour set1 = new DataColour(Colors.Red, startTime - 10);

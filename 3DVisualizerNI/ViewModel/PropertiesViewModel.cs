@@ -12,6 +12,10 @@ using System.Windows.Threading;
 
 namespace _3DVisualizerNI.ViewModel
 {
+
+    /// <summary>
+    /// ViewModel connecting properties bar with models
+    /// </summary>
     public class PropertiesViewModel : ViewModelBase
     {
         #region Private Fields
@@ -112,7 +116,7 @@ namespace _3DVisualizerNI.ViewModel
             {
                 if (spatialMeasurement != null)
                 {
-                    return (double)spatialMeasurement.getMaxIdx() / spatialMeasurement.Fs;
+                    return (double)spatialMeasurement.measurementData.getMaxIdx() / spatialMeasurement.measurementData.Fs;
                 }
                 else return 0;
             }
@@ -122,12 +126,12 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (spatialMeasurement != null) return spatialMeasurement.scale;
+                if (spatialMeasurement != null) return spatialMeasurement.measurementScale;
                 return 5;
             }
             set
             {
-                spatialMeasurement.scale = value;
+                spatialMeasurement.measurementScale = value;
             }
         }
 
@@ -243,7 +247,7 @@ namespace _3DVisualizerNI.ViewModel
             {
                 if (spatialMeasurement != null)
                 {
-                    return MeasurementUtils.todB(spatialMeasurement.getMax());
+                    return MeasurementUtils.todB(spatialMeasurement.measurementData.getMax());
                 }
                 else return 0;
             }
@@ -262,14 +266,14 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (spatialMeasurement != null) return spatialMeasurement.position.X;
+                if (spatialMeasurement != null) return spatialMeasurement.measurementPosition.X;
                 return 0;
             }
             set
             {
-                Vector3D newPos = spatialMeasurement.position;
+                Vector3D newPos = spatialMeasurement.measurementPosition;
                 newPos.X = value;
-                spatialMeasurement.position = newPos;
+                spatialMeasurement.measurementPosition = newPos;
             }
         }
 
@@ -277,14 +281,14 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (spatialMeasurement != null) return spatialMeasurement.position.Y;
+                if (spatialMeasurement != null) return spatialMeasurement.measurementPosition.Y;
                 return 0;
             }
             set
             {
-                Vector3D newPos = spatialMeasurement.position;
+                Vector3D newPos = spatialMeasurement.measurementPosition;
                 newPos.Y = value;
-                spatialMeasurement.position = newPos;
+                spatialMeasurement.measurementPosition = newPos;
             }
         }
 
@@ -292,14 +296,14 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (spatialMeasurement != null) return spatialMeasurement.position.Z;
+                if (spatialMeasurement != null) return spatialMeasurement.measurementPosition.Z;
                 return 0;
             }
             set
             {
-                Vector3D newPos = spatialMeasurement.position;
+                Vector3D newPos = spatialMeasurement.measurementPosition;
                 newPos.Z = value;
-                spatialMeasurement.position = newPos;
+                spatialMeasurement.measurementPosition = newPos;
             }
         }
 
@@ -309,12 +313,12 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (spatialMeasurement != null) return spatialMeasurement.resolution;
+                if (spatialMeasurement != null) return spatialMeasurement.measurementResolution;
                 return 5;
             }
             set
             {
-                spatialMeasurement.resolution = value;
+                spatialMeasurement.measurementResolution = value;
             }
         }
         public RelayCommand ShowIPCommand { get; private set; }

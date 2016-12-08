@@ -5,6 +5,9 @@ using System.Windows.Media.Media3D;
 
 namespace _3DVisualizerNI.ViewModel
 {
+    /// <summary>
+    /// ViewModel connecting 3D viewport with displayed models.
+    /// </summary>
     public class Model3DViewModel : ViewModelBase
     {
         private SpatialMeasurement test;
