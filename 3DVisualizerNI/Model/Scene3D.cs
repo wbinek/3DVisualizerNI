@@ -6,15 +6,27 @@ using System.Windows.Media.Media3D;
 
 namespace _3DVisualizerNI.Model
 {
+    /// <summary>
+    /// Class containing 3D room model
+    /// </summary>
     public class Scene3D
     {
+        /// <summary>
+        /// 3D Model object
+        /// </summary>
         public Model3DGroup model { get; set; }
 
+        /// <summary>
+        /// Default creator
+        /// </summary>
         public Scene3D()
         {
             model = new Model3DGroup();
         }
 
+        /// <summary>
+        /// Method for loading model showing dialog
+        /// </summary>
         public void LoadModel()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -36,6 +48,10 @@ namespace _3DVisualizerNI.Model
             }
         }
 
+        /// <summary>
+        /// Method for loading model form given path
+        /// </summary>
+        /// <param name="path">path to load from</param>
         public void LoadModel(string path)
         {
             ModelImporter import = new ModelImporter();

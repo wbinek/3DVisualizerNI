@@ -16,7 +16,7 @@
         <DataTemplate DataType = "{x:Type data:DataColour}">
             <StackPanel Orientation = "Horizontal">
                 <TextBlock Text=">" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                <xctk:DecimalUpDown Value = "{Binding Path = treshold}"  Width = "60" Margin = "5 5 5 5" FormatString="N0" Increment="1"/>
+                <xctk:DecimalUpDown Value = "{Binding Path = threshold}"  Width = "60" Margin = "5 5 5 5" FormatString="N0" Increment="1"/>
                 <xctk:ColorPicker SelectedColor = "{Binding color, Mode = TwoWay}" Margin = "5 5 5 5" Width = "70" />
             </StackPanel>
         </DataTemplate>

@@ -5,6 +5,9 @@ using GalaSoft.MvvmLight.Messaging;
 
 namespace _3DVisualizerNI.ViewModel
 {
+    /// <summary>
+    /// View Model connecting menu toolbar with appropriate classes.
+    /// </summary>
     public class MenuToolbarViewModel : ViewModelBase
     {
         private Scene3D scene3D;
