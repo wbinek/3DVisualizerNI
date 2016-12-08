@@ -241,7 +241,7 @@ namespace _3DVisualizerNI.Model
                 cone.Origin = intersectionPoints[i] - faceNormals[i] * cone.Height;
                 cone.Normal = -faceNormals[i];
                 cone.BaseRadius = amplitudes[i] * Math.Sqrt(respScale);
-                cone.BaseRadius = 0.1;
+                // cone.BaseRadius = 0.1;
                 cone.ThetaDiv = 5;
                 cone.BaseCap = false;
                 cone.TopCap = false;
