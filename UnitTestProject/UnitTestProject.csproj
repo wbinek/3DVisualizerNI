@@ -46,7 +46,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -59,6 +61,7 @@
     <ProjectReference Include="..\3DVisualizerNI\3DVisualizerNI.csproj">
       <Project>{23d9f9b7-562a-4d2f-ae35-07f5c02591bf}</Project>
       <Name>3DVisualizerNI</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
