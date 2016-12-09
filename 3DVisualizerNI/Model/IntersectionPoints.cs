@@ -101,13 +101,18 @@ namespace _3DVisualizerNI.Model
         public ObservableCollection<DataColour> colorsTimeSet { get; set; }
 
         /// <summary>
+        /// If true markers will not be scaled according to amplitude
+        /// </summary>
+        public bool constantMarkerSize { get; set; } = false;
+
+        /// <summary>
         /// Currently selected color set
         /// </summary>
         public ObservableCollection<DataColour> currentColorSet
         {
             get
             {
-                switch (sellectedColorDisplayMode)
+                switch (selectedColorDisplayMode)
                 {
                     case "Time [ms]":
                         return colorsTimeSet;
@@ -119,7 +124,7 @@ namespace _3DVisualizerNI.Model
             }
             set
             {
-                switch (sellectedColorDisplayMode)
+                switch (selectedColorDisplayMode)
                 {
                     case "Time [ms]":
                         colorsTimeSet = value;
@@ -201,7 +206,7 @@ namespace _3DVisualizerNI.Model
         /// <summary>
         /// Currently selected coloring mode
         /// </summary>
-        public string sellectedColorDisplayMode { get; set; } = "Time [ms]";
+        public string selectedColorDisplayMode { get; set; } = "Time [ms]";
 
         #endregion Public Properties
 
@@ -239,9 +244,8 @@ namespace _3DVisualizerNI.Model
                 TruncatedConeVisual3D cone = new TruncatedConeVisual3D();
                 cone.Height = 0.01;
                 cone.Origin = intersectionPoints[i] - faceNormals[i] * cone.Height;
-                cone.Normal = -faceNormals[i];
-                cone.BaseRadius = amplitudes[i] * Math.Sqrt(respScale);
-                // cone.BaseRadius = 0.1;
+                cone.Normal = -faceNormals[i];               
+                if(constantMarkerSize) cone.BaseRadius = 0.1; else cone.BaseRadius = amplitudes[i] * Math.Sqrt(respScale);
                 cone.ThetaDiv = 5;
                 cone.BaseCap = false;
                 cone.TopCap = false;
@@ -338,7 +342,7 @@ namespace _3DVisualizerNI.Model
         /// <returns></returns>
         private Color getColor(int index, double preassure)
         {
-            switch (sellectedColorDisplayMode)
+            switch (selectedColorDisplayMode)
             {
                 case "Time [ms]":
                     double time = (double)index / Fs * 1000;

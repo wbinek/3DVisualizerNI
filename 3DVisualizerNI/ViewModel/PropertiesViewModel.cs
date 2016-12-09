@@ -87,13 +87,26 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return intersectionPoints.sellectedColorDisplayMode;
+                if (intersectionPoints != null) return intersectionPoints.selectedColorDisplayMode;
                 return "";
             }
             set
             {
-                intersectionPoints.sellectedColorDisplayMode = value;
+                intersectionPoints.selectedColorDisplayMode = value;
                 RaisePropertyChanged("dataColors");
+            }
+        }
+
+        public bool constantSizeSelected
+        {
+            get
+            {
+                if (intersectionPoints != null) return intersectionPoints.constantMarkerSize;
+                return false;
+            }
+            set
+            {
+                intersectionPoints.constantMarkerSize = value;
             }
         }
 
