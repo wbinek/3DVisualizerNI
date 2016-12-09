@@ -138,6 +138,11 @@ namespace _3DVisualizerNI.Model
         }
 
         /// <summary>
+        /// Array of amplitudes after peak detection
+        /// </summary>
+        public double[] filteredAmplitudes { get; set; }
+
+        /// <summary>
         /// Current measurement sampling frequency
         /// </summary>
         public int Fs { get; set; }
@@ -208,6 +213,11 @@ namespace _3DVisualizerNI.Model
         /// </summary>
         public string selectedColorDisplayMode { get; set; } = "Time [ms]";
 
+        /// <summary>
+        /// If true only detected peaks will be displayed
+        /// </summary>
+        public bool showPeaksOnly { get; set; } = false;
+
         #endregion Public Properties
 
         #region Private Properties
@@ -238,20 +248,25 @@ namespace _3DVisualizerNI.Model
         public void builidIntersectionModel()
         {
             intersectionModel = new Model3DGroup();
+            double[] drawAmplitudes;
+            if (showPeaksOnly && filteredAmplitudes!=null) drawAmplitudes = filteredAmplitudes; else drawAmplitudes = amplitudes;
 
             for (int i = (int)(respStartTime * Fs); i < respEndTime * Fs; i++)
             {
-                TruncatedConeVisual3D cone = new TruncatedConeVisual3D();
-                cone.Height = 0.01;
-                cone.Origin = intersectionPoints[i] - faceNormals[i] * cone.Height;
-                cone.Normal = -faceNormals[i];               
-                if(constantMarkerSize) cone.BaseRadius = 0.1; else cone.BaseRadius = amplitudes[i] * Math.Sqrt(respScale);
-                cone.ThetaDiv = 5;
-                cone.BaseCap = false;
-                cone.TopCap = false;
-                cone.Material = new DiffuseMaterial(new SolidColorBrush(getColor(i, amplitudes[i])));
-                cone.BackMaterial = null;
-                intersectionModel.Children.Add(cone.Content);
+                if (drawAmplitudes[i] != 0)
+                {
+                    TruncatedConeVisual3D cone = new TruncatedConeVisual3D();
+                    cone.Height = 0.01;
+                    cone.Origin = intersectionPoints[i] - faceNormals[i] * cone.Height;
+                    cone.Normal = -faceNormals[i];
+                    if (constantMarkerSize) cone.BaseRadius = 0.1; else cone.BaseRadius = drawAmplitudes[i] * Math.Sqrt(respScale);
+                    cone.ThetaDiv = 5;
+                    cone.BaseCap = false;
+                    cone.TopCap = false;
+                    cone.Material = new DiffuseMaterial(new SolidColorBrush(getColor(i, drawAmplitudes[i])));
+                    cone.BackMaterial = null;
+                    intersectionModel.Children.Add(cone.Content);
+                }
             }
         }
 
@@ -338,9 +353,9 @@ namespace _3DVisualizerNI.Model
         /// Gets color from legend
         /// </summary>
         /// <param name="index">Current sample index</param>
-        /// <param name="preassure">Current sample preassure</param>
+        /// <param name="pressure">Current sample pressure</param>
         /// <returns></returns>
-        private Color getColor(int index, double preassure)
+        private Color getColor(int index, double pressure)
         {
             switch (selectedColorDisplayMode)
             {
@@ -353,7 +368,7 @@ namespace _3DVisualizerNI.Model
                     break;
 
                 case "Amplitude [dB]":
-                    double amplitude = MeasurementUtils.todB(preassure);
+                    double amplitude = MeasurementUtils.todB(pressure);
                     foreach (DataColour color in colorsAmplitudeSet)
                     {
                         if (amplitude > color.threshold)

@@ -1,4 +1,5 @@
 ﻿using _3DVisualizerNI.Model;
+using _3DVisualizerNI.Views;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -47,6 +48,7 @@ namespace _3DVisualizerNI.ViewModel
             this.StopAnimationCommand = new RelayCommand(this.StopAnimation);
             this.AddDataColorCommand = new RelayCommand(AddDataColor);
             this.RemoveDataColorCommand = new RelayCommand<IList>(RemoveDataColor);
+            this.PeakDetectionCommand = new RelayCommand(PeakDetection);
 
             Messenger.Default.Register<SpatialMeasurement>
             (
@@ -336,9 +338,24 @@ namespace _3DVisualizerNI.ViewModel
         }
         public RelayCommand ShowIPCommand { get; private set; }
 
-        public RelayCommand StartAnimationCommand { get; private set; }
+        public bool showPeaksOnly
+        {
+            get
+            {
+                if (intersectionPoints != null) return intersectionPoints.constantMarkerSize;
+                return false;
+            }
+            set
+            {
+                intersectionPoints.constantMarkerSize = value;
+            }
+        }
+
+public RelayCommand StartAnimationCommand { get; private set; }
 
         public RelayCommand StopAnimationCommand { get; private set; }
+
+        public RelayCommand PeakDetectionCommand { get; private set; }
 
         public double timeSlider
         {
@@ -452,11 +469,6 @@ namespace _3DVisualizerNI.ViewModel
             isAnimationStartEnabled = false;
         }
 
-        //private object ReceiveIntersectionPoints(IntersectionPoints ip)
-        //{
-        //    intersectionPoints = ip;
-        //    return null;
-        //}
         private void ShowIntersectionPoints()
         {
             intersectionPoints.builidIntersectionModel();
@@ -467,6 +479,19 @@ namespace _3DVisualizerNI.ViewModel
         {
             aTimer.Stop();
             isAnimationStartEnabled = true;
+        }
+
+        private void PeakDetection()
+        {
+            PeakFindWindow pfWindow = new PeakFindWindow();
+            ((PeakFindViewModel)pfWindow.DataContext).amplitudes = spatialMeasurement.measurementData.getAmplitudeArray();
+            ((PeakFindViewModel)pfWindow.DataContext).filteredAmplitudes = spatialMeasurement.measurementAmplitudesFiltered;
+            ((PeakFindViewModel)pfWindow.DataContext).Fs = spatialMeasurement.measurementData.Fs;
+
+            ((PeakFindViewModel)pfWindow.DataContext).InitPlotModel();
+
+
+            pfWindow.Show();           
         }
 
         #endregion Private Methods
