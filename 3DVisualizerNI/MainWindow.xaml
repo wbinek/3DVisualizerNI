@@ -5,9 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_3DVisualizerNI"
         xmlns:views="clr-namespace:_3DVisualizerNI.Views"
+        xmlns:VM = "clr-namespace:_3DVisualizerNI.ViewModel"
         mc:Ignorable="d"
-        DataContext="{Binding Main, Source={StaticResource Locator}}"
         Title="MainWindow" Height="600" Width="800">
+    
+    <Window.DataContext>
+        <VM:MainViewModel/>
+    </Window.DataContext>
 
     <Grid>
         <Grid.RowDefinitions>

@@ -184,12 +184,14 @@
     <Compile Include="ViewModel\MenuToolbarViewModel.cs" />
     <Compile Include="ViewModel\Model3DViewModel.cs" />
     <Compile Include="ViewModel\PropertiesViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="Views\MenuToolbarView.xaml.cs">
       <DependentUpon>MenuToolbarView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Model3DView.xaml.cs">
       <DependentUpon>Model3DView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PeakFindWindow.xaml.cs">
+      <DependentUpon>PeakFindWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PropertiesView.xaml.cs">
       <DependentUpon>PropertiesView.xaml</DependentUpon>
@@ -211,6 +213,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Model3DView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PeakFindWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -237,7 +243,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="3DVisualizerNI_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
