@@ -5,9 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:_3DVisualizerNI.Views"
              xmlns:h="http://helix-toolkit.org/wpf"
-             DataContext="{Binding Model3D, Source={StaticResource Locator}}"
+             xmlns:VM = "clr-namespace:_3DVisualizerNI.ViewModel"
+             
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
+    
+    <UserControl.DataContext>
+        <VM:Model3DViewModel/>
+    </UserControl.DataContext>
+    
     <Grid>
         <h:HelixViewport3D>
             <h:DefaultLights></h:DefaultLights>
