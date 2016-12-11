@@ -233,7 +233,7 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if ( spatialMeasurement != null && model != null ) return true;
+                if (spatialMeasurement != null && model != null) return true;
                 return false;
             }
         }
@@ -274,6 +274,19 @@ namespace _3DVisualizerNI.ViewModel
             {
                 if (intersectionPoints != null) return (intersectionPoints.respLength / intersectionPoints.Fs) - (intEndTime - intStartTime);
                 return 0;
+            }
+        }
+
+        public bool peaksOnlySelected
+        {
+            get
+            {
+                if (intersectionPoints != null) return intersectionPoints.showPeaksOnly;
+                return false;
+            }
+            set
+            {
+                intersectionPoints.showPeaksOnly = value;
             }
         }
 
@@ -351,7 +364,7 @@ namespace _3DVisualizerNI.ViewModel
             }
         }
 
-public RelayCommand StartAnimationCommand { get; private set; }
+        public RelayCommand StartAnimationCommand { get; private set; }
 
         public RelayCommand StopAnimationCommand { get; private set; }
 
@@ -485,7 +498,7 @@ public RelayCommand StartAnimationCommand { get; private set; }
         {
             PeakFindWindow pfWindow = new PeakFindWindow();
             ((PeakFindViewModel)pfWindow.DataContext).amplitudes = spatialMeasurement.measurementData.getAmplitudeArray();
-            ((PeakFindViewModel)pfWindow.DataContext).filteredAmplitudes = spatialMeasurement.measurementAmplitudesFiltered;
+            ((PeakFindViewModel)pfWindow.DataContext).filteredAmplitudes = intersectionPoints.filteredAmplitudes;
             ((PeakFindViewModel)pfWindow.DataContext).Fs = spatialMeasurement.measurementData.Fs;
 
             ((PeakFindViewModel)pfWindow.DataContext).InitPlotModel();

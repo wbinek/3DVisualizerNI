@@ -8,16 +8,16 @@ namespace _3DVisualizerNI.Model
 {
     public static class PeakFinder
     {
-        public static double[] FindPeaksZScore(double[] amplitudes, int lag, double threshold, double influence, double minLevel)
+        public static double[] FindPeaksZScore(double[] amplitudes, int lag, double threshold, double influence, double minLevel, out double[] avgFilter, out double[] stdFilter )
         {
             double[] peaks = new double[amplitudes.Length];
             double[] filteredY = new double[amplitudes.Length];
-            double[] avgFilter = new double[amplitudes.Length];
-            double[] stdFilter = new double[amplitudes.Length];
+            avgFilter = new double[amplitudes.Length];
+            stdFilter = new double[amplitudes.Length];
 
             Array.Copy(amplitudes, 0, filteredY, 0, lag+lag+1);
-            avgFilter[lag] = filteredY.Skip(0).Take(lag + 1 + lag).Average();
-            stdFilter[lag] = std(filteredY.Skip(0).Take(lag + 1 + lag).ToArray());
+            avgFilter[lag] = avr(filteredY,0,lag + 1 + lag);
+            stdFilter[lag] = std(filteredY, avgFilter[lag],0,lag + 1 + lag);
 
             for(int i = lag + 1; i < amplitudes.Length - lag; i++)
             {
@@ -26,17 +26,29 @@ namespace _3DVisualizerNI.Model
                     peaks[i] = amplitudes[i];
                 }
                 filteredY[i + lag] = influence * amplitudes[i + lag] + (1 - influence) * filteredY[i + lag - 1];
-                avgFilter[i] = filteredY.Skip(i-lag-1).Take(lag + 1 + lag).Average();
-                stdFilter[i] = std(filteredY.Skip(i-lag-1).Take(lag + 1 + lag).ToArray());
+                avgFilter[i] = avr(filteredY,i-lag,lag + 1 + lag);
+                stdFilter[i] = std(filteredY, avgFilter[i],i-lag,lag + 1 + lag);
             }
             return peaks;
         }
 
-        private static double std(double[] data)
+        private static double std(double[] data, double avr, int startIdx, int length)
         {
-            double average = data.Average();
-            double sumOfSquaresOfDifferences = data.Select(val => (val - average) * (val - average)).Sum();
-            return Math.Sqrt(sumOfSquaresOfDifferences / data.Length);
+            double sumOfSquaresOfDifferences = 0;
+            for (int i = startIdx; i< startIdx + length; i++) {
+                sumOfSquaresOfDifferences += (data[i] - avr) * (data[i] - avr);
+            }
+            return Math.Sqrt(sumOfSquaresOfDifferences / length);
+        }
+
+        private static double avr(double[] data, int startIdx, int length)
+        {
+            double sum=0;
+            for(int i=startIdx; i< startIdx + length; i++)
+            {
+                sum += data[i];
+            }
+            return sum / length;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using _3DVisualizerNI.Model;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Messaging;
 using OxyPlot;
 using OxyPlot.Series;
 using System;
@@ -15,11 +16,13 @@ namespace _3DVisualizerNI.ViewModel
     {
         public double[] amplitudes { get; set; }
         public double[] filteredAmplitudes { get; set; }
+        public double[] avrAmpitude;
+        public double[] stdValue;
 
         public int lag { get; set; } = 50;
-        public double threshold { get; set; } = 1.5;
-        public double influence { get; set; } = 0.5;
-        public double minLevel { get; set; } = 20;
+        public double threshold { get; set; } = 2;
+        public double influence { get; set; } = 0.1;
+        public double minLevel { get; set; } = 35;
 
 
         public int Fs { get; set; }
@@ -34,19 +37,16 @@ namespace _3DVisualizerNI.ViewModel
         public void InitPlotModel()
         {
             MyModel = new PlotModel();
-
-            LineSeries data = new LineSeries();
-            for(int i=0;i<amplitudes.Length;i++)
-            {
-                data.Points.Add(new DataPoint((double)i/Fs, amplitudes[i]));
-            }
-            MyModel.Series.Add(data);
             RaisePropertyChanged("MyModel");
+
+            updateDisplay();
+            
         }
 
         private void PeakDetection()
         {
-            filteredAmplitudes = PeakFinder.FindPeaksZScore(amplitudes, lag, threshold, influence, minLevel);
+            filteredAmplitudes = PeakFinder.FindPeaksZScore(amplitudes, lag, threshold, influence, minLevel, out avrAmpitude, out  stdValue);
+            Messenger.Default.Send<double[]>(filteredAmplitudes);
             updateDisplay();
         }
 
@@ -54,25 +54,60 @@ namespace _3DVisualizerNI.ViewModel
         {
             MyModel.Series.Clear();
 
-            LineSeries amp = new LineSeries();
-            amp.Color = OxyColor.FromRgb(0, 128, 0);
+            if (stdValue != null)
+            {
+                AreaSeries stdValueSeries1 = new AreaSeries();
+                stdValueSeries1.Color = OxyColor.FromRgb(0, 200, 100);
+                stdValueSeries1.Fill = OxyColors.LightBlue;
+
+                for (int i = 0; i < stdValue.Length; i++)
+                {
+                    stdValueSeries1.Points.Add(new DataPoint((double)i / Fs, avrAmpitude[i] + threshold * stdValue[i]));
+                    stdValueSeries1.Points2.Add(new DataPoint((double)i / Fs, avrAmpitude[i] - threshold * stdValue[i]));
+                }
+                MyModel.Series.Add(stdValueSeries1);
+            }
+
+            LineSeries amplitudeSeries = new LineSeries();
+            amplitudeSeries.Color = OxyColor.FromRgb(0, 0, 200);
+            amplitudeSeries.StrokeThickness = 1;
+            amplitudeSeries.MinimumSegmentLength = 10;
+
             for (int i = 0; i < amplitudes.Length; i++)
             {
-                amp.Points.Add(new DataPoint((double)i / Fs, amplitudes[i]));
+                amplitudeSeries.Points.Add(new DataPoint((double)i / Fs, amplitudes[i]));
             }
-            MyModel.Series.Add(amp);
+            MyModel.Series.Add(amplitudeSeries);
 
             if (filteredAmplitudes != null)
             {
-                LineSeries peaks = new LineSeries();
-                peaks.Color = OxyColor.FromRgb(0, 0, 128);
+                LineSeries peaksSeries = new LineSeries();
+                peaksSeries.Color = OxyColor.FromRgb(0, 150, 0);
+                peaksSeries.StrokeThickness = 1;
+                peaksSeries.MinimumSegmentLength = 10;
+
                 for (int i = 0; i < filteredAmplitudes.Length; i++)
                 {
-                    peaks.Points.Add(new DataPoint((double)i / Fs, filteredAmplitudes[i]));
+                    peaksSeries.Points.Add(new DataPoint((double)i / Fs, filteredAmplitudes[i]));
                 }
-                MyModel.Series.Add(peaks);
+                MyModel.Series.Add(peaksSeries);
             }
-            RaisePropertyChanged("MyModel");
+
+            if (avrAmpitude != null)
+            {
+                LineSeries avrAmplitudeSeries = new LineSeries();
+                avrAmplitudeSeries.Color = OxyColor.FromRgb(0, 200, 100);
+                avrAmplitudeSeries.StrokeThickness = 1;
+                avrAmplitudeSeries.MinimumSegmentLength = 10;
+
+                for (int i = 0; i < avrAmpitude.Length; i++)
+                {
+                    avrAmplitudeSeries.Points.Add(new DataPoint((double)i / Fs, avrAmpitude[i]));
+                }
+                MyModel.Series.Add(avrAmplitudeSeries);
+            }
+          
+            MyModel.InvalidatePlot(true);
         }
     }
 }

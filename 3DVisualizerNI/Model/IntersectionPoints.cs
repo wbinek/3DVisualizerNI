@@ -1,4 +1,5 @@
-﻿using HelixToolkit.Wpf;
+﻿using GalaSoft.MvvmLight.Messaging;
+using HelixToolkit.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -77,6 +78,12 @@ namespace _3DVisualizerNI.Model
             faceNormals = new List<Vector3D>();
             colorsTimeSet = new ObservableCollection<DataColour>();
             colorsAmplitudeSet = new ObservableCollection<DataColour>();
+
+            Messenger.Default.Register<double[]>
+            (
+                this,
+                (fA) => ReceiveFilteredResponse(fA)
+            );
 
             initColorDisplayMode();
         }
@@ -438,6 +445,12 @@ namespace _3DVisualizerNI.Model
             }
 
             return HitTestResultBehavior.Continue;
+        }
+
+        private object ReceiveFilteredResponse(double[] fA)
+        {
+            filteredAmplitudes = fA;
+            return null;
         }
 
         #endregion Private Methods

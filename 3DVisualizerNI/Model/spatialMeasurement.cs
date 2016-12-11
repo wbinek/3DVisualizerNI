@@ -212,8 +212,6 @@ namespace _3DVisualizerNI.Model
         /// </summary>
         public MeasurementData measurementData;
 
-        public double[] measurementAmplitudesFiltered;
-
         /// <summary>
         /// Vector describing measurement position
         /// </summary>
