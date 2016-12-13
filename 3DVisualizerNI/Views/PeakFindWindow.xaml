@@ -9,9 +9,9 @@
         mc:Ignorable="d"
         Title="Peak Find" Height="300" Width="500">
 
-    <Window.DataContext>
+    <!--<Window.DataContext>
         <VM:PeakFindViewModel/>
-    </Window.DataContext>
+    </Window.DataContext>-->
 
     <Grid>
         <Grid.ColumnDefinitions>

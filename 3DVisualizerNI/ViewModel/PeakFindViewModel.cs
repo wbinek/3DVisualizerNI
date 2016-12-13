@@ -14,23 +14,82 @@ namespace _3DVisualizerNI.ViewModel
 {
     public class PeakFindViewModel : ViewModelBase
     {
+        private PeakFindData PeakFindResult;
+
         public double[] amplitudes { get; set; }
-        public double[] filteredAmplitudes { get; set; }
+        public double[] filteredAmplitudes
+        {
+            get
+            {
+                return PeakFindResult.filteredAmplitudes;
+            }
+
+            set
+            {
+                PeakFindResult.filteredAmplitudes = value;
+            }
+        }
         public double[] avrAmpitude;
         public double[] stdValue;
 
-        public int lag { get; set; } = 50;
-        public double threshold { get; set; } = 2;
-        public double influence { get; set; } = 0.1;
-        public double minLevel { get; set; } = 35;
+        public int lag
+        {
+            get
+            {
+                return PeakFindResult.lag;
+            }
+
+            set
+            {
+                PeakFindResult.lag = value;
+            }
+        }
+        public double threshold
+        {
+            get
+            {
+                return PeakFindResult.threshold;
+            }
+
+            set
+            {
+                PeakFindResult.threshold = value;
+            }
+        }
+        public double influence
+        {
+            get
+            {
+                return PeakFindResult.influence;
+            }
+
+            set
+            {
+                PeakFindResult.influence = value;
+            }
+        }
+        public double minLevel
+        {
+            get
+            {
+                return PeakFindResult.minLevel;
+            }
+
+            set
+            {
+                PeakFindResult.minLevel = value;
+            }
+        }
+
 
 
         public int Fs { get; set; }
         public PlotModel MyModel { get; private set; }
         public RelayCommand PeakDetectionCommand { get; private set; }
 
-        public PeakFindViewModel()
+        public PeakFindViewModel(PeakFindData PeakFindResults)
         {
+            PeakFindResult = PeakFindResults;
             this.PeakDetectionCommand = new RelayCommand(PeakDetection);
         }       
 
@@ -46,7 +105,7 @@ namespace _3DVisualizerNI.ViewModel
         private void PeakDetection()
         {
             filteredAmplitudes = PeakFinder.FindPeaksZScore(amplitudes, lag, threshold, influence, minLevel, out avrAmpitude, out  stdValue);
-            Messenger.Default.Send<double[]>(filteredAmplitudes);
+            Messenger.Default.Send<PeakFindData>(PeakFindResult);
             updateDisplay();
         }
 

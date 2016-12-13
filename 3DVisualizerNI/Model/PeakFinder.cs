@@ -6,6 +6,16 @@ using System.Threading.Tasks;
 
 namespace _3DVisualizerNI.Model
 {
+    public class PeakFindData
+    {
+        public double[] filteredAmplitudes { get; set; }
+        public int lag { get; set; } = 50;
+        public double threshold { get; set; } = 2;
+        public double influence { get; set; } = 0.1;
+        public double minLevel { get; set; } = 35;
+    }
+
+
     public static class PeakFinder
     {
         public static double[] FindPeaksZScore(double[] amplitudes, int lag, double threshold, double influence, double minLevel, out double[] avgFilter, out double[] stdFilter )

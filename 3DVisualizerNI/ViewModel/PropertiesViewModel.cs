@@ -80,7 +80,7 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return intersectionPoints.colorDisplayMode;
+                if (intersectionPoints != null) return intersectionPoints.DisplayProperties.colorDisplayMode;
                 return null;
             }
         }
@@ -89,12 +89,12 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return intersectionPoints.selectedColorDisplayMode;
+                if (intersectionPoints != null) return intersectionPoints.DisplayProperties.selectedColorDisplayMode;
                 return "";
             }
             set
             {
-                intersectionPoints.selectedColorDisplayMode = value;
+                intersectionPoints.DisplayProperties.selectedColorDisplayMode = value;
                 RaisePropertyChanged("dataColors");
             }
         }
@@ -103,12 +103,12 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return intersectionPoints.constantMarkerSize;
+                if (intersectionPoints != null) return intersectionPoints.DisplayProperties.constantMarkerSize;
                 return false;
             }
             set
             {
-                intersectionPoints.constantMarkerSize = value;
+                intersectionPoints.DisplayProperties.constantMarkerSize = value;
             }
         }
 
@@ -116,12 +116,12 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return intersectionPoints.currentColorSet;
+                if (intersectionPoints != null) return intersectionPoints.DisplayProperties.currentColorSet;
                 return null;
             }
             set
             {
-                intersectionPoints.currentColorSet = value;
+                intersectionPoints.DisplayProperties.currentColorSet = value;
             }
         }
 
@@ -154,12 +154,12 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return intersectionPoints.respEndTime;
+                if (intersectionPoints != null) return intersectionPoints.ResponseProperties.respEndTime;
                 return 0;
             }
             set
             {
-                intersectionPoints.respEndTime = value;
+                intersectionPoints.ResponseProperties.respEndTime = value;
                 RaisePropertyChanged("intEndTime");
                 RaisePropertyChanged("intLength");
                 RaisePropertyChanged("maxTimeSlider");
@@ -182,12 +182,12 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return intersectionPoints.respStartTime;
+                if (intersectionPoints != null) return intersectionPoints.ResponseProperties.respStartTime;
                 return 0;
             }
             set
             {
-                intersectionPoints.respStartTime = value;
+                intersectionPoints.ResponseProperties.respStartTime = value;
                 RaisePropertyChanged("intStartTime");
                 RaisePropertyChanged("intLength");
                 RaisePropertyChanged("maxTimeSlider");
@@ -272,7 +272,7 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return (intersectionPoints.respLength / intersectionPoints.Fs) - (intEndTime - intStartTime);
+                if (intersectionPoints != null) return (intersectionPoints.ResponseProperties.respLength / intersectionPoints.ResponseProperties.Fs) - (intEndTime - intStartTime);
                 return 0;
             }
         }
@@ -281,12 +281,12 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return intersectionPoints.showPeaksOnly;
+                if (intersectionPoints != null) return intersectionPoints.DisplayProperties.showPeaksOnly;
                 return false;
             }
             set
             {
-                intersectionPoints.showPeaksOnly = value;
+                intersectionPoints.DisplayProperties.showPeaksOnly = value;
             }
         }
 
@@ -355,12 +355,12 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return intersectionPoints.constantMarkerSize;
+                if (intersectionPoints != null) return intersectionPoints.DisplayProperties.constantMarkerSize;
                 return false;
             }
             set
             {
-                intersectionPoints.constantMarkerSize = value;
+                intersectionPoints.DisplayProperties.constantMarkerSize = value;
             }
         }
 
@@ -431,8 +431,8 @@ namespace _3DVisualizerNI.ViewModel
             intersectionPoints = new IntersectionPoints();
             intersectionPoints.calculateIntersectionPoints(model.model, spatialMeasurement);
 
-            intStartTime = intersectionPoints.respStartTime + (directTime - 0.005);
-            intEndTime = intersectionPoints.respEndTime + directTime;
+            intStartTime = intersectionPoints.ResponseProperties.respStartTime + (directTime - 0.005);
+            intEndTime = intersectionPoints.ResponseProperties.respEndTime + directTime;
 
             RaisePropertyChanged("intStartTime");
             RaisePropertyChanged("intEndTime");
@@ -497,10 +497,12 @@ namespace _3DVisualizerNI.ViewModel
         private void PeakDetection()
         {
             PeakFindWindow pfWindow = new PeakFindWindow();
+            PeakFindViewModel pfViewModel = new PeakFindViewModel(intersectionPoints.PeakFindResults);
+            pfViewModel.amplitudes = spatialMeasurement.measurementData.getAmplitudeArray();
+            pfViewModel.Fs = spatialMeasurement.measurementData.Fs;
+            pfWindow.DataContext = pfViewModel;
             ((PeakFindViewModel)pfWindow.DataContext).amplitudes = spatialMeasurement.measurementData.getAmplitudeArray();
-            ((PeakFindViewModel)pfWindow.DataContext).filteredAmplitudes = intersectionPoints.filteredAmplitudes;
             ((PeakFindViewModel)pfWindow.DataContext).Fs = spatialMeasurement.measurementData.Fs;
-
             ((PeakFindViewModel)pfWindow.DataContext).InitPlotModel();
 
 
