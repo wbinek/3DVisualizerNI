@@ -1,4 +1,5 @@
 ﻿using _3DVisualizerNI.Model;
+using _3DVisualizerNI.Views;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -47,6 +48,7 @@ namespace _3DVisualizerNI.ViewModel
             this.StopAnimationCommand = new RelayCommand(this.StopAnimation);
             this.AddDataColorCommand = new RelayCommand(AddDataColor);
             this.RemoveDataColorCommand = new RelayCommand<IList>(RemoveDataColor);
+            this.PeakDetectionCommand = new RelayCommand(PeakDetection);
 
             Messenger.Default.Register<SpatialMeasurement>
             (
@@ -78,7 +80,7 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return intersectionPoints.colorDisplayMode;
+                if (intersectionPoints != null) return intersectionPoints.DisplayProperties.colorDisplayMode;
                 return null;
             }
         }
@@ -87,13 +89,26 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return intersectionPoints.sellectedColorDisplayMode;
+                if (intersectionPoints != null) return intersectionPoints.DisplayProperties.selectedColorDisplayMode;
                 return "";
             }
             set
             {
-                intersectionPoints.sellectedColorDisplayMode = value;
+                intersectionPoints.DisplayProperties.selectedColorDisplayMode = value;
                 RaisePropertyChanged("dataColors");
+            }
+        }
+
+        public bool constantSizeSelected
+        {
+            get
+            {
+                if (intersectionPoints != null) return intersectionPoints.DisplayProperties.constantMarkerSize;
+                return false;
+            }
+            set
+            {
+                intersectionPoints.DisplayProperties.constantMarkerSize = value;
             }
         }
 
@@ -101,12 +116,12 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return intersectionPoints.currentColorSet;
+                if (intersectionPoints != null) return intersectionPoints.DisplayProperties.currentColorSet;
                 return null;
             }
             set
             {
-                intersectionPoints.currentColorSet = value;
+                intersectionPoints.DisplayProperties.currentColorSet = value;
             }
         }
 
@@ -139,12 +154,12 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return intersectionPoints.respEndTime;
+                if (intersectionPoints != null) return intersectionPoints.ResponseProperties.respEndTime;
                 return 0;
             }
             set
             {
-                intersectionPoints.respEndTime = value;
+                intersectionPoints.ResponseProperties.respEndTime = value;
                 RaisePropertyChanged("intEndTime");
                 RaisePropertyChanged("intLength");
                 RaisePropertyChanged("maxTimeSlider");
@@ -167,12 +182,12 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return intersectionPoints.respStartTime;
+                if (intersectionPoints != null) return intersectionPoints.ResponseProperties.respStartTime;
                 return 0;
             }
             set
             {
-                intersectionPoints.respStartTime = value;
+                intersectionPoints.ResponseProperties.respStartTime = value;
                 RaisePropertyChanged("intStartTime");
                 RaisePropertyChanged("intLength");
                 RaisePropertyChanged("maxTimeSlider");
@@ -218,7 +233,7 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if ( spatialMeasurement != null && model != null ) return true;
+                if (spatialMeasurement != null && model != null) return true;
                 return false;
             }
         }
@@ -257,8 +272,21 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (intersectionPoints != null) return (intersectionPoints.respLength / intersectionPoints.Fs) - (intEndTime - intStartTime);
+                if (intersectionPoints != null) return (intersectionPoints.ResponseProperties.respLength / intersectionPoints.ResponseProperties.Fs) - (intEndTime - intStartTime);
                 return 0;
+            }
+        }
+
+        public bool peaksOnlySelected
+        {
+            get
+            {
+                if (intersectionPoints != null) return intersectionPoints.DisplayProperties.showPeaksOnly;
+                return false;
+            }
+            set
+            {
+                intersectionPoints.DisplayProperties.showPeaksOnly = value;
             }
         }
 
@@ -323,9 +351,24 @@ namespace _3DVisualizerNI.ViewModel
         }
         public RelayCommand ShowIPCommand { get; private set; }
 
+        public bool showPeaksOnly
+        {
+            get
+            {
+                if (intersectionPoints != null) return intersectionPoints.DisplayProperties.constantMarkerSize;
+                return false;
+            }
+            set
+            {
+                intersectionPoints.DisplayProperties.constantMarkerSize = value;
+            }
+        }
+
         public RelayCommand StartAnimationCommand { get; private set; }
 
         public RelayCommand StopAnimationCommand { get; private set; }
+
+        public RelayCommand PeakDetectionCommand { get; private set; }
 
         public double timeSlider
         {
@@ -388,8 +431,8 @@ namespace _3DVisualizerNI.ViewModel
             intersectionPoints = new IntersectionPoints();
             intersectionPoints.calculateIntersectionPoints(model.model, spatialMeasurement);
 
-            intStartTime = intersectionPoints.respStartTime + (directTime - 0.005);
-            intEndTime = intersectionPoints.respEndTime + directTime;
+            intStartTime = intersectionPoints.ResponseProperties.respStartTime + (directTime - 0.005);
+            intEndTime = intersectionPoints.ResponseProperties.respEndTime + directTime;
 
             RaisePropertyChanged("intStartTime");
             RaisePropertyChanged("intEndTime");
@@ -439,11 +482,6 @@ namespace _3DVisualizerNI.ViewModel
             isAnimationStartEnabled = false;
         }
 
-        //private object ReceiveIntersectionPoints(IntersectionPoints ip)
-        //{
-        //    intersectionPoints = ip;
-        //    return null;
-        //}
         private void ShowIntersectionPoints()
         {
             intersectionPoints.builidIntersectionModel();
@@ -454,6 +492,21 @@ namespace _3DVisualizerNI.ViewModel
         {
             aTimer.Stop();
             isAnimationStartEnabled = true;
+        }
+
+        private void PeakDetection()
+        {
+            PeakFindWindow pfWindow = new PeakFindWindow();
+            PeakFindViewModel pfViewModel = new PeakFindViewModel(intersectionPoints.PeakFindResults);
+            pfViewModel.amplitudes = spatialMeasurement.measurementData.getAmplitudeArray();
+            pfViewModel.Fs = spatialMeasurement.measurementData.Fs;
+            pfWindow.DataContext = pfViewModel;
+            ((PeakFindViewModel)pfWindow.DataContext).amplitudes = spatialMeasurement.measurementData.getAmplitudeArray();
+            ((PeakFindViewModel)pfWindow.DataContext).Fs = spatialMeasurement.measurementData.Fs;
+            ((PeakFindViewModel)pfWindow.DataContext).InitPlotModel();
+
+
+            pfWindow.Show();           
         }
 
         #endregion Private Methods

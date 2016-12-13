@@ -1,0 +1,32 @@
+﻿<Window xmlns:CustomControls="clr-namespace:_3DVisualizerNI.CustomControls"  x:Class="_3DVisualizerNI.Views.PeakFindWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_3DVisualizerNI.Views"
+        xmlns:VM = "clr-namespace:_3DVisualizerNI.ViewModel"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        mc:Ignorable="d"
+        Title="Peak Find" Height="300" Width="500">
+
+    <!--<Window.DataContext>
+        <VM:PeakFindViewModel/>
+    </Window.DataContext>-->
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <oxy:PlotView x:Name="Plot1" Model="{Binding MyModel}" Margin="10" Grid.Column="0"></oxy:PlotView>
+
+        <StackPanel Grid.Column="1" Width="Auto" Orientation="Vertical"  Background="GhostWhite">
+            <Button Content="Calculate peaks" Margin="5 5 5 5" Command="{Binding PeakDetectionCommand}"></Button>
+            <CustomControls:NumericWithLabel Value="{Binding lag}" Label="Lag:" Format="N0"/>
+            <CustomControls:NumericWithLabel Value="{Binding threshold}" Label="Threshold:" Format="N2"/>
+            <CustomControls:NumericWithLabel Value="{Binding influence}" Label="Influence:" Format="N2"/>
+            <CustomControls:NumericWithLabel Value="{Binding minLevel}" Label="Min dB:" Format="N0"/>
+        </StackPanel>
+    </Grid>
+    
+</Window>
