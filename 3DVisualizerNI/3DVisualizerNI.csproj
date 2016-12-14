@@ -138,6 +138,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -187,8 +188,12 @@
     <Compile Include="CustomControls\NumericWithLabel.xaml.cs">
       <DependentUpon>NumericWithLabel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\EnumHelper.cs" />
+    <Compile Include="Helpers\ButterworthFilterDesign\Biquad.cs" />
+    <Compile Include="Helpers\ButterworthFilterDesign\BiquadChain.cs" />
+    <Compile Include="Helpers\ButterworthFilterDesign\Butterworth.cs" />
     <Compile Include="Model\IntersectionPoints.cs" />
-    <Compile Include="Model\MyVector3D.cs" />
+    <Compile Include="Helpers\MyVector3D.cs" />
     <Compile Include="Model\PeakFinder.cs" />
     <Compile Include="Model\Scene3D.cs" />
     <Compile Include="Model\SpatialMeasurement.cs" />

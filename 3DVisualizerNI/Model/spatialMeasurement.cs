@@ -1,4 +1,6 @@
-﻿using HelixToolkit.Wpf;
+﻿using _3DVisualizerNI.Helpers;
+using _3DVisualizerNI.Helpers.ButterworthFilterDesign;
+using HelixToolkit.Wpf;
 using Microsoft.Win32;
 using NAudio.Wave;
 using System;
@@ -50,8 +52,53 @@ namespace _3DVisualizerNI.Model
         /// Arrays containing measurement result
         /// </summary>
         private double[] w, x, y, z;
+        private double[] filteredW, filteredX, filteredY, filteredZ;
+
+        public class FilterProperties
+        {
+            public FilterBank bank { get; set; } = FilterBank.None;
+            public CenterFreqO centerFreqO { get; set; } = CenterFreqO.f1000;
+            public CenterFreqTO centerFreqTO { get; set; } = CenterFreqTO.f1000;
+
+            public Enum SelectedFrequency {
+                get
+                {
+                    switch (bank)
+                    {
+                        case FilterBank.Octave:
+                            return centerFreqO;
+                        case FilterBank.Third_octave:
+                            return centerFreqTO;
+                    }
+                    return centerFreqO;
+                }
+            }
+        }
+
+        public void UpdateFilters()
+        {
+            if(filterProperties.bank == FilterBank.None)
+            {
+                filteredW = w;
+                filteredX = x;
+                filteredY = y;
+                filteredZ = z;
+                return;
+            }
+
+            filteredW = Butterworth.filterResult(filterProperties.bank, filterProperties.SelectedFrequency, w, Fs);
+            filteredX = Butterworth.filterResult(filterProperties.bank, filterProperties.SelectedFrequency, x, Fs);
+            filteredY = Butterworth.filterResult(filterProperties.bank, filterProperties.SelectedFrequency, y, Fs);
+            filteredZ = Butterworth.filterResult(filterProperties.bank, filterProperties.SelectedFrequency, z, Fs);
+        }
 
         #endregion Private Fields
+
+        public MeasurementData()
+        {
+            filterProperties = new FilterProperties();
+            UpdateFilters();
+        }
 
         #region Public Properties
 
@@ -59,6 +106,8 @@ namespace _3DVisualizerNI.Model
         /// Measurement sampling frequency
         /// </summary>
         public int Fs { get; set; }
+
+        public FilterProperties filterProperties { get; set; }
 
         #endregion Public Properties
 
@@ -70,7 +119,7 @@ namespace _3DVisualizerNI.Model
         /// <returns>Amplitude array w</returns>
         public double[] getAmplitudeArray()
         {
-            return w;
+            return filteredW;
         }
 
         /// <summary>
@@ -80,7 +129,7 @@ namespace _3DVisualizerNI.Model
         /// <returns>Amplitude w at specified index</returns>
         public double getAmplitudeAtIdx(int idx)
         {
-            return w[idx];
+            return filteredW[idx];
         }
 
         /// <summary>
@@ -90,7 +139,7 @@ namespace _3DVisualizerNI.Model
         /// <returns>Vector (x,y,z) at selected index</returns>
         public Vector3D getDirectionAtIdx(int idx)
         {
-            return new Vector3D(x[idx], y[idx], z[idx]);
+            return new Vector3D(filteredX[idx], filteredY[idx], filteredZ[idx]);
         }
 
         /// <summary>
@@ -99,7 +148,7 @@ namespace _3DVisualizerNI.Model
         /// <returns>Measurement length</returns>
         public int getLength()
         {
-            return w.Length;
+            return filteredW.Length;
         }
 
         /// <summary>
@@ -108,9 +157,9 @@ namespace _3DVisualizerNI.Model
         /// <returns>Max amplitude (w) value</returns>
         public double getMax()
         {
-            if (w != null)
+            if (filteredW != null)
             {
-                return w.Select(x => Math.Abs(x)).Max();
+                return filteredW.Select(x => Math.Abs(x)).Max();
             }
             return 0;
         }
@@ -121,10 +170,10 @@ namespace _3DVisualizerNI.Model
         /// <returns>Index of max amplitude (w) value</returns>
         public int getMaxIdx()
         {
-            if (w != null)
+            if (filteredW != null)
             {
                 double max = getMax();
-                return Array.IndexOf(Array.ConvertAll(w, x => Math.Abs(x)), max);
+                return Array.IndexOf(Array.ConvertAll(filteredW, x => Math.Abs(x)), max);
             }
             return 0;
         }
@@ -162,6 +211,8 @@ namespace _3DVisualizerNI.Model
             x = Array.ConvertAll(_x.ToArray(), s => (double)s);
             y = Array.ConvertAll(_y.ToArray(), s => (double)s);
             z = Array.ConvertAll(_z.ToArray(), s => (double)s);
+
+            UpdateFilters();
         }
 
         #endregion Public Methods

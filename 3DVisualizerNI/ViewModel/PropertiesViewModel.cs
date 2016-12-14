@@ -1,4 +1,5 @@
-﻿using _3DVisualizerNI.Model;
+﻿using _3DVisualizerNI.Helpers.ButterworthFilterDesign;
+using _3DVisualizerNI.Model;
 using _3DVisualizerNI.Views;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -8,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media.Media3D;
 using System.Windows.Threading;
 
@@ -29,6 +31,70 @@ namespace _3DVisualizerNI.ViewModel
         private Scene3D model;
         private SpatialMeasurement spatialMeasurement;
 
+        public FilterBank SelectedFilterBank
+        {
+            get { if(spatialMeasurement!=null) return spatialMeasurement.measurementData.filterProperties.bank;
+                return FilterBank.None;
+            }
+            set
+            {
+                if (spatialMeasurement.measurementData.filterProperties.bank != value)
+                {
+                    spatialMeasurement.measurementData.filterProperties.bank = value;
+                    RaisePropertyChanged("thirdOctaveVisible");
+                    RaisePropertyChanged("OctaveVisible");
+                }
+            }
+        }
+        public Visibility thirdOctaveVisible
+        {
+            get
+            {
+                if (SelectedFilterBank == FilterBank.Third_octave) return Visibility.Visible;
+                return Visibility.Hidden;
+            }
+        }
+        public Visibility OctaveVisible
+        {
+            get
+            {
+                if (SelectedFilterBank == FilterBank.Octave) return Visibility.Visible;
+                return Visibility.Hidden;
+            }
+        }
+        public CenterFreqO SelectedFrequencyOctave
+        {
+            get
+            {
+                if (spatialMeasurement != null)
+                {
+                    return spatialMeasurement.measurementData.filterProperties.centerFreqO;
+
+                }
+                return CenterFreqO.f1000;
+            }
+            set
+            {
+                spatialMeasurement.measurementData.filterProperties.centerFreqO = value;
+            }
+        }
+        public CenterFreqTO SelectedFrequencyThirdOctave
+        {
+            get
+            {
+                if (spatialMeasurement != null)
+                {
+                    return spatialMeasurement.measurementData.filterProperties.centerFreqTO;
+
+                }
+                return CenterFreqTO.f1000;
+            }
+            set
+            {
+                spatialMeasurement.measurementData.filterProperties.centerFreqTO = value;
+            }
+        }
+
         #endregion Private Fields
 
         #region Public Constructors
@@ -49,6 +115,7 @@ namespace _3DVisualizerNI.ViewModel
             this.AddDataColorCommand = new RelayCommand(AddDataColor);
             this.RemoveDataColorCommand = new RelayCommand<IList>(RemoveDataColor);
             this.PeakDetectionCommand = new RelayCommand(PeakDetection);
+            this.UpdateFiltersCommand = new RelayCommand(UpdateFilters);           
 
             Messenger.Default.Register<SpatialMeasurement>
             (
@@ -370,6 +437,8 @@ namespace _3DVisualizerNI.ViewModel
 
         public RelayCommand PeakDetectionCommand { get; private set; }
 
+        public RelayCommand UpdateFiltersCommand { get; private set; }
+
         public double timeSlider
         {
             get
@@ -501,12 +570,15 @@ namespace _3DVisualizerNI.ViewModel
             pfViewModel.amplitudes = spatialMeasurement.measurementData.getAmplitudeArray();
             pfViewModel.Fs = spatialMeasurement.measurementData.Fs;
             pfWindow.DataContext = pfViewModel;
-            ((PeakFindViewModel)pfWindow.DataContext).amplitudes = spatialMeasurement.measurementData.getAmplitudeArray();
-            ((PeakFindViewModel)pfWindow.DataContext).Fs = spatialMeasurement.measurementData.Fs;
             ((PeakFindViewModel)pfWindow.DataContext).InitPlotModel();
 
 
             pfWindow.Show();           
+        }
+
+        private void UpdateFilters()
+        {
+            spatialMeasurement.measurementData.UpdateFilters();
         }
 
         #endregion Private Methods

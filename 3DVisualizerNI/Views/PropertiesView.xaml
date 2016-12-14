@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:_3DVisualizerNI.Views"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:data = "clr-namespace:_3DVisualizerNI.Model"
-             xmlns:VM = "clr-namespace:_3DVisualizerNI.ViewModel"          
+             xmlns:VM = "clr-namespace:_3DVisualizerNI.ViewModel"  
+             xmlns:conv = "clr-namespace:_3DVisualizerNI.Helpers" 
 
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="300">
@@ -62,15 +63,15 @@
                         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="X:"></Label>
-                                <xctk:DecimalUpDown Value="{Binding pX}"></xctk:DecimalUpDown>
+                                <xctk:DecimalUpDown Value="{Binding pX}" HorizontalAlignment="Right"></xctk:DecimalUpDown>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="Y:"></Label>
-                                <xctk:DecimalUpDown Value="{Binding pY}"></xctk:DecimalUpDown>
+                                <xctk:DecimalUpDown Value="{Binding pY}" HorizontalAlignment="Right"></xctk:DecimalUpDown>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="Z:"></Label>
-                                <xctk:DecimalUpDown Value="{Binding pZ}"></xctk:DecimalUpDown>
+                                <xctk:DecimalUpDown Value="{Binding pZ}" HorizontalAlignment="Right"></xctk:DecimalUpDown>
                             </StackPanel>
                         </StackPanel>
 
@@ -87,7 +88,7 @@
                     </Grid>
                 </Expander>
 
-                <Expander Header='Intersection properties' IsEnabled="{Binding isIntersectionPropertiesEnabled}" IsExpanded="False">
+                <Expander Header='Display properties' IsEnabled="{Binding isIntersectionPropertiesEnabled}" IsExpanded="False">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"></RowDefinition>
@@ -150,6 +151,9 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"></RowDefinition>
                             <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -160,6 +164,25 @@
 
                         <Label Grid.Row="1" HorizontalAlignment="Center" Content="Show peaks only:" ></Label>
                         <CheckBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Margin="5,5,5,5" IsChecked="{Binding peaksOnlySelected}"></CheckBox>
+
+
+                        <Button Grid.Row="2" Grid.ColumnSpan="2" Command="{Binding UpdateFiltersCommand}" Margin="5,5,5,5">Update filters</Button>
+                        
+                        <Label Grid.Row="3" HorizontalAlignment="Left" Content="Filter Bank:" ></Label>
+                        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Path=SelectedFilterBank, Converter={conv:EnumToCollectionConverter}, Mode=OneTime}"
+                                SelectedValuePath="Key"
+                                DisplayMemberPath="Value"
+                                SelectedValue="{Binding Path=SelectedFilterBank}" />
+
+                        <Label Grid.Row="4" HorizontalAlignment="Left" Content="Frequency:" ></Label>
+                        <ComboBox Grid.Row="4" Grid.Column="1" Visibility="{Binding OctaveVisible}" ItemsSource="{Binding Path=SelectedFrequencyOctave, Converter={conv:EnumToCollectionConverter}, Mode=OneTime}"
+                                SelectedValuePath="Key"
+                                DisplayMemberPath="Value"
+                                SelectedValue="{Binding Path=SelectedFrequencyOctave}" />
+                        <ComboBox Grid.Row="4" Grid.Column="1" Visibility="{Binding thirdOctaveVisible}" ItemsSource="{Binding Path=SelectedFrequencyThirdOctave, Converter={conv:EnumToCollectionConverter}, Mode=OneTime}"
+                                SelectedValuePath="Key"
+                                DisplayMemberPath="Value"
+                                SelectedValue="{Binding Path=SelectedFrequencyThirdOctave}" />
                     </Grid>
                 </Expander>
                 

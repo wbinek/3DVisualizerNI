@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Media.Media3D;
 
-namespace _3DVisualizerNI.Model
+namespace _3DVisualizerNI.Helpers
 {
     /// <summary>
     /// Static class containing vector coordinates conversions
