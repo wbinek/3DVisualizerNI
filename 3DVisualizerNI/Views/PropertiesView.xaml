@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:_3DVisualizerNI.Views"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:data = "clr-namespace:_3DVisualizerNI.Model"
-             xmlns:VM = "clr-namespace:_3DVisualizerNI.ViewModel"          
+             xmlns:VM = "clr-namespace:_3DVisualizerNI.ViewModel"
+             xmlns:customControls="clr-namespace:_3DVisualizerNI.CustomControls"
 
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="300">
@@ -59,20 +60,7 @@
                         <ComboBox Grid.Column="1" SelectedItem="{Binding ResolutionSelected}" ItemsSource="{Binding ResolutionList}" VerticalContentAlignment="Center" Margin="5,5,5,5" Width="50"></ComboBox>
 
                         <Label Content="Position:" Grid.Row="1" VerticalContentAlignment="Center"></Label>
-                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="X:"></Label>
-                                <xctk:DecimalUpDown Value="{Binding pX}"></xctk:DecimalUpDown>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="Y:"></Label>
-                                <xctk:DecimalUpDown Value="{Binding pY}"></xctk:DecimalUpDown>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="Z:"></Label>
-                                <xctk:DecimalUpDown Value="{Binding pZ}"></xctk:DecimalUpDown>
-                            </StackPanel>
-                        </StackPanel>
+                        <customControls:Vector3DControl Vector="{Binding MeasurementPosition}" Grid.Row="1" Grid.Column="1"></customControls:Vector3DControl>
 
                         <Label Grid.Row="2" Content="Response scale:" VerticalContentAlignment="Center"></Label>
                         <Slider Grid.Row="2" Grid.Column="1" Value="{Binding ImpulseScale}" Maximum="50" Minimum="1" TickPlacement="Both"  TickFrequency="10"></Slider>
