@@ -10,7 +10,6 @@ namespace _3DVisualizerNI.ViewModel
     /// </summary>
     public class Model3DViewModel : ViewModelBase
     {
-        private SpatialMeasurement test;
 
         private Model3DGroup model3DContent;
         private Model3DGroup spatialResponse3DContent;
@@ -93,7 +92,6 @@ namespace _3DVisualizerNI.ViewModel
 
         private object ReceiveResponse(SpatialMeasurement sm)
         {
-            test = sm;
             SpatialResponse3DContent = sm.responseModel;
             return null;
         }

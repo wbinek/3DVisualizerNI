@@ -118,17 +118,17 @@
                         <Label Grid.Row="2" Content="Window length [s]:"></Label>
                         <xctk:DecimalUpDown Grid.Row="2" Grid.Column ="1" Value="{Binding intLength}" Increment="0.01" FormatString="N3"></xctk:DecimalUpDown>
 
-                        <Label Grid.Row="4" Content="Slide window:" VerticalContentAlignment="Center"></Label>
-                        <Slider Grid.Row="4" Grid.Column="1" Value="{Binding timeSlider}" Maximum="{Binding maxTimeSlider}" Minimum="0" TickPlacement="Both"  TickFrequency="0.01" IsSnapToTickEnabled="True"></Slider>
+                        <Label Grid.Row="3" Content="Slide window:" VerticalContentAlignment="Center"></Label>
+                        <Slider Grid.Row="3" Grid.Column="1" Value="{Binding timeSlider}" Maximum="{Binding maxTimeSlider}" Minimum="0" TickPlacement="Both"  TickFrequency="0.01" IsSnapToTickEnabled="True"></Slider>
 
-                        <Label Grid.Row="3" Grid.ColumnSpan="2" Content="LEGEND" HorizontalAlignment="Center" VerticalContentAlignment="Center"></Label>
+                        <Label Grid.Row="4" Grid.ColumnSpan="2" Content="LEGEND" HorizontalAlignment="Center" VerticalContentAlignment="Center"></Label>
 
-                        <ComboBox Grid.Row="4"  Grid.ColumnSpan="2" SelectedItem="{Binding colorModeSelected}" ItemsSource="{Binding colorModes}" VerticalContentAlignment="Center" Margin="5,5,5,5"></ComboBox>
+                        <ComboBox Grid.Row="5"  Grid.ColumnSpan="2" SelectedItem="{Binding colorModeSelected}" ItemsSource="{Binding colorModes}" VerticalContentAlignment="Center" Margin="5,5,5,5"></ComboBox>
 
-                        <ListBox Name="LegendListBox" Grid.Row="5" Grid.ColumnSpan="2" ItemsSource = "{Binding dataColors}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="200" IsEnabled="{Binding ipDisplayEnabled}" />
+                        <ListBox Name="LegendListBox" Grid.Row="6" Grid.ColumnSpan="2" ItemsSource = "{Binding dataColors}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="200" IsEnabled="{Binding ipDisplayEnabled}" />
 
-                        <Button Grid.Row="6"  Command="{Binding AddDataColorCommand}" Margin="5,5,5,5">Add item</Button>
-                        <Button Grid.Row="6" Grid.Column="1" Command="{Binding RemoveDataColorCommand}" CommandParameter="{Binding ElementName=LegendListBox, Path=SelectedItems}" Margin="5,5,5,5">Remove item
+                        <Button Grid.Row="7"  Command="{Binding AddDataColorCommand}" Margin="5,5,5,5">Add item</Button>
+                        <Button Grid.Row="7" Grid.Column="1" Command="{Binding RemoveDataColorCommand}" CommandParameter="{Binding ElementName=LegendListBox, Path=SelectedItems}" Margin="5,5,5,5">Remove item
                             <Button.Style>
                                 <Style>
                                     <Style.Triggers>
@@ -140,8 +140,8 @@
                             </Button.Style>
                         </Button>
 
-                        <Label Grid.Row="7" HorizontalAlignment="Center" Content="Constant marker size:" ></Label>
-                        <CheckBox Grid.Row="7" Grid.Column="1" HorizontalAlignment="Center" Margin="5,5,5,5" IsChecked="{Binding constantSizeSelected}"></CheckBox>
+                        <Label Grid.Row="8" HorizontalAlignment="Center" Content="Constant marker size:" ></Label>
+                        <CheckBox Grid.Row="8" Grid.Column="1" HorizontalAlignment="Center" Margin="5,5,5,5" IsChecked="{Binding constantSizeSelected}"></CheckBox>
                     </Grid>
                 </Expander>
 

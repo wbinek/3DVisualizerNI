@@ -187,6 +187,9 @@
     <Compile Include="CustomControls\NumericWithLabel.xaml.cs">
       <DependentUpon>NumericWithLabel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\Vector3D.xaml.cs">
+      <DependentUpon>Vector3D.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\IntersectionPoints.cs" />
     <Compile Include="Model\MyVector3D.cs" />
     <Compile Include="Model\PeakFinder.cs" />
@@ -210,6 +213,10 @@
       <DependentUpon>PropertiesView.xaml</DependentUpon>
     </Compile>
     <Page Include="CustomControls\NumericWithLabel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\Vector3D.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
