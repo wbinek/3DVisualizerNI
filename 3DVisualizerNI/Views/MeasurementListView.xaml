@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="_3DVisualizerNI.Views.MeasurementListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:_3DVisualizerNI.Views"
+             xmlns:viewModel="clr-namespace:_3DVisualizerNI.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    
+    <UserControl.DataContext>
+        <viewModel:MeasurementListViewModel/>
+    </UserControl.DataContext>
+
+    <Grid>
+        <ListView Name="List" ItemsSource="{Binding MeasurementList}">
+            <!--<ListView.InputBindings>
+                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding SelectMeasuremetCommand}" CommandParameter="{Binding ElementName=List, Path=SelectedItem}"></MouseBinding>
+            </ListView.InputBindings>-->
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Measurement" Width="150">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding measurementName}">
+                                    <TextBlock.InputBindings>
+                                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.SelectMeasuremetCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding ElementName=List, Path=SelectedItem}"></MouseBinding>
+                                    </TextBlock.InputBindings>
+                                </TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>

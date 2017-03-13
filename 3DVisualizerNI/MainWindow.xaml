@@ -23,11 +23,13 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <views:Model3DView x:Name = "Model3DView" Grid.Column="0"></views:Model3DView>
             <GroupBox Header="PROPERTIES" Grid.Column="1" Background="GhostWhite" VerticalAlignment="Stretch">
                 <views:PropertiesView x:Name="PropertiesView" ></views:PropertiesView>
             </GroupBox>
+            <views:MeasurementListView x:Name="MeasurementList"  Grid.Column="2"></views:MeasurementListView>
         </Grid>
     </Grid>
 </Window>

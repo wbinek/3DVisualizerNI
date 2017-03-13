@@ -14,7 +14,8 @@
     
     <Grid>
         <Menu>
-            <MenuItem Header="Plik">
+            <MenuItem Header="Project">
+                <MenuItem Header="New project" Command="{Binding NewProjectCommand}"></MenuItem>
             </MenuItem>
             <MenuItem Header="Model">
                 <MenuItem Header="Load 3D model" Command="{Binding LoadModelCommand}"></MenuItem>
@@ -22,6 +23,7 @@
 
             <MenuItem Header="Measurement">
                 <MenuItem Header="Load measurement" Command="{Binding LoadMeasurementCommand}"></MenuItem>
+                <MenuItem Header="Make measurement" Command="{Binding MakeMeasurementCommand}"></MenuItem>
             </MenuItem>
         </Menu>
     </Grid>

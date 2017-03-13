@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using _3DVisualizerNI.ViewModel;
 
 namespace _3DVisualizerNI
 {
@@ -10,6 +11,7 @@ namespace _3DVisualizerNI
         public MainWindow()
         {
             InitializeComponent();
+            ((MenuToolbarViewModel)MenuToolbarView.DataContext).NewProject();
         }
     }
 }

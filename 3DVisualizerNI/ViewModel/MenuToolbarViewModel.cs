@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using _3DVisualizerNI.Views;
 
 namespace _3DVisualizerNI.ViewModel
 {
@@ -17,16 +18,20 @@ namespace _3DVisualizerNI.ViewModel
         {
             this.LoadModelCommand = new RelayCommand(this.LoadModel);
             this.LoadMeasurementCommand = new RelayCommand(this.LoadMeasurement);
+            this.MakeMeasurementCommand = new RelayCommand(this.MakeMeasurement);
+            this.NewProjectCommand = new RelayCommand(this.NewProject);
         }
 
         public RelayCommand LoadMeasurementCommand { get; private set; }
+        public RelayCommand MakeMeasurementCommand { get; private set; }
         public RelayCommand LoadModelCommand { get; private set; }
+        public RelayCommand NewProjectCommand { get; private set; }
         public void LoadMeasurement()
         {
             spatialMeasurement = new SpatialMeasurement();
             spatialMeasurement.importWaveResult();
 
-            Messenger.Default.Send<SpatialMeasurement>(spatialMeasurement);
+            Messenger.Default.Send<SpatialMeasurement>(spatialMeasurement, "AddToList");
         }
 
         public void LoadModel()
@@ -35,6 +40,20 @@ namespace _3DVisualizerNI.ViewModel
             scene3D.LoadModel();
 
             Messenger.Default.Send<Scene3D>(scene3D);
+        }
+
+        public void NewProject()
+        {
+            Project project = new Project();
+            Messenger.Default.Send<Project>(project);
+        }
+
+        public void MakeMeasurement()
+        {
+            MakeMeasurementWindow measWindow = new MakeMeasurementWindow();
+            MakeMeasurementViewModel measViewModel = new MakeMeasurementViewModel();
+            measWindow.DataContext = measViewModel;
+            measWindow.Show();
         }
     }
 }
