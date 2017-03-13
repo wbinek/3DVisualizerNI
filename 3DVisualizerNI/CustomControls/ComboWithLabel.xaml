@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="_3DVisualizerNI.CustomControls.ComboWithLabel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:_3DVisualizerNI.CustomControls"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="50" d:DesignWidth="300">
+    
+    <Grid Name="Root">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Label Content="{Binding Label}" Grid.Column="0"></Label>
+        <ComboBox SelectedItem="{Binding Item}" ItemsSource="{Binding List}" VerticalContentAlignment="Center" Margin="5,5,5,5" Width="125" HorizontalAlignment="Right" Grid.Column="1"></ComboBox>
+    </Grid>
+</UserControl>

@@ -6,20 +6,17 @@
              xmlns:local="clr-namespace:_3DVisualizerNI.CustomControls"
              mc:Ignorable="d"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="100" d:DesignWidth="80">
     <Grid Name="Root">
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
-                <Label Content="X:"></Label>
-                <xctk:DecimalUpDown Value="{Binding X, Mode=TwoWay}"></xctk:DecimalUpDown>
+                <local:NumericWithLabel Label="X" Value="{Binding X, Mode=TwoWay}" Format="N1"></local:NumericWithLabel>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Label Content="Y:"></Label>
-                <xctk:DecimalUpDown Value="{Binding Y, Mode=TwoWay}"></xctk:DecimalUpDown>
+                <local:NumericWithLabel Label="Y" Value="{Binding Y, Mode=TwoWay}" Format="N1"></local:NumericWithLabel>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Label Content="Z:"></Label>
-                <xctk:DecimalUpDown Value="{Binding Z, Mode=TwoWay}"></xctk:DecimalUpDown>
+                <local:NumericWithLabel Label="Z" Value="{Binding Z, Mode=TwoWay}" Format="N1"></local:NumericWithLabel>
             </StackPanel>
         </StackPanel>
     </Grid>

@@ -290,48 +290,16 @@ namespace _3DVisualizerNI.ViewModel
             }
         }
 
-        public double pX
+        public Vector3D MeasurementPosition
         {
             get
             {
-                if (spatialMeasurement != null) return spatialMeasurement.measurementPosition.X;
-                return 0;
+                if (spatialMeasurement != null) return spatialMeasurement.measurementPosition;
+                return new Vector3D(0,0,0);
             }
             set
             {
-                Vector3D newPos = spatialMeasurement.measurementPosition;
-                newPos.X = value;
-                spatialMeasurement.measurementPosition = newPos;
-            }
-        }
-
-        public double pY
-        {
-            get
-            {
-                if (spatialMeasurement != null) return spatialMeasurement.measurementPosition.Y;
-                return 0;
-            }
-            set
-            {
-                Vector3D newPos = spatialMeasurement.measurementPosition;
-                newPos.Y = value;
-                spatialMeasurement.measurementPosition = newPos;
-            }
-        }
-
-        public double pZ
-        {
-            get
-            {
-                if (spatialMeasurement != null) return spatialMeasurement.measurementPosition.Z;
-                return 0;
-            }
-            set
-            {
-                Vector3D newPos = spatialMeasurement.measurementPosition;
-                newPos.Z = value;
-                spatialMeasurement.measurementPosition = newPos;
+                spatialMeasurement.measurementPosition = value;
             }
         }
 
@@ -461,6 +429,7 @@ namespace _3DVisualizerNI.ViewModel
             RaisePropertyChanged("isResponsePropertiesEnabled");
             RaisePropertyChanged("isCalculateInstersecitionPointsEnabled");
             RaisePropertyChanged("isIntersectionPropertiesEnabled");
+            RaisePropertyChanged("MeasurementPosition");
 
             isIntersectionPointsDisplayEnabled = false;
             return null;
