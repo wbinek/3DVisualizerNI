@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media.Media3D;
@@ -265,6 +266,8 @@ namespace _3DVisualizerNI.Model
         /// 3D Model of measured response
         /// </summary>
         public Model3DGroup responseModel { get; set; }
+
+        public string measurementName { get; set; }
         #endregion Public Properties
 
         #region Public Methods
@@ -320,6 +323,7 @@ namespace _3DVisualizerNI.Model
             {
                 path = OpenDialog.FileName;
                 measurementData.importWaveResult(path);
+                measurementName = Path.GetFileName(path);
                 buildResponseModel();
                 setTransforms();
             }
