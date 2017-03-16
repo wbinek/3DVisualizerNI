@@ -10,13 +10,13 @@
     <Grid Name="Root">
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
-                <local:NumericWithLabel Label="X" Value="{Binding X, Mode=TwoWay}" Format="N1"></local:NumericWithLabel>
+                <local:NumericWithLabel Label="X" Value="{Binding X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Format="N1"></local:NumericWithLabel>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <local:NumericWithLabel Label="Y" Value="{Binding Y, Mode=TwoWay}" Format="N1"></local:NumericWithLabel>
+                <local:NumericWithLabel Label="Y" Value="{Binding Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Format="N1"></local:NumericWithLabel>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <local:NumericWithLabel Label="Z" Value="{Binding Z, Mode=TwoWay}" Format="N1"></local:NumericWithLabel>
+                <local:NumericWithLabel Label="Z" Value="{Binding Z, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Format="N1"></local:NumericWithLabel>
             </StackPanel>
         </StackPanel>
     </Grid>

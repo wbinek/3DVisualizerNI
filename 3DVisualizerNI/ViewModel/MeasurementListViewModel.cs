@@ -15,6 +15,8 @@ namespace _3DVisualizerNI.ViewModel
     class MeasurementListViewModel : ViewModelBase
     {
         private Project project;
+        public RelayCommand<SpatialMeasurement> SelectMeasuremetCommand { get; private set; }
+        public RelayCommand<SpatialMeasurement> SaveResultAsWaveCommand { get; private set; }
 
         public ObservableCollection<SpatialMeasurement> MeasurementList
         {
@@ -33,9 +35,10 @@ namespace _3DVisualizerNI.ViewModel
            );
 
             SelectMeasuremetCommand = new RelayCommand<SpatialMeasurement>(SelectMeasurement);
+            SaveResultAsWaveCommand = new RelayCommand<SpatialMeasurement>(SaveResultAsWave);
         }
 
-        public RelayCommand<SpatialMeasurement> SelectMeasuremetCommand { get; private set; }
+       
         private object ReceiveProject(Project proj)
         {
             project = proj;
@@ -46,6 +49,11 @@ namespace _3DVisualizerNI.ViewModel
         private void SelectMeasurement(SpatialMeasurement meas)
         {
             Messenger.Default.Send<SpatialMeasurement>(meas);
+        }
+
+        private void SaveResultAsWave(SpatialMeasurement meas)
+        {
+            meas.saveWaveResult();
         }
     }
 }

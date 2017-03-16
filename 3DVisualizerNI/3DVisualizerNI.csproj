@@ -120,6 +120,10 @@
       <HintPath>..\packages\HelixToolkit.Wpf.2015.1.715\lib\net45\HelixToolkit.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MathNet.Numerics, Version=3.17.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.3.17.0\lib\net40\MathNet.Numerics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
@@ -140,6 +144,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -195,13 +200,19 @@
     <Compile Include="CustomControls\Vector3DControl.xaml.cs">
       <DependentUpon>Vector3DControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\CardConfig.cs" />
+    <Compile Include="Model\MeasurementTools\aiaoDriver.cs" />
+    <Compile Include="Model\MeasurementTools\CardConfig.cs" />
     <Compile Include="Model\IntersectionPoints.cs" />
+    <Compile Include="Model\MeasurementTools\FunctionGenerator.cs" />
+    <Compile Include="Model\MeasurementTools\MeasurementConfig.cs" />
+    <Compile Include="Model\MeasurementTools\MeasurementExecutioner.cs" />
+    <Compile Include="Model\MeasurementTools\Tools.cs" />
     <Compile Include="Model\MyVector3D.cs" />
     <Compile Include="Model\PeakFinder.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\Scene3D.cs" />
     <Compile Include="Model\SpatialMeasurement.cs" />
+    <Compile Include="ViewModel\AcceptResultsViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MakeMeasurementViewModel.cs" />
     <Compile Include="ViewModel\MeasurementListViewModel.cs" />
@@ -209,6 +220,9 @@
     <Compile Include="ViewModel\Model3DViewModel.cs" />
     <Compile Include="ViewModel\PeakFindViewModel.cs" />
     <Compile Include="ViewModel\PropertiesViewModel.cs" />
+    <Compile Include="Views\AcceptResultsWindow.xaml.cs">
+      <DependentUpon>AcceptResultsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MakeMeasurementWindow.xaml.cs">
       <DependentUpon>MakeMeasurementWindow.xaml</DependentUpon>
     </Compile>
@@ -251,6 +265,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\AcceptResultsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MakeMeasurementWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

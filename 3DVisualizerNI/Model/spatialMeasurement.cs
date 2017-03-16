@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media.Media3D;
+using System.Xml.Serialization.Configuration;
 
 namespace _3DVisualizerNI.Model
 {
@@ -55,6 +56,14 @@ namespace _3DVisualizerNI.Model
         #endregion Private Fields
 
         #region Public Properties
+
+        public void setData(double[] W, double[] X, double[] Y, double[] Z)
+        {
+            w = W;
+            x = X;
+            y = Y;
+            z = Z;
+        }
 
         /// <summary>
         /// Measurement sampling frequency
@@ -151,18 +160,50 @@ namespace _3DVisualizerNI.Model
 
             float[] buffer = new float[reader.WaveFormat.Channels];
             Fs = reader.WaveFormat.SampleRate;
-            while (reader.Read(buffer, 0, reader.WaveFormat.Channels) > 0)
+
+            int read = reader.Read(buffer, 0, reader.WaveFormat.Channels);
+            double scale=1;
+            while (read > 0)
             {
                 _w.Add(buffer[0]);
                 _x.Add(buffer[1]);
                 _y.Add(buffer[2]);
                 _z.Add(buffer[3]);
+                read = reader.Read(buffer, 0, reader.WaveFormat.Channels);
+
+                if (read == 1)
+                {
+                    scale = buffer[0];
+                    break;
+                }
             }
 
-            w = Array.ConvertAll(_w.ToArray(), s => (double)s);
-            x = Array.ConvertAll(_x.ToArray(), s => (double)s);
-            y = Array.ConvertAll(_y.ToArray(), s => (double)s);
-            z = Array.ConvertAll(_z.ToArray(), s => (double)s);
+            
+            w = Array.ConvertAll(_w.ToArray(), s => (double)(s/scale));
+            x = Array.ConvertAll(_x.ToArray(), s => (double)(s/scale));
+            y = Array.ConvertAll(_y.ToArray(), s => (double)(s/scale));
+            z = Array.ConvertAll(_z.ToArray(), s => (double)(s/scale));
+        }
+
+        public void saveResultAsWave(string path)
+        {
+            double maxVal = getMax();
+            if (maxVal < 1) maxVal = 1;
+
+            WaveFormat format = WaveFormat.CreateIeeeFloatWaveFormat(Fs, 4);
+            WaveFileWriter writer = new WaveFileWriter(path,format);
+            for (int i = 0; i < w.Length; i++)
+            {
+
+                writer.WriteSample((float)(w[i]/ maxVal));
+                writer.WriteSample((float)(x[i]/ maxVal));
+                writer.WriteSample((float)(y[i]/ maxVal));
+                writer.WriteSample((float)(z[i]/ maxVal));
+            }
+
+            writer.WriteSample((float)(1/maxVal));
+            writer.Close();
+            
         }
 
         #endregion Public Methods
@@ -326,6 +367,20 @@ namespace _3DVisualizerNI.Model
                 measurementName = Path.GetFileName(path);
                 buildResponseModel();
                 setTransforms();
+            }
+        }
+
+        public void saveWaveResult()
+        {
+            //Get File Path
+            string path;
+            SaveFileDialog SaveDialog = new SaveFileDialog();
+            SaveDialog.Filter = "wav files (*.wav)|*.wav";
+
+            if (SaveDialog.ShowDialog() == true)
+            {
+                path = SaveDialog.FileName;
+                measurementData.saveResultAsWave(path);
             }
         }
 

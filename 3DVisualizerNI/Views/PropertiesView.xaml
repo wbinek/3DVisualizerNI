@@ -34,8 +34,8 @@
         <GroupBox Header="Display" Grid.Row="0">
             <StackPanel  IsEnabled="{Binding isIntersectionPropertiesEnabled}">
                 <Button Command="{Binding ShowIPCommand}" Margin="5,5,5,5">Show intersection points</Button>
-                <Button Command="{Binding StartAnimationCommand}" Margin="5,5,5,5" IsEnabled="{Binding animationStartEnabled}">Start animation</Button>
-                <Button Command="{Binding StopAnimationCommand}" Margin="5,5,5,5" IsEnabled="{Binding animationStopEnabled}">Stop animation</Button>
+                <Button Command="{Binding StartAnimationCommand}" Margin="5,5,5,5" IsEnabled="{Binding isAnimationStartEnabled}">Start animation</Button>
+                <Button Command="{Binding StopAnimationCommand}" Margin="5,5,5,5" IsEnabled="{Binding isAnimationStopEnabled}">Stop animation</Button>
             </StackPanel>
         </GroupBox>
         <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="1">
@@ -113,7 +113,7 @@
 
                         <ComboBox Grid.Row="5"  Grid.ColumnSpan="2" SelectedItem="{Binding colorModeSelected}" ItemsSource="{Binding colorModes}" VerticalContentAlignment="Center" Margin="5,5,5,5"></ComboBox>
 
-                        <ListBox Name="LegendListBox" Grid.Row="6" Grid.ColumnSpan="2" ItemsSource = "{Binding dataColors}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="200" IsEnabled="{Binding ipDisplayEnabled}" />
+                        <ListBox Name="LegendListBox" Grid.Row="6" Grid.ColumnSpan="2" ItemsSource = "{Binding dataColors}" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="200" IsEnabled="{Binding isIntersectionPointsDisplayEnabled}" />
 
                         <Button Grid.Row="7"  Command="{Binding AddDataColorCommand}" Margin="5,5,5,5">Add item</Button>
                         <Button Grid.Row="7" Grid.Column="1" Command="{Binding RemoveDataColorCommand}" CommandParameter="{Binding ElementName=LegendListBox, Path=SelectedItems}" Margin="5,5,5,5">Remove item

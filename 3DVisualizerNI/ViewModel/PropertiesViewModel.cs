@@ -430,6 +430,7 @@ namespace _3DVisualizerNI.ViewModel
             RaisePropertyChanged("isCalculateInstersecitionPointsEnabled");
             RaisePropertyChanged("isIntersectionPropertiesEnabled");
             RaisePropertyChanged("MeasurementPosition");
+            RaisePropertyChanged("ImpulseScale");
 
             isIntersectionPointsDisplayEnabled = false;
             return null;

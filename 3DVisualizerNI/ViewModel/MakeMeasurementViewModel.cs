@@ -1,17 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using NationalInstruments.DAQmx;
-using _3DVisualizerNI.Model;
+using _3DVisualizerNI.Model.MeasurementTools;
 
 namespace _3DVisualizerNI.ViewModel
 {
     class MakeMeasurementViewModel : ViewModelBase
     {
         public CardConfig cardConfig;
+        public MeasurementConfig measurementConfig;
+
+        public RelayCommand StartMeasurementCommand { get; private set; }
 
         public List<ChannelConfig> AvalibleChannels
         {
@@ -92,10 +98,87 @@ namespace _3DVisualizerNI.ViewModel
             set { cardConfig.aoMin = value; }
         }
 
+        public Array AvalibleMeasurementMethod
+        {
+            get { return measurementConfig.AvaliblemMeasurementMethod; }
+        }
+        public MeasurementMethods MeasurementMethodSelected
+        {
+            get { return measurementConfig.measMethod; }
+            set { measurementConfig.measMethod = value; }
+        }
+
+        public int AveragesNo
+        {
+            get { return measurementConfig.averages; }
+            set { measurementConfig.averages = value; }
+        }
+
+        public int Fmin
+        {
+            get { return measurementConfig.fmin; }
+            set { measurementConfig.fmin = value; }
+        }
+
+        public int Fmax
+        {
+            get
+            {
+                if (measurementConfig.fmax == 0) return cardConfig.chSmplRate / 2;
+                return measurementConfig.fmax;
+            }
+            set
+            {
+                if (value > cardConfig.chSmplRate / 2) value = cardConfig.chSmplRate / 2;
+                measurementConfig.fmax = value;
+            }
+        }
+
+        public double measLength
+        {
+            get { return measurementConfig.measLength; }
+            set { measurementConfig.measLength = value; }
+        }
+
+        public double breakLength
+        {
+            get { return measurementConfig.breakLength; }
+            set { measurementConfig.breakLength = value; }
+        }
+
         public MakeMeasurementViewModel()
         {
             cardConfig = new CardConfig();
+            measurementConfig = new MeasurementConfig();
+            this.StartMeasurementCommand = new RelayCommand(this.StartMeasurement);
         }
 
+        public double TimerMax{get; set;}
+        public double TimerValue { get; set; }
+        private Timer timer;
+        private int timerInterval=500;
+
+        public void StartMeasurement()
+        {
+            TimerValue = 0;
+            TimerMax = AveragesNo * (measLength + breakLength);
+            RaisePropertyChanged("TimerMax");
+            RaisePropertyChanged("TimerValue");
+            timer =new Timer(timerInterval);
+            timer.Elapsed += timer_Elapsed;
+            timer.Start();
+
+            MeasurementExecutioner me = new MeasurementExecutioner(cardConfig,measurementConfig);
+            me.startMeasurement();
+
+           }
+
+        private void timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            TimerValue += (double)timerInterval / 1000;
+            RaisePropertyChanged("TimerValue");
+            if (TimerValue >= TimerMax)
+                timer.Stop();
+        }
     }
 }

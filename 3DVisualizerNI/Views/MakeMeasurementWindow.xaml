@@ -12,13 +12,19 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <TabControl Grid.Row="0">
             <TabItem Header ="Measurement config">
                 <StackPanel>
                     <GroupBox x:Name="MeasurementSettings" Header="Measurement settings">
                         <StackPanel>
-                            
+                            <customControls:ComboWithLabel Label="Measurement method:" List="{Binding AvalibleMeasurementMethod}" Item="{Binding MeasurementMethodSelected}"></customControls:ComboWithLabel>
+                            <customControls:NumericWithLabel Label="Number of averages:" Format="N0" Value="{Binding AveragesNo}"></customControls:NumericWithLabel>
+                            <customControls:NumericWithLabel Label="Measurement length:" Format="N0" Value="{Binding measLength}"></customControls:NumericWithLabel>
+                            <customControls:NumericWithLabel Label="Break length:" Format="N1" Value="{Binding breakLength}"></customControls:NumericWithLabel>
+                            <customControls:NumericWithLabel Label="Fmin:" Format="N0" Value="{Binding Fmin}"></customControls:NumericWithLabel>
+                            <customControls:NumericWithLabel Label="Fmax:" Format="N0" Value="{Binding Fmax}"></customControls:NumericWithLabel>
                         </StackPanel>
                     </GroupBox>
                 </StackPanel>
@@ -75,6 +81,7 @@
                 
             </TabItem>
         </TabControl>
-        <Button Grid.Row="1">Start measurement</Button>
+        <Button Grid.Row="1" Command="{Binding StartMeasurementCommand}">Start measurement</Button>
+        <ProgressBar Grid.Row="2" Minimum="0" Maximum="{Binding TimerMax}" Value="{Binding TimerValue}"></ProgressBar>
     </Grid>
 </Window>

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NationalInstruments.DAQmx;
 
-namespace _3DVisualizerNI.Model
+namespace _3DVisualizerNI.Model.MeasurementTools
 {
     [Serializable]
     public class ChannelConfig
@@ -103,6 +103,16 @@ namespace _3DVisualizerNI.Model
             catch (ArgumentOutOfRangeException)
             {
                 System.Windows.MessageBox.Show("No output channel detected");
+            }
+
+            try
+            {
+                for(int i=1;i<4;i++)
+                    chConfig[i].chActive = true;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                System.Windows.MessageBox.Show("Not enough input channels to carry measurement. Use at least 4 channels.");
             }
 
             loadDefault();
