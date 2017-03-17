@@ -54,6 +54,7 @@
                             <RowDefinition Height="Auto"></RowDefinition>
                             <RowDefinition Height="Auto"></RowDefinition>
                             <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
                         </Grid.RowDefinitions>
 
                         <Label Content="Resolution [deg]:" VerticalContentAlignment="Center"></Label>
@@ -71,7 +72,10 @@
                         <Label Grid.Row="4" Content="Max level [dB]:" VerticalContentAlignment="Center"></Label>
                         <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding maxLevel,StringFormat=N1}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
 
-                        <Button Grid.Row="5" Grid.ColumnSpan="2" Command="{Binding CalculateIPCommand}" Margin="5,5,5,5" IsEnabled="{Binding isCalculateInstersecitionPointsEnabled}">Calculate intersection points</Button>
+                        <Label Grid.Row="5" Content="Total level [dB]:" VerticalContentAlignment="Center"></Label>
+                        <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding totalLevel,StringFormat=N1}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+
+                        <Button Grid.Row="6" Grid.ColumnSpan="2" Command="{Binding CalculateIPCommand}" Margin="5,5,5,5" IsEnabled="{Binding isCalculateInstersecitionPointsEnabled}">Calculate intersection points</Button>
                     </Grid>
                 </Expander>
 

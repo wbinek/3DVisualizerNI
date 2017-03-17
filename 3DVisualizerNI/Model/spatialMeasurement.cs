@@ -139,6 +139,17 @@ namespace _3DVisualizerNI.Model
             return 0;
         }
 
+        public double getTotalLevel()
+        {
+            if (w != null)
+            {
+                double psq = 0;
+                Array.ForEach(w, x => psq += x * x);
+                return 10 * Math.Log10(psq / (4E-10));
+            }
+            return 0;
+        }
+
         /// <summary>
         /// Imports result from wave at given path
         /// </summary>

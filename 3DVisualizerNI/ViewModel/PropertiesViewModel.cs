@@ -268,6 +268,18 @@ namespace _3DVisualizerNI.ViewModel
             }
         }
 
+        public double totalLevel
+        {
+            get
+            {
+                if (spatialMeasurement != null)
+                {
+                    return spatialMeasurement.measurementData.getTotalLevel();
+                }
+                else return 0;
+            }
+        }
+
         public double maxTimeSlider
         {
             get
@@ -426,6 +438,7 @@ namespace _3DVisualizerNI.ViewModel
             spatialMeasurement = sm;
             RaisePropertyChanged("directTime");
             RaisePropertyChanged("maxLevel");
+            RaisePropertyChanged("totalLevel");
             RaisePropertyChanged("isResponsePropertiesEnabled");
             RaisePropertyChanged("isCalculateInstersecitionPointsEnabled");
             RaisePropertyChanged("isIntersectionPropertiesEnabled");

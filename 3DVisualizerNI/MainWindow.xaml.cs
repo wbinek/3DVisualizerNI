@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using _3DVisualizerNI.ViewModel;
 
 namespace _3DVisualizerNI
@@ -12,6 +13,12 @@ namespace _3DVisualizerNI
         {
             InitializeComponent();
             ((MenuToolbarViewModel)MenuToolbarView.DataContext).NewProject();
+            Closing += OnWindowClosing;
+        }
+
+        private void OnWindowClosing(object obj, CancelEventArgs arg)
+        {
+            Application.Current.Shutdown();
         }
     }
 }
