@@ -200,8 +200,8 @@ namespace _3DVisualizerNI.ViewModel
             set
             {
                 _animationStartEnabled = value;
-                RaisePropertyChanged("animationStartEnabled");
-                RaisePropertyChanged("animationStopEnabled");
+                RaisePropertyChanged("isAnimationStartEnabled");
+                RaisePropertyChanged("isAnimationStopEnabled");
             }
         }
 
@@ -209,7 +209,6 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (isIntersectionPointsDisplayEnabled == false) return false;
                 return !isAnimationStartEnabled;
             }
         }
@@ -226,6 +225,7 @@ namespace _3DVisualizerNI.ViewModel
                 _isIntersectionPointsDisplayEnabled = value;
                 RaisePropertyChanged("isIntersectionPointsDisplayEnabled");
                 RaisePropertyChanged("isIntersectionPropertiesEnabled");
+                RaisePropertyChanged("isAnimationStartEnabled");
             }
         }
 
