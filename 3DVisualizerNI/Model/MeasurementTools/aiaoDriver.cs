@@ -9,7 +9,7 @@ using NationalInstruments.DAQmx;
 
 namespace _3DVisualizerNI.Model.MeasurementTools
 {
-    internal class aiaoDriver
+    internal class aiaoDriver : IDisposable
     {
         private int cycle;
         private DataColumn[] dataColumn;
@@ -121,7 +121,7 @@ namespace _3DVisualizerNI.Model.MeasurementTools
                     {
                         // Display Errors
                         MessageBox.Show(exception.Message);
-                        StopTask();
+                        StopTask(true);
                     }
             }
         }
@@ -243,6 +243,37 @@ namespace _3DVisualizerNI.Model.MeasurementTools
             if (device.BusType != DeviceBusType.CompactDaq)
                 return deviceName;
             return device.CompactDaqChassisDeviceName;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true); //I am calling you from Dispose, it's safe
+        }
+
+        protected void Dispose(Boolean itIsSafeToAlsoFreeManagedObjects)
+        {
+            if (itIsSafeToAlsoFreeManagedObjects) { 
+                if (this.inputTask != null)
+                {
+                    this.inputTask.Dispose();
+                    this.inputTask = null;
+                }
+                if (this.outputTask != null)
+                {
+                    this.outputTask.Dispose();
+                    this.outputTask = null;
+                }
+                if (this.outputTask != null)
+                {
+                    this.dataTable.Dispose();
+                    this.dataTable = null;
+                }
+            }
+        }
+
+        ~aiaoDriver()
+        {
+            Dispose(false); //I am *not* calling you from Dispose, it's *not* safe
         }
     }
 }

@@ -8,6 +8,7 @@ using MathNet.Numerics.IntegralTransforms;
 
 namespace _3DVisualizerNI.Model.MeasurementTools
 {
+
     public static class Tools
     {
         public static IEnumerable<IEnumerable<T>> Split<T>(this T[] array, int size)
@@ -69,6 +70,17 @@ namespace _3DVisualizerNI.Model.MeasurementTools
             return attribute == null ? value.ToString() : attribute.Description;
         }
 
+        public static double getAverageLevel(double[] w)
+        {
+            if (w != null)
+            {
+                double psq = 0;
+                double len = w.Length;
+                Array.ForEach(w, x => psq += x * x / len);
+                return 10 * Math.Log10(psq / (4E-10));
+            }
+            return 0;
+        }
 
         public static double[] getTimeVector(int length, int Fs)
         {
