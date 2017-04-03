@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using Microsoft.Win32;
 using _3DVisualizerNI.Views;
 
 namespace _3DVisualizerNI.ViewModel
@@ -28,10 +29,20 @@ namespace _3DVisualizerNI.ViewModel
         public RelayCommand NewProjectCommand { get; private set; }
         public void LoadMeasurement()
         {
-            spatialMeasurement = new SpatialMeasurement();
-            spatialMeasurement.importWaveResult();
+            //Get File Path
+            OpenFileDialog OpenDialog = new OpenFileDialog();
+            OpenDialog.Filter = "wav files (*.wav)|*.wav";
+            OpenDialog.Multiselect = true;
 
-            Messenger.Default.Send<SpatialMeasurement>(spatialMeasurement, "AddToList");
+            if (OpenDialog.ShowDialog() == true)
+            {
+                foreach (var path in OpenDialog.FileNames)
+                {
+                    spatialMeasurement = new SpatialMeasurement();
+                    spatialMeasurement.importWaveResult(path);
+                    Messenger.Default.Send<SpatialMeasurement>(spatialMeasurement, "AddToList");
+                }              
+            }         
         }
 
         public void LoadModel()
