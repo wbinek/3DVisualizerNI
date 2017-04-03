@@ -20,6 +20,10 @@
                             Command="{Binding SaveResultAsWaveCommand}"                     
                             CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}">
                     </MenuItem>
+                    <MenuItem Header="Open time series" 
+                            Command="{Binding OpenTimeSeriesCommand}"                     
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}">
+                    </MenuItem>
                 </ContextMenu>
             </ListView.ContextMenu>
             <ListView.View>

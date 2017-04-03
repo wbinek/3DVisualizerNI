@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using System.Timers;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using NationalInstruments.DAQmx;
+using _3DVisualizerNI.Model;
 using _3DVisualizerNI.Model.MeasurementTools;
 
 namespace _3DVisualizerNI.ViewModel
@@ -108,6 +110,16 @@ namespace _3DVisualizerNI.ViewModel
             set { measurementConfig.measMethod = value; }
         }
 
+        public Array AvaliblePostProcessingMethod
+        {
+            get { return measurementConfig.AvaliblePostProcessMethod; }
+        }
+        public PostProcessMethods PostProcessingMethodSelected
+        {
+            get { return measurementConfig.processMethod; }
+            set { measurementConfig.processMethod = value; }
+        }
+
         public int AveragesNo
         {
             get { return measurementConfig.averages; }
@@ -151,7 +163,22 @@ namespace _3DVisualizerNI.ViewModel
             cardConfig = new CardConfig();
             measurementConfig = new MeasurementConfig();
             this.StartMeasurementCommand = new RelayCommand(this.StartMeasurement);
+
+            Messenger.Default.Register<double>
+            (
+                this,
+                "averageLevel",
+                (par) => setAverageLevel(par)
+            );
         }
+
+        public void setAverageLevel(double level)
+        {
+            measuredLevel = level;
+            RaisePropertyChanged("measuredLevel");
+        }
+
+        public double measuredLevel { get; set; }
 
         public double TimerMax{get; set;}
         public double TimerValue { get; set; }
@@ -161,7 +188,7 @@ namespace _3DVisualizerNI.ViewModel
         public void StartMeasurement()
         {
             TimerValue = 0;
-            TimerMax = AveragesNo * (measLength + breakLength);
+            TimerMax = (AveragesNo+1) * (measLength + breakLength);
             RaisePropertyChanged("TimerMax");
             RaisePropertyChanged("TimerValue");
             timer =new Timer(timerInterval);
@@ -170,8 +197,7 @@ namespace _3DVisualizerNI.ViewModel
 
             MeasurementExecutioner me = new MeasurementExecutioner(cardConfig,measurementConfig);
             me.startMeasurement();
-
-           }
+        }
 
         private void timer_Elapsed(object sender, ElapsedEventArgs e)
         {

@@ -20,11 +20,19 @@
                     <GroupBox x:Name="MeasurementSettings" Header="Measurement settings">
                         <StackPanel>
                             <customControls:ComboWithLabel Label="Measurement method:" List="{Binding AvalibleMeasurementMethod}" Item="{Binding MeasurementMethodSelected}"></customControls:ComboWithLabel>
+                            <customControls:ComboWithLabel Label="Post processing method:" List="{Binding AvaliblePostProcessingMethod}" Item="{Binding PostProcessingMethodSelected}"></customControls:ComboWithLabel>
                             <customControls:NumericWithLabel Label="Number of averages:" Format="N0" Value="{Binding AveragesNo}"></customControls:NumericWithLabel>
                             <customControls:NumericWithLabel Label="Measurement length:" Format="N0" Value="{Binding measLength}"></customControls:NumericWithLabel>
                             <customControls:NumericWithLabel Label="Break length:" Format="N1" Value="{Binding breakLength}"></customControls:NumericWithLabel>
                             <customControls:NumericWithLabel Label="Fmin:" Format="N0" Value="{Binding Fmin}"></customControls:NumericWithLabel>
                             <customControls:NumericWithLabel Label="Fmax:" Format="N0" Value="{Binding Fmax}"></customControls:NumericWithLabel>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox x:Name="MeasurementStats" Header="Measurement statistics">
+                        <StackPanel>
+                            <TextBlock> Measured level</TextBlock>
+                            <TextBlock Text="{Binding measuredLevel}"></TextBlock>
                         </StackPanel>
                     </GroupBox>
                 </StackPanel>

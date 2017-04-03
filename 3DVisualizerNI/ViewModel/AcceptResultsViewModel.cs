@@ -47,19 +47,20 @@ namespace _3DVisualizerNI.ViewModel
             window.Close();
         }
 
-        public void PlotW(double[] data, double[] time)
+        public void plot(double[] data, double[] time, PlotModel plot, string label = "")
         {
             LineSeries amplitudeSeries = new LineSeries();
+            amplitudeSeries.Points.Capacity = data.Length;
             amplitudeSeries.Color = OxyColor.FromRgb(0, 0, 200);
             amplitudeSeries.StrokeThickness = 1;
             amplitudeSeries.MinimumSegmentLength = 10;
-            amplitudeSeries.Title = "channel W";
+            amplitudeSeries.Title = label;
 
             for (int i = 0; i < data.Length; i++)
             {
                 amplitudeSeries.Points.Add(new DataPoint(time[i], data[i]));
             }
-            plotW.Series.Add(amplitudeSeries);
+            plot.Series.Add(amplitudeSeries);
 
             LinearAxis xAxis = new LinearAxis();
             xAxis.Position = AxisPosition.Bottom;
@@ -70,97 +71,18 @@ namespace _3DVisualizerNI.ViewModel
             yAxis.MajorGridlineStyle = LineStyle.Solid;
             yAxis.MinorGridlineStyle = LineStyle.Dash;
 
-            plotW.Axes.Add(xAxis);
-            plotW.Axes.Add(yAxis);
+            plot.Axes.Add(xAxis);
+            plot.Axes.Add(yAxis);
 
-            plotW.InvalidatePlot(true);
+            plot.InvalidatePlot(true);
         }
 
-        public void PlotX(double[] data, double[] time)
+        public void PlotData(double[] dataW, double[] dataX, double[] dataY, double[] dataZ, double[] time)
         {
-            LineSeries amplitudeSeries = new LineSeries();
-            amplitudeSeries.Color = OxyColor.FromRgb(0, 0, 200);
-            amplitudeSeries.StrokeThickness = 1;
-            amplitudeSeries.MinimumSegmentLength = 10;
-            amplitudeSeries.Title = "channel X";
-
-            for (int i = 0; i < data.Length; i++)
-            {
-                amplitudeSeries.Points.Add(new DataPoint(time[i], data[i]));
-            }
-            plotX.Series.Add(amplitudeSeries);
-
-            LinearAxis xAxis = new LinearAxis();
-            xAxis.Position = AxisPosition.Bottom;
-            xAxis.MajorGridlineStyle = LineStyle.Solid;
-            xAxis.MinorGridlineStyle = LineStyle.Dash;
-            LinearAxis yAxis = new LinearAxis();
-            yAxis.Position = AxisPosition.Left;
-            yAxis.MajorGridlineStyle = LineStyle.Solid;
-            yAxis.MinorGridlineStyle = LineStyle.Dash;
-
-            plotX.Axes.Add(xAxis);
-            plotX.Axes.Add(yAxis);
-
-            plotX.InvalidatePlot(true);
-        }
-
-        public void PlotY(double[] data, double[] time)
-        {
-            LineSeries amplitudeSeries = new LineSeries();
-            amplitudeSeries.Color = OxyColor.FromRgb(0, 0, 200);
-            amplitudeSeries.StrokeThickness = 1;
-            amplitudeSeries.MinimumSegmentLength = 10;
-            amplitudeSeries.Title = "channel Y";
-
-            for (int i = 0; i < data.Length; i++)
-            {
-                amplitudeSeries.Points.Add(new DataPoint(time[i], data[i]));
-            }
-            plotY.Series.Add(amplitudeSeries);
-
-            LinearAxis xAxis = new LinearAxis();
-            xAxis.Position = AxisPosition.Bottom;
-            xAxis.MajorGridlineStyle = LineStyle.Solid;
-            xAxis.MinorGridlineStyle = LineStyle.Dash;
-            LinearAxis yAxis = new LinearAxis();
-            yAxis.Position = AxisPosition.Left;
-            yAxis.MajorGridlineStyle = LineStyle.Solid;
-            yAxis.MinorGridlineStyle = LineStyle.Dash;
-
-            plotY.Axes.Add(xAxis);
-            plotY.Axes.Add(yAxis);
-
-            plotY.InvalidatePlot(true);
-        }
-
-        public void PlotZ(double[] data, double[] time)
-        {
-            LineSeries amplitudeSeries = new LineSeries();
-            amplitudeSeries.Color = OxyColor.FromRgb(0, 0, 200);
-            amplitudeSeries.StrokeThickness = 1;
-            amplitudeSeries.MinimumSegmentLength = 10;
-            amplitudeSeries.Title = "channel Z";
-
-            for (int i = 0; i < data.Length; i++)
-            {
-                amplitudeSeries.Points.Add(new DataPoint(time[i], data[i]));
-            }
-            plotZ.Series.Add(amplitudeSeries);
-
-            LinearAxis xAxis = new LinearAxis();
-            xAxis.Position = AxisPosition.Bottom;
-            xAxis.MajorGridlineStyle = LineStyle.Solid;
-            xAxis.MinorGridlineStyle = LineStyle.Dash;
-            LinearAxis yAxis = new LinearAxis();
-            yAxis.Position = AxisPosition.Left;
-            yAxis.MajorGridlineStyle = LineStyle.Solid;
-            yAxis.MinorGridlineStyle = LineStyle.Dash;
-
-            plotZ.Axes.Add(xAxis);
-            plotZ.Axes.Add(yAxis);
-
-            plotZ.InvalidatePlot(true);
+            plot(dataW, time, plotW, "channel W");
+            plot(dataX, time, plotX, "channel X");
+            plot(dataY, time, plotY, "channel Y");
+            plot(dataZ, time, plotZ, "channel Z");
         }
     }
 }
