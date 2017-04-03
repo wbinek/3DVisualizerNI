@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OxyPlot.Axes;
 
 namespace _3DVisualizerNI.ViewModel
 {
@@ -105,6 +106,7 @@ namespace _3DVisualizerNI.ViewModel
         private void PeakDetection()
         {
             filteredAmplitudes = PeakFinder.FindPeaksZScore(amplitudes, lag, threshold, influence, minLevel, out avrAmpitude, out  stdValue);
+            PeakFindResult.notEmpty = true;
             Messenger.Default.Send<PeakFindData>(PeakFindResult);
             updateDisplay();
         }
@@ -142,7 +144,7 @@ namespace _3DVisualizerNI.ViewModel
             {
                 LineSeries peaksSeries = new LineSeries();
                 peaksSeries.Color = OxyColor.FromRgb(0, 150, 0);
-                peaksSeries.StrokeThickness = 1;
+                peaksSeries.StrokeThickness = 2;
                 peaksSeries.MinimumSegmentLength = 10;
 
                 for (int i = 0; i < filteredAmplitudes.Length; i++)
@@ -165,7 +167,23 @@ namespace _3DVisualizerNI.ViewModel
                 }
                 MyModel.Series.Add(avrAmplitudeSeries);
             }
-          
+
+            if (MyModel.Axes.Count == 0)
+            {
+                MyModel.Axes.Clear();
+                LinearAxis xAxis = new LinearAxis();
+                xAxis.Position = AxisPosition.Bottom;
+                xAxis.MajorGridlineStyle = LineStyle.Solid;
+                xAxis.MinorGridlineStyle = LineStyle.Dash;
+                LinearAxis yAxis = new LinearAxis();
+                yAxis.Position = AxisPosition.Left;
+                yAxis.MajorGridlineStyle = LineStyle.Solid;
+                yAxis.MinorGridlineStyle = LineStyle.Dash;
+
+                MyModel.Axes.Add(xAxis);
+                MyModel.Axes.Add(yAxis);
+            }
+
             MyModel.InvalidatePlot(true);
         }
     }
