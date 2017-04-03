@@ -137,16 +137,29 @@ namespace _3DVisualizerNI.ViewModel
             }
         }
 
-        public int ImpulseScale
+        public double ImpulseScale
         {
             get
             {
                 if (spatialMeasurement != null) return spatialMeasurement.measurementScale;
-                return 5;
+                return 1;
             }
             set
             {
                 spatialMeasurement.measurementScale = value;
+            }
+        }
+
+        public int MarkerScale
+        {
+            get
+            {
+                if (spatialMeasurement != null) return intersectionPoints.DisplayProperties.markerScale;
+                return 1;
+            }
+            set
+            {
+                intersectionPoints.DisplayProperties.markerScale = value;
             }
         }
 
@@ -254,6 +267,16 @@ namespace _3DVisualizerNI.ViewModel
                 if (spatialMeasurement != null) return true;
                 return false;
             }
+        }
+
+        public bool isPeaksOnlyEnabled
+        {
+            get
+            {
+                if (intersectionPoints != null) return intersectionPoints.PeakFindResults.notEmpty;
+                return false;
+            }
+            set { intersectionPoints.PeakFindResults.notEmpty = value; }
         }
 
         public double maxLevel
@@ -444,8 +467,10 @@ namespace _3DVisualizerNI.ViewModel
             RaisePropertyChanged("isIntersectionPropertiesEnabled");
             RaisePropertyChanged("MeasurementPosition");
             RaisePropertyChanged("ImpulseScale");
+            RaisePropertyChanged("isPeaksOnlyEnabled");
 
             isIntersectionPointsDisplayEnabled = false;
+            //isPeaksOnlyEnabled = false;
             return null;
         }
 
@@ -486,10 +511,11 @@ namespace _3DVisualizerNI.ViewModel
             pfWindow.DataContext = pfViewModel;
             ((PeakFindViewModel)pfWindow.DataContext).amplitudes = spatialMeasurement.measurementData.getAmplitudeArray();
             ((PeakFindViewModel)pfWindow.DataContext).Fs = spatialMeasurement.measurementData.Fs;
-            ((PeakFindViewModel)pfWindow.DataContext).InitPlotModel();
+            ((PeakFindViewModel)pfWindow.DataContext).InitPlotModel();            
 
+            pfWindow.Show();
 
-            pfWindow.Show();           
+            RaisePropertyChanged("isPeaksOnlyEnabled");
         }
 
         #endregion Private Methods

@@ -38,6 +38,11 @@ namespace _3DVisualizerNI.Model
             return (4E-10) * Math.Pow(10, 0.1 * level);
         }
 
+        public static double deg2rad(double deg)
+        {
+            return Math.PI * deg / 180;
+        }
+
         #endregion Public Methods
     }
 
@@ -81,6 +86,21 @@ namespace _3DVisualizerNI.Model
         public double[] getAmplitudeArray()
         {
             return w;
+        }
+
+        public double[] getX()
+        {
+            return x;
+        }
+
+        public double[] getY()
+        {
+            return y;
+        }
+
+        public double[] getZ()
+        {
+            return z;
         }
 
         /// <summary>
@@ -241,7 +261,7 @@ namespace _3DVisualizerNI.Model
         /// <summary>
         /// Measurement display scale
         /// </summary>
-        private int _scale = 5;
+        private double _scale = 0.001;
 
         #endregion Private Fields
 
@@ -301,7 +321,7 @@ namespace _3DVisualizerNI.Model
         /// <summary>
         /// Measurement display scale
         /// </summary>
-        public int measurementScale
+        public double measurementScale
         {
             get
             {
@@ -336,49 +356,46 @@ namespace _3DVisualizerNI.Model
             int bins = 360 / measurementResolution;
 
             double[,] r = new double[bins / 2, bins];
+            double stpPhi = MeasurementUtils.deg2rad(measurementResolution);
 
             for (int i = 0; i < measurementData.getLength(); i++)
             {
                 Vector3D vector = MyVector3D.toSphericalDeg(measurementData.getDirectionAtIdx(i));
-                r[(int)(vector.X / measurementResolution), (int)(vector.Y / measurementResolution)] += measurementData.getAmplitudeAtIdx(i) * measurementData.getAmplitudeAtIdx(i);
+                r[(int)(vector.X / measurementResolution), (int)(vector.Y / measurementResolution)] += (measurementData.getAmplitudeAtIdx(i) * measurementData.getDirectionAtIdx(i)).Length;
             }
-
+            double max = 0;
             //Add cones to model to create a view of spatial impulse response
             for (int i = 0; i < bins / 2; i++)
-                for (int j = 0; j < bins; j++)
+            {
+                double elementArea = stpPhi *
+                        (Math.Cos(MeasurementUtils.deg2rad((i) * measurementResolution)) -
+                        Math.Cos(MeasurementUtils.deg2rad((i + 1) * measurementResolution))) / (4 * Math.PI);
+                for (int j = 0; j < bins; j++)         
                 {
-                    {
-                        TruncatedConeVisual3D cone = new TruncatedConeVisual3D();
-                        cone.Origin = center;
-                        cone.Height = r[i, j];
-                        cone.Normal = MyVector3D.toCartesianDeg(i * measurementResolution, j * measurementResolution, r[i, j]);
-                        cone.BaseRadius = 0;
-                        cone.TopRadius = (2 * Math.PI * r[i, j] / (2 * bins));
-                        cone.BaseCap = false;
-                        cone.ThetaDiv = 5;
-                        responseModel.Children.Add(cone.Content);
-                    }
+                    TruncatedConeVisual3D cone = new TruncatedConeVisual3D();
+                    cone.Origin = center;
+                    cone.Height = r[i, j]/elementArea;
+                    if (cone.Height > max) max = cone.Height;
+                    cone.Normal = MyVector3D.toCartesianDeg(i * measurementResolution, j * measurementResolution, r[i, j]);
+                    cone.BaseRadius = 0;
+                    cone.TopRadius = 2*Math.Sqrt(elementArea * (cone.Height * cone.Height) / Math.PI);
+                    cone.BaseCap = false;
+                    cone.ThetaDiv = 5;
+                    responseModel.Children.Add(cone.Content);
                 }
+            }
+            measurementScale = 1/max;
         }
 
         /// <summary>
         /// Method importing spatial response from wav file
         /// </summary>
-        public void importWaveResult()
+        public void importWaveResult(string path)
         {
-            //Get File Path
-            string path;
-            OpenFileDialog OpenDialog = new OpenFileDialog();
-            OpenDialog.Filter = "wav files (*.wav)|*.wav";
-
-            if (OpenDialog.ShowDialog() == true)
-            {
-                path = OpenDialog.FileName;
-                measurementData.importWaveResult(path);
-                measurementName = Path.GetFileName(path);
-                buildResponseModel();
-                setTransforms();
-            }
+            measurementData.importWaveResult(path);
+            measurementName = Path.GetFileName(path);
+            buildResponseModel();
+            setTransforms();
         }
 
         public void saveWaveResult()
@@ -402,6 +419,10 @@ namespace _3DVisualizerNI.Model
         {
             Transform3DGroup newTransform = new Transform3DGroup();
 
+            Rotation3D rot = new AxisAngleRotation3D();
+
+
+            newTransform.Children.Add(new RotateTransform3D());
             newTransform.Children.Add(new TranslateTransform3D(measurementPosition));
             newTransform.Children.Add(new ScaleTransform3D(new Vector3D(measurementScale, measurementScale, measurementScale), measurementPosition.ToPoint3D()));
             responseModel.Transform = newTransform;
