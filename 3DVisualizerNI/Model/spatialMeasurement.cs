@@ -398,7 +398,7 @@ namespace _3DVisualizerNI.Model
             setTransforms();
         }
 
-        public void saveWaveResult()
+        public string saveWaveResult()
         {
             //Get File Path
             string path;
@@ -409,7 +409,10 @@ namespace _3DVisualizerNI.Model
             {
                 path = SaveDialog.FileName;
                 measurementData.saveResultAsWave(path);
+                return path;
             }
+
+            return "";
         }
 
         /// <summary>

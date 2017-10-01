@@ -171,6 +171,32 @@ namespace _3DVisualizerNI.Model.MeasurementTools
             return envelope;
         }
 
+        public static double[] fastConvolution(double[] data, double[] filter)
+        {
+            int M = data.Length;
+            int L = filter.Length;
+            int N = M + L-1;
+
+            double[] paddedData = new double[N];
+            double[] paddedfilter = new double[N];
+
+            Array.Copy(data, paddedData, data.Length);
+            Array.Copy(filter, paddedfilter, filter.Length);
+
+            var H = Tools.double2Complex(paddedfilter);
+            var X = Tools.double2Complex(paddedData);
+
+            Fourier.Forward(H, FourierOptions.Matlab);
+            Fourier.Forward(X, FourierOptions.Matlab);
+            var ytc = X.Zip(H, (xs, ys) => xs * ys).ToArray();
+            Fourier.Inverse(ytc, FourierOptions.Matlab);
+            double[] yt = Tools.complexReal2Double(ytc);
+
+
+            //return yt.Take(M).ToArray();
+            return yt.Skip(L-1).ToArray();
+        }
+
         /// <summary>
         ///     Fits a line to a collection of (x,y) points.
         /// </summary>
