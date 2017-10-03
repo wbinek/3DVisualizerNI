@@ -52,6 +52,20 @@ namespace _3DVisualizerNI.Model.MeasurementTools
             return expSweep;
         }
 
+        public static double[] generateReverseSweep(int length, int Fs, int minFreq, int maxFreq, double outputScaling = 1)
+        {
+            double[] sweep = generateExpSweep(length, Fs, minFreq, maxFreq);
+            var time = Tools.getTimeVector(length, Fs);
+            var maxT = time[time.Count() - 1];
+            double L = maxT / Math.Log10(2 * Math.PI * (maxFreq / minFreq));
+
+            double[] invSweep =  sweep.Reverse().Zip(time, (x, t) => x * Math.Exp(-t / L)).ToArray();
+
+            //Energy calculation part for the filter to be energy conserving - migh be wrong!!!
+            double SqEN = Tools.getSignalEnergy(invSweep) * 2 * outputScaling;
+            return Array.ConvertAll(invSweep, x => (1d / (SqEN)) * x);
+        }
+
         public static double[] repeatSignal(double[] signal, int breakLength, int repetitions)
         {
             int lengthSequence = (signal.Length + breakLength);

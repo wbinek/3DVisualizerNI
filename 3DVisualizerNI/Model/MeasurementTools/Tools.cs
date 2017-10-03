@@ -121,6 +121,14 @@ namespace _3DVisualizerNI.Model.MeasurementTools
             return Array.ConvertAll(realft, smpl => 20 * Math.Log10(smpl / 2e-5));
         }
 
+        public static double getSignalEnergy(double[] w)
+        {
+            double psq = 0;
+            double len = w.Length;
+            Array.ForEach(w, x => psq += x * x);
+            return psq;
+        }
+
         public static double[] getFreqVector(int length, int Fs)
         {
             return Fourier.FrequencyScale(length, Fs);
@@ -176,6 +184,7 @@ namespace _3DVisualizerNI.Model.MeasurementTools
             int M = data.Length;
             int L = filter.Length;
             int N = M + L-1;
+            //int next = (int) Math.Pow(2, Math.Ceiling(Math.Log(N) / Math.Log(2)));
 
             double[] paddedData = new double[N];
             double[] paddedfilter = new double[N];
@@ -188,6 +197,7 @@ namespace _3DVisualizerNI.Model.MeasurementTools
 
             Fourier.Forward(H, FourierOptions.Matlab);
             Fourier.Forward(X, FourierOptions.Matlab);
+
             var ytc = X.Zip(H, (xs, ys) => xs * ys).ToArray();
             Fourier.Inverse(ytc, FourierOptions.Matlab);
             double[] yt = Tools.complexReal2Double(ytc);
