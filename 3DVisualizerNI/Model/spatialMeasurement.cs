@@ -1,13 +1,8 @@
 ﻿using HelixToolkit.Wpf;
-using Microsoft.Win32;
-using NAudio.Wave;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Media.Media3D;
-using System.Xml.Serialization.Configuration;
 
 namespace _3DVisualizerNI.Model
 {

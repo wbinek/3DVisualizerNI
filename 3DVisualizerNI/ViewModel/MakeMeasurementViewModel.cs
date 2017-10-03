@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using NationalInstruments.DAQmx;
-using _3DVisualizerNI.Model;
 using _3DVisualizerNI.Model.MeasurementTools;
 
 namespace _3DVisualizerNI.ViewModel
