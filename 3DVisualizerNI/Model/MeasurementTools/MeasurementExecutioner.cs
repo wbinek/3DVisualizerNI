@@ -14,6 +14,7 @@ using _3DVisualizerNI.ViewModel;
 using _3DVisualizerNI.Views;
 using System.IO;
 using NAudio.Wave;
+using _3DVisualizerNI.Model.Utilities;
 
 namespace _3DVisualizerNI.Model.MeasurementTools
 {
@@ -109,10 +110,17 @@ namespace _3DVisualizerNI.Model.MeasurementTools
             chY = tasks[2].Result;
             chZ = tasks[3].Result;
 
-            showAcceptanceWindow(chW, chX, chY, chZ, dane[0], dane[1], dane[2], dane[3]);
+            //Show window to accept the measurement results
+            bool accepted = showAcceptanceWindow(chW, chX, chY, chZ);
+
+            //If accepted ask to save the waveforms
+            if (accepted)
+            {
+                promptSaveResult(chW, chX, chY, chZ, dane[0], dane[1], dane[2], dane[3]);
+            }
         }
 
-        private void showAcceptanceWindow(double[] chW, double[] chX, double[] chY, double[] chZ, double[] ch0 = null, double[] ch1 = null, double[] ch2 = null, double[] ch3 = null)
+        private bool showAcceptanceWindow(double[] chW, double[] chX, double[] chY, double[] chZ)
         {
             int length = (int)(cardConfig.chSmplRate * (measConfig.breakLength/*));//*/ + measConfig.measLength));
             var Fs = cardConfig.chSmplRate;
@@ -135,35 +143,25 @@ namespace _3DVisualizerNI.Model.MeasurementTools
                 pomiar.setTransforms();
 
                 Messenger.Default.Send<SpatialMeasurement>(pomiar, "AddToList");
-
-                ///To do!!!!
-                //Show save window on measurement finished. Temp solution - should be moved somwhere else.
-                //Make separate (static) wave save class.
-                if (ch0 != null)
-                {
-                    string path = pomiar.saveWaveResult();
-                    string fileName = Path.GetFileNameWithoutExtension(path);
-                    path = Path.Combine(Path.GetDirectoryName(path), fileName + "_raw.wav");
-
-                    WaveFormat format = WaveFormat.CreateIeeeFloatWaveFormat(Fs, 4);
-                    WaveFileWriter writer = new WaveFileWriter(path, format);
-
-                    double max = ch0.Select(x => Math.Abs(x)).Max();
-                    for (int i = 0; i < ch0.Length; i++)
-                    {
-
-                        writer.WriteSample((float)(ch0[i]/max));
-                        writer.WriteSample((float)(ch1[i]/max));
-                        writer.WriteSample((float)(ch2[i]/max));
-                        writer.WriteSample((float)(ch3[i]/max));
-                    }
-                    writer.Close();
-
-                }
-
+                return true;
             }
+            return false;
 
 
+        }
+
+        private void promptSaveResult(double[] chW, double[] chX, double[] chY, double[] chZ, double[] ch0, double[] ch1, double[] ch2, double[] ch3)
+        {
+            string path = "";
+            if(waveSaveRead.getSavePath(ref path) == true)
+            {
+                int Fs = cardConfig.chSmplRate;
+                waveSaveRead.saveResultAsWave(path, chW, chX, chY, chZ, Fs);
+
+                string fileName = Path.GetFileNameWithoutExtension(path);
+                string pathRaw = Path.Combine(Path.GetDirectoryName(path), fileName + "_raw.wav");
+                waveSaveRead.saveResultAsWave(pathRaw, ch0, ch1, ch2, ch3, Fs);
+            }
         }
 
         private double[] calculateImpulseResp(double[] inputData)

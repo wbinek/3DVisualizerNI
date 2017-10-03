@@ -11,6 +11,8 @@ using GalaSoft.MvvmLight.Messaging;
 using _3DVisualizerNI.Model;
 using _3DVisualizerNI.Model.MeasurementTools;
 using _3DVisualizerNI.Views;
+using Microsoft.Win32;
+using _3DVisualizerNI.Model.Utilities;
 
 namespace _3DVisualizerNI.ViewModel
 {
@@ -57,7 +59,11 @@ namespace _3DVisualizerNI.ViewModel
 
         private void SaveResultAsWave(SpatialMeasurement meas)
         {
-            meas.saveWaveResult();
+            string path="";
+            if (waveSaveRead.getSavePath(ref path) == true)
+            {
+                meas.saveWaveResult(path);
+            }
         }
 
         private void OpenTimeSeries(SpatialMeasurement meas)

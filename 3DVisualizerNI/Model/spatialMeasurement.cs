@@ -49,6 +49,7 @@ namespace _3DVisualizerNI.Model
     /// <summary>
     /// Class containing basic measurement result data
     /// </summary>
+    [Serializable]
     public class MeasurementData
     {
         #region Private Fields
@@ -57,6 +58,8 @@ namespace _3DVisualizerNI.Model
         /// Arrays containing measurement result
         /// </summary>
         private double[] w, x, y, z;
+
+        private int _fs;
 
         #endregion Private Fields
 
@@ -73,7 +76,7 @@ namespace _3DVisualizerNI.Model
         /// <summary>
         /// Measurement sampling frequency
         /// </summary>
-        public int Fs { get; set; }
+        public int Fs { get { return _fs; } set { _fs = value; } }
 
         #endregion Public Properties
 
@@ -176,65 +179,12 @@ namespace _3DVisualizerNI.Model
         /// <param name="path">Path to wavfile</param>
         public void importWaveResult(string path)
         {
-            AudioFileReader reader = new AudioFileReader(path);
-
-            if (reader.WaveFormat.Channels != 4)
-            {
-                MessageBox.Show("Wave doesn't contain four channels. Can't import.");
-                return;
-            }
-
-            List<float> _w = new List<float>();
-            List<float> _x = new List<float>();
-            List<float> _y = new List<float>();
-            List<float> _z = new List<float>();
-
-            float[] buffer = new float[reader.WaveFormat.Channels];
-            Fs = reader.WaveFormat.SampleRate;
-
-            int read = reader.Read(buffer, 0, reader.WaveFormat.Channels);
-            double scale=1;
-            while (read > 0)
-            {
-                _w.Add(buffer[0]);
-                _x.Add(buffer[1]);
-                _y.Add(buffer[2]);
-                _z.Add(buffer[3]);
-                read = reader.Read(buffer, 0, reader.WaveFormat.Channels);
-
-                if (read == 1)
-                {
-                    scale = buffer[0];
-                    break;
-                }
-            }
-
-            
-            w = Array.ConvertAll(_w.ToArray(), s => (double)(s/scale));
-            x = Array.ConvertAll(_x.ToArray(), s => (double)(s/scale));
-            y = Array.ConvertAll(_y.ToArray(), s => (double)(s/scale));
-            z = Array.ConvertAll(_z.ToArray(), s => (double)(s/scale));
+            Utilities.waveSaveRead.readWaveResult(path,ref w,ref x,ref y,ref z,ref _fs);
         }
 
         public void saveResultAsWave(string path)
         {
-            double maxVal = getMax();
-            if (maxVal < 1) maxVal = 1;
-
-            WaveFormat format = WaveFormat.CreateIeeeFloatWaveFormat(Fs, 4);
-            WaveFileWriter writer = new WaveFileWriter(path,format);
-            for (int i = 0; i < w.Length; i++)
-            {
-
-                writer.WriteSample((float)(w[i]/ maxVal));
-                writer.WriteSample((float)(x[i]/ maxVal));
-                writer.WriteSample((float)(y[i]/ maxVal));
-                writer.WriteSample((float)(z[i]/ maxVal));
-            }
-
-            writer.WriteSample((float)(1/maxVal));
-            writer.Close();
-            
+            Utilities.waveSaveRead.saveResultAsWave(path, w, x, y, z, Fs);
         }
 
         #endregion Public Methods
@@ -398,21 +348,9 @@ namespace _3DVisualizerNI.Model
             setTransforms();
         }
 
-        public string saveWaveResult()
+        public void saveWaveResult(string path)
         {
-            //Get File Path
-            string path;
-            SaveFileDialog SaveDialog = new SaveFileDialog();
-            SaveDialog.Filter = "wav files (*.wav)|*.wav";
-
-            if (SaveDialog.ShowDialog() == true)
-            {
-                path = SaveDialog.FileName;
-                measurementData.saveResultAsWave(path);
-                return path;
-            }
-
-            return "";
+            measurementData.saveResultAsWave(path);
         }
 
         /// <summary>

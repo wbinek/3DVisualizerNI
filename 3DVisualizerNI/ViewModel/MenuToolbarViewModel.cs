@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Win32;
 using _3DVisualizerNI.Views;
+using _3DVisualizerNI.Model.Utilities;
 
 namespace _3DVisualizerNI.ViewModel
 {
@@ -12,6 +13,7 @@ namespace _3DVisualizerNI.ViewModel
     /// </summary>
     public class MenuToolbarViewModel : ViewModelBase
     {
+        private Project project;
         private Scene3D scene3D;
         private SpatialMeasurement spatialMeasurement;
 
@@ -21,28 +23,58 @@ namespace _3DVisualizerNI.ViewModel
             this.LoadMeasurementCommand = new RelayCommand(this.LoadMeasurement);
             this.MakeMeasurementCommand = new RelayCommand(this.MakeMeasurement);
             this.NewProjectCommand = new RelayCommand(this.NewProject);
+            this.SaveProjectCommand = new RelayCommand(this.SaveProject);
+            this.LoadProjectCommand = new RelayCommand(this.LoadProject);
         }
 
         public RelayCommand LoadMeasurementCommand { get; private set; }
         public RelayCommand MakeMeasurementCommand { get; private set; }
         public RelayCommand LoadModelCommand { get; private set; }
         public RelayCommand NewProjectCommand { get; private set; }
+        public RelayCommand SaveProjectCommand { get; private set; }
+        public RelayCommand LoadProjectCommand { get; private set; }
+
         public void LoadMeasurement()
         {
-            //Get File Path
-            OpenFileDialog OpenDialog = new OpenFileDialog();
-            OpenDialog.Filter = "wav files (*.wav)|*.wav";
-            OpenDialog.Multiselect = true;
-
-            if (OpenDialog.ShowDialog() == true)
+            string[] paths = new string[0];
+            if (waveSaveRead.getLoadPaths(ref paths) == true)
             {
-                foreach (var path in OpenDialog.FileNames)
+                foreach (var path in paths)
                 {
                     spatialMeasurement = new SpatialMeasurement();
                     spatialMeasurement.importWaveResult(path);
                     Messenger.Default.Send<SpatialMeasurement>(spatialMeasurement, "AddToList");
                 }              
             }         
+        }
+
+        public void SaveProject()
+        {
+            //Get File Path
+            string path;
+            SaveFileDialog SaveDialog = new SaveFileDialog();
+            SaveDialog.Filter = "rmni files (*.rmni)|*.rmni";
+
+            if (SaveDialog.ShowDialog() == true)
+            {
+                path = SaveDialog.FileName;
+                project.WriteToBinaryFile(path);
+            }
+        }
+
+        public void LoadProject()
+        {
+            //Get File Path
+            OpenFileDialog OpenDialog = new OpenFileDialog();
+            OpenDialog.Filter = "rmni files (*.rmni)|*.rmni";
+            OpenDialog.Multiselect = false;
+
+            if (OpenDialog.ShowDialog() == true)
+            {
+                project = new Project();
+                project.LoadFromBinaryFile(OpenDialog.FileName);
+                Messenger.Default.Send<Project>(project);
+            }
         }
 
         public void LoadModel()
@@ -55,7 +87,7 @@ namespace _3DVisualizerNI.ViewModel
 
         public void NewProject()
         {
-            Project project = new Project();
+            project = new Project();
             Messenger.Default.Send<Project>(project);
         }
 

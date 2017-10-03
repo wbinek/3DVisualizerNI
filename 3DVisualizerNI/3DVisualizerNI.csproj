@@ -210,6 +210,7 @@
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\Scene3D.cs" />
     <Compile Include="Model\SpatialMeasurement.cs" />
+    <Compile Include="Model\Utilities\waveSaveRead.cs" />
     <Compile Include="ViewModel\AcceptResultsViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MakeMeasurementViewModel.cs" />
