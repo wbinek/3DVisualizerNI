@@ -162,7 +162,7 @@ namespace _3DVisualizerNI.Model
             if (w != null)
             {
                 double psq = 0;
-                Array.ForEach(w, x => psq += x * x);
+                Array.ForEach(w, x => psq += x * x / Fs);
                 return 10 * Math.Log10(psq / (4E-10));
             }
             return 0;
@@ -282,7 +282,9 @@ namespace _3DVisualizerNI.Model
         /// <summary>
         /// 3D Model of measured response
         /// </summary>
-        public Model3DGroup responseModel { get; set; }
+        [NonSerialized]
+        private Model3DGroup _responseModel;
+        public Model3DGroup responseModel { get { return _responseModel; } set { _responseModel = value; } }
 
         public string measurementName { get; set; }
         #endregion Public Properties
@@ -339,9 +341,21 @@ namespace _3DVisualizerNI.Model
         {
             measurementData.importWaveResult(path);
             measurementName = Path.GetFileName(path);
+            onImport();
+        }
+
+        public void onImport()
+        {
             buildResponseModel();
             setTransforms();
         }
+
+        public void onPorjectLoad()
+        {
+            responseModel = new Model3DGroup();
+            onImport();
+        }
+
 
         public void saveWaveResult(string path)
         {

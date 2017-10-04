@@ -25,34 +25,29 @@ namespace _3DVisualizerNI.Model
 
         public void WriteToBinaryFile(string filePath)
         {
-            TextWriter writer = null;
-            try
+            using (Stream stream = File.Open(filePath, FileMode.Create))
             {
-                var serializer = new XmlSerializer(typeof(Project));
-                writer = new StreamWriter(filePath, false);
-                serializer.Serialize(writer, this);
-            }
-            finally
-            {
-                if (writer != null)
-                    writer.Close();
+                var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                binaryFormatter.Serialize(stream, this);
             }
         }
 
         public void LoadFromBinaryFile(string filePath)
         {
-            TextReader reader = null;
-            try
+            using (Stream stream = File.Open(filePath, FileMode.Open))
             {
-                var serializer = new XmlSerializer(typeof(Project));
-                reader = new StreamReader(filePath);
-                Project loaded =  (Project)serializer.Deserialize(reader);
-                this.MeasurementList = loaded.MeasurementList;
+                var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                Project loadedProj = (Project)binaryFormatter.Deserialize(stream);
+                this.MeasurementList = loadedProj.MeasurementList;
+                onLoad();
             }
-            finally
+        }
+
+        private void onLoad()
+        {
+            foreach(SpatialMeasurement measurement in MeasurementList)
             {
-                if (reader != null)
-                    reader.Close();
+                measurement.onPorjectLoad();
             }
         }
 
