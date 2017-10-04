@@ -192,6 +192,9 @@
     <Compile Include="CustomControls\NumericWithLabel.xaml.cs">
       <DependentUpon>NumericWithLabel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\textBlockWithLabel.xaml.cs">
+      <DependentUpon>textBlockWithLabel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CustomControls\Vector3DControl.xaml.cs">
       <DependentUpon>Vector3DControl.xaml</DependentUpon>
     </Compile>
@@ -245,6 +248,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CustomControls\NumericWithLabel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\textBlockWithLabel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

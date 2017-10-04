@@ -11,6 +11,7 @@ using GalaSoft.MvvmLight.Command;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
+using _3DVisualizerNI.Model.MeasurementTools;
 
 namespace _3DVisualizerNI.ViewModel
 {
@@ -24,6 +25,12 @@ namespace _3DVisualizerNI.ViewModel
         public PlotModel plotX { get; private set; }
         public PlotModel plotY { get; private set; }
         public PlotModel plotZ { get; private set; }
+
+        public double totalLevelValue { get; set; }
+        public double maxLevelValue { get; set; }
+        public double averageLevelValue { get; set; }
+        public double noiseLevelValue { get; set; }
+        public double snrLevelValue { get; set; }
 
         public AcceptResultsViewModel()
         {
@@ -83,6 +90,18 @@ namespace _3DVisualizerNI.ViewModel
             plot(dataX, time, plotX, "channel X");
             plot(dataY, time, plotY, "channel Y");
             plot(dataZ, time, plotZ, "channel Z");
+
+            calculateStats(dataW, dataX, dataY, dataZ, time);
+        }
+
+        private void calculateStats(double[] dataW, double[] dataX, double[] dataY, double[] dataZ, double[] time)
+        {
+            int fs =(int)(1 / (time[1] - time[0]));
+            totalLevelValue = Tools.getTotalLevel(dataW, fs);
+            maxLevelValue = Tools.getMaxLevel(dataW);
+            averageLevelValue = Tools.getAverageLevel(dataW);
+            noiseLevelValue = Tools.getAverageLevel(dataW.Skip(dataW.Length-fs/2).ToArray());
+            snrLevelValue = maxLevelValue - noiseLevelValue;
         }
     }
 }

@@ -82,6 +82,24 @@ namespace _3DVisualizerNI.Model.MeasurementTools
             return 0;
         }
 
+        public static double getMaxLevel(double[] w)
+        {
+            double maxVal = w.Select(x => Math.Abs(x)).Max();
+            return 10 * Math.Log10(maxVal*maxVal / 4e-10);
+        }
+
+        public static double getTotalLevel(double[] w, int fs)
+        {
+            if (w != null)
+            {
+                double psq = 0;
+                double len = w.Length;
+                Array.ForEach(w, x => psq += x * x/fs);
+                return 10 * Math.Log10(psq / (4E-10));
+            }
+            return 0;
+        }
+
         public static double[] getTimeVector(int length, int Fs)
         {
             var time = new double[length];

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_3DVisualizerNI.Views"
         xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:customcontrols="clr-namespace:_3DVisualizerNI.CustomControls"
         mc:Ignorable="d"
         x:Name ="AcceptResults"
         Title="Accept Results" Height="600" Width="900">
@@ -13,6 +14,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -23,7 +25,18 @@
         <oxy:PlotView Grid.Row="0" Grid.Column="1" x:Name="plotX" Model="{Binding plotX}" Margin="10"></oxy:PlotView>
         <oxy:PlotView Grid.Row="1" Grid.Column="0" x:Name="plotY" Model="{Binding plotY}" Margin="10"></oxy:PlotView>
         <oxy:PlotView Grid.Row="1" Grid.Column="1" x:Name="plotZ" Model="{Binding plotZ}" Margin="10"></oxy:PlotView>
-        <Button Grid.Row="2" Grid.Column="0" Command="{Binding DeclineResultsCommand}" CommandParameter="{Binding ElementName=AcceptResults}">Decilne</Button>
-        <Button Grid.Row="2" Grid.Column="1" Command="{Binding AcceptResultsCommand}" CommandParameter="{Binding ElementName=AcceptResults}">Accept</Button>
+        
+        <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" x:Name="MeasurementStats" Header="Measurement statistics">
+            <StackPanel>
+                <customcontrols:textBlockWithLabel Label="Total Level (SEL):" Text="{Binding totalLevelValue,StringFormat=N1}"></customcontrols:textBlockWithLabel>
+                <customcontrols:textBlockWithLabel Label="Max Level (Lpmax):" Text="{Binding maxLevelValue,StringFormat=N1}"></customcontrols:textBlockWithLabel>
+                <customcontrols:textBlockWithLabel Label="Average Level (Leq):" Text="{Binding averageLevelValue,StringFormat=N1}"></customcontrols:textBlockWithLabel>
+                <customcontrols:textBlockWithLabel Label="Noise floor (Leq_end):" Text="{Binding noiseLevelValue,StringFormat=N1}"></customcontrols:textBlockWithLabel>
+                <customcontrols:textBlockWithLabel Label="SNR:" Text="{Binding snrLevelValue,StringFormat=N1}"></customcontrols:textBlockWithLabel>
+            </StackPanel>
+        </GroupBox>
+        
+        <Button Grid.Row="3" Grid.Column="0" Command="{Binding DeclineResultsCommand}" CommandParameter="{Binding ElementName=AcceptResults}">Decilne</Button>
+        <Button Grid.Row="3" Grid.Column="1" Command="{Binding AcceptResultsCommand}" CommandParameter="{Binding ElementName=AcceptResults}">Accept</Button>
     </Grid>
 </Window>
