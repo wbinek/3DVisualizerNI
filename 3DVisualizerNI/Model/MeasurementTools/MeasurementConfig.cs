@@ -5,6 +5,7 @@ namespace _3DVisualizerNI.Model.MeasurementTools
     public enum MeasurementMethods
     {
         SweepSine,
+        ImpulseRecording,
         Calibrate,
     }
 

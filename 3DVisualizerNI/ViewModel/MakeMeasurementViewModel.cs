@@ -102,7 +102,16 @@ namespace _3DVisualizerNI.ViewModel
         public MeasurementMethods MeasurementMethodSelected
         {
             get { return measurementConfig.measMethod; }
-            set { measurementConfig.measMethod = value; }
+            set {
+                measurementConfig.measMethod = value;
+                if(value== MeasurementMethods.ImpulseRecording)
+                {
+                    AveragesNo = 0;
+                    RaisePropertyChanged("AveragesNo");
+                    breakLength = 0;
+                    RaisePropertyChanged("breakLength");
+                }
+            }
         }
 
         public Array AvaliblePostProcessingMethod

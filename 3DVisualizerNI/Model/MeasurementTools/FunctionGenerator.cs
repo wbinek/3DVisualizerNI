@@ -6,7 +6,8 @@ namespace _3DVisualizerNI.Model.MeasurementTools
     public enum generatorMethods
     {
         SineWave,
-        ExponentialSweep
+        ExponentialSweep,
+        Silence,
     }
 
     public static class FunctionGenerator
@@ -25,6 +26,12 @@ namespace _3DVisualizerNI.Model.MeasurementTools
                 sin[i] = Math.Sin(2 * Math.PI * f * time[i]);
 
             return sin;
+        }
+
+        public static double[] generateSilence(int length)
+        {
+            double[] silence = new double[length];
+            return silence;
         }
 
         public static double[] generateZeros(int length)
@@ -89,6 +96,9 @@ namespace _3DVisualizerNI.Model.MeasurementTools
                     break;
                 case generatorMethods.ExponentialSweep:
                     signal = generateExpSweep(length, Fs, F1, optionalF2);
+                    break;
+                case generatorMethods.Silence:
+                    signal = generateSilence(length);
                     break;
             }
             return repeatSignal(signal, breakLength, repetitions);

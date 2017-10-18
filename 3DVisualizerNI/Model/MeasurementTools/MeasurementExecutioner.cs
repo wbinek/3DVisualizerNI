@@ -37,6 +37,14 @@ namespace _3DVisualizerNI.Model.MeasurementTools
                 case MeasurementMethods.SweepSine:
                     postprocess(dane);
                     break;
+                case MeasurementMethods.ImpulseRecording:
+                    bool accepted = showAcceptanceWindow(dane[0], dane[1], dane[2], dane[3]);
+                    //If accepted ask to save the waveforms
+                    if (accepted)
+                    {
+                        promptSaveResult(dane[0], dane[1], dane[2], dane[3]);
+                    }
+                    break;
                 case MeasurementMethods.Calibrate:
                     caluclateAvaerageLevel(dane);
                     break;
@@ -73,6 +81,11 @@ namespace _3DVisualizerNI.Model.MeasurementTools
                     output = FunctionGenerator.generateByEnum(measConfig.genMethod,
                         (int)(cardConfig.chSmplRate * measConfig.measLength), cardConfig.chSmplRate,
                         measConfig.fmin, measConfig.fmax, (int)measConfig.breakLength * cardConfig.chSmplRate, measConfig.averages+1);
+                    break;
+                case MeasurementMethods.ImpulseRecording:
+                    output = FunctionGenerator.generateByEnum(generatorMethods.Silence,
+                        (int)(cardConfig.chSmplRate * measConfig.measLength), cardConfig.chSmplRate,
+                        measConfig.fmin, measConfig.fmax, (int)measConfig.breakLength * cardConfig.chSmplRate, measConfig.averages + 1);
                     break;
             }
 
@@ -116,7 +129,7 @@ namespace _3DVisualizerNI.Model.MeasurementTools
 
         private bool showAcceptanceWindow(double[] chW, double[] chX, double[] chY, double[] chZ)
         {
-            int length = (int)(cardConfig.chSmplRate * (measConfig.breakLength/*));//*/ + measConfig.measLength));
+            int length = (int)chW.Length;
             var Fs = cardConfig.chSmplRate;
 
             var timevector = Tools.getTimeVector(length, Fs);
@@ -144,7 +157,7 @@ namespace _3DVisualizerNI.Model.MeasurementTools
 
         }
 
-        private void promptSaveResult(double[] chW, double[] chX, double[] chY, double[] chZ, double[] ch0, double[] ch1, double[] ch2, double[] ch3)
+        private void promptSaveResult(double[] chW, double[] chX, double[] chY, double[] chZ, double[] ch0 = null, double[] ch1 = null, double[] ch2 = null, double[] ch3 = null)
         {
             string path = "";
             if(waveSaveRead.getSavePath(ref path) == true)
@@ -152,9 +165,12 @@ namespace _3DVisualizerNI.Model.MeasurementTools
                 int Fs = cardConfig.chSmplRate;
                 waveSaveRead.saveResultAsWave(path, chW, chX, chY, chZ, Fs);
 
-                string fileName = Path.GetFileNameWithoutExtension(path);
-                string pathRaw = Path.Combine(Path.GetDirectoryName(path), fileName + "_raw.wav");
-                waveSaveRead.saveResultAsWave(pathRaw, ch0, ch1, ch2, ch3, Fs);
+                if(ch0 != null)
+                {
+                    string fileName = Path.GetFileNameWithoutExtension(path);
+                    string pathRaw = Path.Combine(Path.GetDirectoryName(path), fileName + "_raw.wav");
+                    waveSaveRead.saveResultAsWave(pathRaw, ch0, ch1, ch2, ch3, Fs);
+                }
             }
         }
 
