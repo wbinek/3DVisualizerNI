@@ -211,34 +211,6 @@ namespace _3DVisualizerNI.Model.MeasurementTools
                 input = Butterworth.filterResult(measConfig.fmax, measConfig.fmin, input, cardConfig.chSmplRate, 12);
             }
 
-            /// Old impulse response calculation method using circular convolution
-            //var resultFFT = Tools.double2Complex(input);
-            //Fourier.Forward(resultFFT, FourierOptions.Matlab);
-
-            //var resultFFTDivided = resultFFT.Zip(outputFFT, (x, y) => x / y).ToArray();
-
-            //if (processing == PostProcessMethods.ZeroFDomainValues)
-            //{
-            //    int startSample = (int)(resultFFTDivided.Length * ((double)measConfig.fmin / cardConfig.chSmplRate));
-            //    int endSample = (int)(resultFFTDivided.Length * ((double)measConfig.fmax / cardConfig.chSmplRate));
-            //    double average = resultFFTDivided.Skip(startSample).Take(endSample - startSample).Select((x) => x.Magnitude).Average();
-
-            //    Complex[] modified = new Complex[resultFFTDivided.Length];
-            //    modified = Array.ConvertAll(modified, x => new Complex(average, 0));
-
-            //    resultFFTDivided.Skip(startSample).Take(endSample - startSample + 1).ToArray().CopyTo(modified, startSample);
-            //    resultFFTDivided.Skip(resultFFTDivided.Length - endSample).Take(endSample - startSample + 1).ToArray().CopyTo(modified, resultFFTDivided.Length - endSample);
-
-            //    resultFFTDivided = modified;
-
-            //}
-            ////var displayOutput = Array.ConvertAll(outputFFT, item => item.Magnitude);
-            ////var displayInput = Array.ConvertAll(resultFFT, item => item.Magnitude);
-            ////var displayRatio = Array.ConvertAll(resultFFTDivided, item => item.Magnitude);   
-
-            //Fourier.Inverse(resultFFTDivided, FourierOptions.Matlab);
-            //var result = Tools.complexReal2Double(resultFFTDivided);
-
             // Impulse response calculation using linear convolution
             int length = (int)(cardConfig.chSmplRate * (measConfig.breakLength/*));//*/ + measConfig.measLength));
             double[] invsweep = FunctionGenerator.generateReverseSweep((int)(cardConfig.chSmplRate * measConfig.measLength), cardConfig.chSmplRate, measConfig.fmin, measConfig.fmax, (double) cardConfig.aoMax);
