@@ -137,16 +137,29 @@ namespace _3DVisualizerNI.ViewModel
             }
         }
 
-        public int ImpulseScale
+        public double ImpulseScale
         {
             get
             {
                 if (spatialMeasurement != null) return spatialMeasurement.measurementScale;
-                return 5;
+                return 1;
             }
             set
             {
                 spatialMeasurement.measurementScale = value;
+            }
+        }
+
+        public int MarkerScale
+        {
+            get
+            {
+                if (spatialMeasurement != null) return intersectionPoints.DisplayProperties.markerScale;
+                return 1;
+            }
+            set
+            {
+                intersectionPoints.DisplayProperties.markerScale = value;
             }
         }
 
@@ -200,8 +213,8 @@ namespace _3DVisualizerNI.ViewModel
             set
             {
                 _animationStartEnabled = value;
-                RaisePropertyChanged("animationStartEnabled");
-                RaisePropertyChanged("animationStopEnabled");
+                RaisePropertyChanged("isAnimationStartEnabled");
+                RaisePropertyChanged("isAnimationStopEnabled");
             }
         }
 
@@ -209,7 +222,6 @@ namespace _3DVisualizerNI.ViewModel
         {
             get
             {
-                if (isIntersectionPointsDisplayEnabled == false) return false;
                 return !isAnimationStartEnabled;
             }
         }
@@ -226,6 +238,7 @@ namespace _3DVisualizerNI.ViewModel
                 _isIntersectionPointsDisplayEnabled = value;
                 RaisePropertyChanged("isIntersectionPointsDisplayEnabled");
                 RaisePropertyChanged("isIntersectionPropertiesEnabled");
+                RaisePropertyChanged("isAnimationStartEnabled");
             }
         }
 
@@ -256,6 +269,16 @@ namespace _3DVisualizerNI.ViewModel
             }
         }
 
+        public bool isPeaksOnlyEnabled
+        {
+            get
+            {
+                if (intersectionPoints != null) return intersectionPoints.PeakFindResults.notEmpty;
+                return false;
+            }
+            set { intersectionPoints.PeakFindResults.notEmpty = value; }
+        }
+
         public double maxLevel
         {
             get
@@ -263,6 +286,18 @@ namespace _3DVisualizerNI.ViewModel
                 if (spatialMeasurement != null)
                 {
                     return MeasurementUtils.todB(spatialMeasurement.measurementData.getMax());
+                }
+                else return 0;
+            }
+        }
+
+        public double totalLevel
+        {
+            get
+            {
+                if (spatialMeasurement != null)
+                {
+                    return spatialMeasurement.measurementData.getTotalLevel();
                 }
                 else return 0;
             }
@@ -290,48 +325,16 @@ namespace _3DVisualizerNI.ViewModel
             }
         }
 
-        public double pX
+        public Vector3D MeasurementPosition
         {
             get
             {
-                if (spatialMeasurement != null) return spatialMeasurement.measurementPosition.X;
-                return 0;
+                if (spatialMeasurement != null) return spatialMeasurement.measurementPosition;
+                return new Vector3D(0,0,0);
             }
             set
             {
-                Vector3D newPos = spatialMeasurement.measurementPosition;
-                newPos.X = value;
-                spatialMeasurement.measurementPosition = newPos;
-            }
-        }
-
-        public double pY
-        {
-            get
-            {
-                if (spatialMeasurement != null) return spatialMeasurement.measurementPosition.Y;
-                return 0;
-            }
-            set
-            {
-                Vector3D newPos = spatialMeasurement.measurementPosition;
-                newPos.Y = value;
-                spatialMeasurement.measurementPosition = newPos;
-            }
-        }
-
-        public double pZ
-        {
-            get
-            {
-                if (spatialMeasurement != null) return spatialMeasurement.measurementPosition.Z;
-                return 0;
-            }
-            set
-            {
-                Vector3D newPos = spatialMeasurement.measurementPosition;
-                newPos.Z = value;
-                spatialMeasurement.measurementPosition = newPos;
+                spatialMeasurement.measurementPosition = value;
             }
         }
 
@@ -458,11 +461,16 @@ namespace _3DVisualizerNI.ViewModel
             spatialMeasurement = sm;
             RaisePropertyChanged("directTime");
             RaisePropertyChanged("maxLevel");
+            RaisePropertyChanged("totalLevel");
             RaisePropertyChanged("isResponsePropertiesEnabled");
             RaisePropertyChanged("isCalculateInstersecitionPointsEnabled");
             RaisePropertyChanged("isIntersectionPropertiesEnabled");
+            RaisePropertyChanged("MeasurementPosition");
+            RaisePropertyChanged("ImpulseScale");
+            RaisePropertyChanged("isPeaksOnlyEnabled");
 
             isIntersectionPointsDisplayEnabled = false;
+            //isPeaksOnlyEnabled = false;
             return null;
         }
 
@@ -503,10 +511,11 @@ namespace _3DVisualizerNI.ViewModel
             pfWindow.DataContext = pfViewModel;
             ((PeakFindViewModel)pfWindow.DataContext).amplitudes = spatialMeasurement.measurementData.getAmplitudeArray();
             ((PeakFindViewModel)pfWindow.DataContext).Fs = spatialMeasurement.measurementData.Fs;
-            ((PeakFindViewModel)pfWindow.DataContext).InitPlotModel();
+            ((PeakFindViewModel)pfWindow.DataContext).InitPlotModel();            
 
+            pfWindow.Show();
 
-            pfWindow.Show();           
+            RaisePropertyChanged("isPeaksOnlyEnabled");
         }
 
         #endregion Private Methods

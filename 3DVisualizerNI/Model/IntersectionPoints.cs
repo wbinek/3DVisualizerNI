@@ -230,11 +230,11 @@ namespace _3DVisualizerNI.Model
             double startTime = (double)measurement.measurementData.getMaxIdx() / measurement.measurementData.Fs * 1000;
 
             DataColour set0 = new DataColour(Colors.DarkRed, 0);
-            DataColour set1 = new DataColour(Colors.Red, startTime - 10);
-            DataColour set2 = new DataColour(Colors.Orange, startTime + 10);
-            DataColour set3 = new DataColour(Colors.Yellow, startTime + 50);
-            DataColour set4 = new DataColour(Colors.GreenYellow, startTime + 70);
-            DataColour set5 = new DataColour(Colors.Green, startTime + 90);
+            DataColour set1 = new DataColour(Colors.Red, startTime - 5);
+            DataColour set2 = new DataColour(Colors.Orange, startTime + 5);
+            DataColour set3 = new DataColour(Colors.Yellow, startTime + 45);
+            DataColour set4 = new DataColour(Colors.GreenYellow, startTime + 75);
+            DataColour set5 = new DataColour(Colors.Green, startTime + 85);
 
             colorsTimeSet.Add(set0);
             colorsTimeSet.Add(set1);
@@ -367,7 +367,8 @@ namespace _3DVisualizerNI.Model
                     cone.Height = 0.01;
                     cone.Origin = intersectionPoints[i] - faceNormals[i] * cone.Height;
                     cone.Normal = -faceNormals[i];
-                    if (DisplayProperties.constantMarkerSize) cone.BaseRadius = 0.1; else cone.BaseRadius = drawAmplitudes[i] * Math.Sqrt(DisplayProperties.markerScale);
+                    if (DisplayProperties.constantMarkerSize)
+                        cone.BaseRadius = 0.1 * Math.Sqrt(DisplayProperties.markerScale); else cone.BaseRadius = drawAmplitudes[i] * Math.Sqrt(DisplayProperties.markerScale);
                     cone.ThetaDiv = 5;
                     cone.BaseCap = false;
                     cone.TopCap = false;
@@ -376,6 +377,48 @@ namespace _3DVisualizerNI.Model
                     intersectionModel.Children.Add(cone.Content);
                 }
             }
+        }
+
+        /// <summary>
+        /// Get intersection points list
+        /// </summary>
+        private List<List<object>> GetIntersectionPointsList()
+        {
+            double[] drawAmplitudes;
+            if (DisplayProperties.showPeaksOnly && PeakFindResults != null) drawAmplitudes = PeakFindResults.filteredAmplitudes; else drawAmplitudes = ResponseProperties.amplitudeArray;
+
+            int index = 0;
+            List<List<object>> intersectionPointsArray = new List<List<object>>();
+            for (int i = (int)(ResponseProperties.respStartTime * ResponseProperties.Fs); i < ResponseProperties.respEndTime * ResponseProperties.Fs; i++)
+            {
+                if (drawAmplitudes[i] != 0)
+                {
+                    List<object> row = new List<object>();
+                    row.Add(index);
+                    row.Add(intersectionPoints[i].X);
+                    row.Add(intersectionPoints[i].Y);
+                    row.Add(intersectionPoints[i].Z);
+                    row.Add((double)i / ResponseProperties.Fs);
+                    row.Add(drawAmplitudes[i]);
+                    intersectionPointsArray.Add(row);
+                    index++;
+                }
+            }
+            return intersectionPointsArray;
+        }
+
+        /// <summary>
+        /// Export intersections as txt file
+        /// </summary>
+        public void SaveIntersectionPointsAsTxt()
+        {
+            List<string> headers = new List<string> { "id", "x", "y", "z", "time", "amplitude" };
+            List<List<object>> intersectionPointsArray = GetIntersectionPointsList();
+
+            string path = "";
+            bool save = Utilities.ArrayToTxtExporter.getSavePath(ref path);         
+            if (save)     
+                Utilities.ArrayToTxtExporter.SaveListAsTxt(path, intersectionPointsArray, headers);
         }
 
         /// <summary>
@@ -462,6 +505,7 @@ namespace _3DVisualizerNI.Model
         private object ReceiveFilteredResponse(PeakFindData _PeakFindResults)
         {
             PeakFindResults = _PeakFindResults;
+            builidIntersectionModel();
             return null;
         }
 

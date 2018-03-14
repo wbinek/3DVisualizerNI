@@ -13,6 +13,7 @@ namespace _3DVisualizerNI.Model
         public double threshold { get; set; } = 2;
         public double influence { get; set; } = 0.1;
         public double minLevel { get; set; } = 35;
+        public bool notEmpty = false;
     }
 
 

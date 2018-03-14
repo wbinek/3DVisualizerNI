@@ -1,0 +1,95 @@
+﻿<Window x:Class="_3DVisualizerNI.Views.MakeMeasurementWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_3DVisualizerNI.Views"
+        xmlns:customControls="clr-namespace:_3DVisualizerNI.CustomControls"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Title="MakeMeasurementWindow" Height="450" Width="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TabControl Grid.Row="0">
+            <TabItem Header ="Measurement config">
+                <StackPanel>
+                    <GroupBox x:Name="MeasurementSettings" Header="Measurement settings">
+                        <StackPanel>
+                            <customControls:ComboWithLabel Label="Measurement method:" List="{Binding AvalibleMeasurementMethod}" Item="{Binding MeasurementMethodSelected}"></customControls:ComboWithLabel>
+                            <customControls:ComboWithLabel Label="Post processing method:" List="{Binding AvaliblePostProcessingMethod}" Item="{Binding PostProcessingMethodSelected}"></customControls:ComboWithLabel>
+                            <customControls:NumericWithLabel Label="Number of averages:" Format="N0" Value="{Binding AveragesNo}"></customControls:NumericWithLabel>
+                            <customControls:NumericWithLabel Label="Measurement length:" Format="N0" Value="{Binding measLength}"></customControls:NumericWithLabel>
+                            <customControls:NumericWithLabel Label="Break length:" Format="N1" Value="{Binding breakLength}"></customControls:NumericWithLabel>
+                            <customControls:NumericWithLabel Label="Fmin:" Format="N0" Value="{Binding Fmin}"></customControls:NumericWithLabel>
+                            <customControls:NumericWithLabel Label="Fmax:" Format="N0" Value="{Binding Fmax}"></customControls:NumericWithLabel>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox x:Name="MeasurementStats" Header="Measurement statistics">
+                        <StackPanel>
+                            <TextBlock> Measured level</TextBlock>
+                            <TextBlock Text="{Binding measuredLevel}"></TextBlock>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+            </TabItem>
+ 
+            <TabItem Header ="Card config">
+                <StackPanel Orientation="Horizontal">
+                    <ListView ItemsSource="{Binding AvalibleChannels}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Name" Width="80" DisplayMemberBinding="{Binding chName}" />
+                                <GridViewColumn Header="Active" Width="50">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding chActive}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Sensitivity" Width="60">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <xctk:DecimalUpDown Value="{Binding chSens}"/>
+                                    </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <StackPanel>
+                        <GroupBox x:Name="timing" Header="Timing Parameters">
+                            <StackPanel>
+                            <!--<ComboBox SelectedItem="{Binding SamplingSelected}" ItemsSource="{Binding SamplingList}" VerticalContentAlignment="Center" Margin="5,5,5,5" Width="50"></ComboBox>-->
+                                <customControls:ComboWithLabel Label="Rate [Hz]: " Item="{Binding SamplingSelected}" List="{Binding SamplingList}"></customControls:ComboWithLabel>
+                                <customControls:ComboWithLabel Label="Samples to Read: " Item="{Binding SampleToReadSelected}" List="{Binding SampleToReadList}"></customControls:ComboWithLabel>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox x:Name="channel" Header="Channel Parameters">
+                            <StackPanel>
+                                <customControls:NumericWithLabel Label="Maximum Preassure [dB]: " Value="{Binding maxPreassure}"></customControls:NumericWithLabel>
+                                <customControls:ComboWithLabel Label="Input Terminal: " List="{Binding AvalibleAITerminalConfig}" Item="{Binding AITerminalConfigSelected}"></customControls:ComboWithLabel>
+                                <customControls:ComboWithLabel Label="IEPE Excitation: " List="{Binding AvalibleIEPESource}" Item="{Binding IEPESourceSelected}"></customControls:ComboWithLabel>
+                                <customControls:NumericWithLabel Label="IEPE Current [A]: " Value="{Binding IEPECurrent}"></customControls:NumericWithLabel>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox x:Name="channelOut" Header="Channel Parameters - Output">
+                            <StackPanel>
+                                <customControls:ComboWithLabel Label="Output Channel" List="{Binding AvalibleOutputChannels}" Item="{Binding OutputChannelSelected}"></customControls:ComboWithLabel>
+                                <customControls:NumericWithLabel Label="Maximum Value: " Value="{Binding MaximumOutputVal}"></customControls:NumericWithLabel>
+                                <customControls:NumericWithLabel Label="Minimum Value: " Value="{Binding MinimumOutputVal}"></customControls:NumericWithLabel>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </StackPanel>
+                
+            </TabItem>
+        </TabControl>
+        <Button Grid.Row="1" Command="{Binding StartMeasurementCommand}">Start measurement</Button>
+        <ProgressBar Grid.Row="2" Minimum="0" Maximum="{Binding TimerMax}" Value="{Binding TimerValue}"></ProgressBar>
+    </Grid>
+</Window>
