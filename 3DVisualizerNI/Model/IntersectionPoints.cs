@@ -380,6 +380,48 @@ namespace _3DVisualizerNI.Model
         }
 
         /// <summary>
+        /// Get intersection points list
+        /// </summary>
+        private List<List<object>> GetIntersectionPointsList()
+        {
+            double[] drawAmplitudes;
+            if (DisplayProperties.showPeaksOnly && PeakFindResults != null) drawAmplitudes = PeakFindResults.filteredAmplitudes; else drawAmplitudes = ResponseProperties.amplitudeArray;
+
+            int index = 0;
+            List<List<object>> intersectionPointsArray = new List<List<object>>();
+            for (int i = (int)(ResponseProperties.respStartTime * ResponseProperties.Fs); i < ResponseProperties.respEndTime * ResponseProperties.Fs; i++)
+            {
+                if (drawAmplitudes[i] != 0)
+                {
+                    List<object> row = new List<object>();
+                    row.Add(index);
+                    row.Add(intersectionPoints[i].X);
+                    row.Add(intersectionPoints[i].Y);
+                    row.Add(intersectionPoints[i].Z);
+                    row.Add((double)i / ResponseProperties.Fs);
+                    row.Add(drawAmplitudes[i]);
+                    intersectionPointsArray.Add(row);
+                    index++;
+                }
+            }
+            return intersectionPointsArray;
+        }
+
+        /// <summary>
+        /// Export intersections as txt file
+        /// </summary>
+        public void SaveIntersectionPointsAsTxt()
+        {
+            List<string> headers = new List<string> { "id", "x", "y", "z", "time", "amplitude" };
+            List<List<object>> intersectionPointsArray = GetIntersectionPointsList();
+
+            string path = "";
+            bool save = Utilities.ArrayToTxtExporter.getSavePath(ref path);         
+            if (save)     
+                Utilities.ArrayToTxtExporter.SaveListAsTxt(path, intersectionPointsArray, headers);
+        }
+
+        /// <summary>
         /// Calculates intersection points using ray tracing
         /// </summary>
         /// <param name="model">3D geometry model</param>

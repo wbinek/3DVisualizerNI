@@ -16,6 +16,7 @@ namespace _3DVisualizerNI.ViewModel
         private Project project;
         private Scene3D scene3D;
         private SpatialMeasurement spatialMeasurement;
+        private IntersectionPoints intersectionPoints;
 
         public MenuToolbarViewModel()
         {
@@ -25,6 +26,13 @@ namespace _3DVisualizerNI.ViewModel
             this.NewProjectCommand = new RelayCommand(this.NewProject);
             this.SaveProjectCommand = new RelayCommand(this.SaveProject);
             this.LoadProjectCommand = new RelayCommand(this.LoadProject);
+            this.SaveProjectIntersecionPointsCommand = new RelayCommand(this.SaveProjectIntersecionPoints);
+
+            Messenger.Default.Register<IntersectionPoints>
+            (
+                this,
+                (ip) => ReceiveIntersectionPoints(ip)
+            );
         }
 
         public RelayCommand LoadMeasurementCommand { get; private set; }
@@ -33,6 +41,7 @@ namespace _3DVisualizerNI.ViewModel
         public RelayCommand NewProjectCommand { get; private set; }
         public RelayCommand SaveProjectCommand { get; private set; }
         public RelayCommand LoadProjectCommand { get; private set; }
+        public RelayCommand SaveProjectIntersecionPointsCommand { get; private set; }
 
         public void LoadMeasurement()
         {
@@ -60,6 +69,12 @@ namespace _3DVisualizerNI.ViewModel
                 path = SaveDialog.FileName;
                 project.WriteToBinaryFile(path);
             }
+        }
+
+        public void SaveProjectIntersecionPoints()
+        {
+            if(intersectionPoints!=null)
+                intersectionPoints.SaveIntersectionPointsAsTxt();
         }
 
         public void LoadProject()
@@ -97,6 +112,11 @@ namespace _3DVisualizerNI.ViewModel
             MakeMeasurementViewModel measViewModel = new MakeMeasurementViewModel();
             measWindow.DataContext = measViewModel;
             measWindow.Show();
+        }
+
+        public void ReceiveIntersectionPoints(IntersectionPoints ip)
+        {
+            intersectionPoints = ip;
         }
     }
 }

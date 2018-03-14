@@ -22,10 +22,12 @@
             <MenuItem Header="Model">
                 <MenuItem Header="Load 3D model" Command="{Binding LoadModelCommand}"></MenuItem>
             </MenuItem>
-
             <MenuItem Header="Measurement">
                 <MenuItem Header="Load measurement" Command="{Binding LoadMeasurementCommand}"></MenuItem>
                 <MenuItem Header="Make measurement" Command="{Binding MakeMeasurementCommand}"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Intersection points">
+                <MenuItem Header="Export intersection points" Command="{Binding SaveProjectIntersecionPointsCommand}"></MenuItem>
             </MenuItem>
         </Menu>
     </Grid>
